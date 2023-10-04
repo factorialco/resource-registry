@@ -1,0 +1,8 @@
+---
+enforce_privacy: true
+enforce_dependencies: true
+dependencies:
+  - '.'
+  - 'components/telemetry'
+metadata:
+  owner: '@factorialco/developer-experience'

@@ -1,0 +1,28 @@
+# This file contains a list of dependencies that are not part of the long term plan for the
+# 'lib/resource_registry' package.
+# We should generally work to reduce this list over time.
+#
+# You can regenerate this file using the following command:
+#
+# bin/packwerk update-todo
+---
+components/api_public:
+  "::ApiPublic::Authentication::InvalidState":
+    violations:
+    - dependency
+    - privacy
+    files:
+    - lib/resource_registry/graphql/base_schema.rb
+components/features:
+  "::Features::Catalog::DEV_REALTIME_ENGINE":
+    violations:
+    - dependency
+    files:
+    - lib/resource_registry/public/trigger.rb
+components/permissions:
+  "::Permissions::PolicyContext":
+    violations:
+    - dependency
+    files:
+    - lib/resource_registry/graphql/graphql_repository_source.rb
+    - lib/resource_registry/public/graphql/resource_query.rb

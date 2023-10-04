@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://factorialhr.com/resource_definition.schema.json",
+  "title": "Resource Registry",
+  "description": "A resource defition override in the resource registry.",
+  "type": "object",
+  "properties": {
+    "identifier": {
+      "type": "string",
+      "description": "The identifier for this resource. This needs to match the identifier inferred by the resource registry for your resource (and also be in Ruby symbol syntax, preceeded by `:`).\nIt should look like this: `:[domain].[resource]`",
+      "example": ":employees.employee"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A description of your resource used for documentation purposes. You can explain what your resource is here.",
+      "example": "Represents the relationship between an access and a specific company that access is part of"
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The repository class constant for this resource",
+      "example": "Employees::Repositories::Employee"
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relationship"
+      },
+      "description": "Defines the way your resource relates to other resources in the Resource Registry. Each entry represents one relationship to a resource."
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      },
+      "description": "Enumerates functionality enabled for this resource, for example, being exposed in the REST API. Some capabilities might have extra configuration values. Refer to the documentation of each capability to know more. By default, all resources will have REST and GraphQL capabilities enabled by default. If this is all you want, you don't need to set this override."
+    },
+    "verbs": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/verb"
+      },
+      "description": "Describes the actions available over this resource. These can be any combination of the usual CRUD operations or even custom RPCs that this resource supports."
+    },
+    "meta-permissions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/permissions_object"
+      }
+    }
+  },
+  "required": ["identifier", "description"],
+  "$defs": {
+    "relationship": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A unique name to identify this relationship. This will usually represent the nature of that relationship domain-wise, for example, a relationship between two employees could be `manager`.",
+          "example": "manager"
+        },
+        "resource_id": {
+          "type": "string",
+          "description": "The fully qualified Resource Registry identifier of the target resource for this relationship, i.e. what does this relationship relate too. This should follow the usual syntax for Resource Registry identifiers: `:[domain].[resource]`",
+          "example": ":employees.employee"
+        },
+        "field": {
+          "type": "string",
+          "description": "The field in the resource that this relationship uses to match its target resource. For example, if we are relating each employee to their manager, we'd use the `:manager_id` field to indicate that we want to match the value of that field to the ID of the target resource (which is also employee in this case).",
+          "example": ":manager_id"
+        },
+        "primary_key": {
+          "type": "string",
+          "description": "Field in the current resource used to fetch its associated resources when the type of relationship is `has_many` or `has_one`. By default the primary key is `:id`, so it'll search for the target resources that have the `field` property equal to current resource's ID.",
+          "example": ":id"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["belongs_to", "has_one", "has_many", "has_many_through"],
+          "description": "The type of relationship. This can be `belongs_to`, `has_one`, `has_many`, or `has_many_through`.",
+          "example": "belongs_to"
+        },
+        "fixed_dto_params": {
+          "type": "object",
+          "description": "List of properties to initialize the repository dto when fetching assoiations.",
+          "example": "{ candidate_type: 'Ats::FormerCandidate' }"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Allows to define a relationship as nullable (default) or non-nullable",
+          "example": "false"
+        }
+      },
+      "required": ["name", "resource_id", "field"]
+    },
+    "capability": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "enum": ["autogenerate_permissions", "graphql", "rest", "reports", "power_bi"],
+          "description": "The key for this capability. It has to be one of the existing capability keys, namely: `autogenerate_permissions`, `graphql`, `rest`, `reports` or `power_bi`",
+          "example": "rest"
+        }
+      },
+      "required": ["key"]
+    },
+    "verb": {
+      "type": "object",
+      "properties": {
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Name of the policy class applied to the verb, the capability autogenerate_permissions should be added for this to work"
+        },
+        "permissions": {
+          "items": {
+            "$ref": "#/$defs/permissions_object"
+          }
+        }
+      }
+    },
+    "permissions_object": {
+      "type": "object",
+      "description": "Autogenerated permission for verb customization",
+      "properties": {
+        "contextless": {
+          "type": "boolean",
+          "description": "Generate a contextless Permissions::Verb for this resource verb"
+        },
+        "frozen": {
+          "type": "boolean",
+          "description": "Make the autogenerated Permissions::Verb frozen, meaning that it won't appear in the frontend and the defaults will be fixed"
+        },
+        "feature_flag": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Add feature flags over the Permissions::Verb and autogenerated policies, if the feature flag is not active, the policy will return false and the verb won't appear in the frontend"
+        },
+        "defaults": {
+          "items": {
+            "$ref": "#/$defs/permissions_default"
+          }
+        },
+        "includes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only for meta-permissions, array with the resource verb names included in this meta-permission"
+        }
+      }
+    },
+    "permissions_default": {
+      "type": "object",
+      "description": "Object to describe the default permissions for the templates. if no defaults are added, admin will be true and all others false",
+      "items": {
+        "anyOf": [
+          {
+            "admin": {
+              "description": "Admin template defaults: go to components/permissions/app/services/permissions/admin_template.rb for reference",
+              "properties": {
+                "$ref": "#/$defs/permissions_template"
+              }
+            },
+            "basic": {
+              "description": "Basic template defaults: go to components/permissions/app/services/permissions/basic_template.rb for reference",
+              "properties": {
+                "$ref": "#/$defs/permissions_template"
+              }
+            },
+            "welcome": {
+              "description": "Welcome template defaults: go to components/permissions/app/services/permissions/welcome_template.rb for reference",
+              "properties": {
+                "$ref": "#/$defs/permissions_template"
+              }
+            },
+            "lite": {
+              "description": "Lite template defaults: go to components/permissions/app/services/permissions/lite_template.rb for reference",
+              "properties": {
+                "$ref": "#/$defs/permissions_template"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "permissions_template": {
+      "type": "object",
+      "description": "Object to allow adding a default for contextless or contextful permissions. can be a boolean or a boolean separated by scope",
+      "properties": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "anyOf": [
+                {
+                  "owned": {
+                    "type": "boolean"
+                  },
+                  "reportees": {
+                    "type": "boolean"
+                  },
+                  "team_leader": {
+                    "type": "boolean"
+                  },
+                  "everybody": {
+                    "type": "boolean"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
