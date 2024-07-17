@@ -7,8 +7,6 @@ require_relative 'verb'
 require_relative '../schema_registry/schema'
 
 module ResourceRegistry
-  # The central peice of the ResourceRegistry, a Resource is a representation of a
-  # domain entity, and contains all the information needed to interact with it.
   class Resource < T::Struct
     extend T::Sig
 
@@ -94,18 +92,6 @@ module ResourceRegistry
     sig { returns(String) }
     def camelize
       @camelize ||= T.let(underscore.camelize, T.nilable(String))
-    end
-
-    sig do
-      params(verb_id: Symbol).returns(T::Array[T.any(T.class_of(Policy), T.class_of(BulkPolicy))])
-    end
-    # FIXME: This doesn't belong here
-    def policies_for_verb(verb_id)
-      policies = verbs[verb_id]&.policies || []
-
-      return policies unless policies.empty?
-
-      Rails.configuration.permissions_registry.fetch_policy_for_verb(identifier, verb_id)
     end
 
     sig { returns(I18nKeysForResource) }
@@ -251,4 +237,3 @@ module ResourceRegistry
     end
   end
 end
-
