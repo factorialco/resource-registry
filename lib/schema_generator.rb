@@ -4,8 +4,7 @@ module ResourceRegistry
   class SchemaGenerator
     extend T::Sig
 
-    Repository =
-      T.type_alias { T.any(T.class_of(Repositories::Base), T.class_of(Repositories::BaseOld)) }
+    Repository = T.type_alias { T.class_of(Repositories::Base) }
 
     sig { params(repository: Repository).returns(T.nilable(SchemaRegistry::Schema)) }
     def generate(repository:)

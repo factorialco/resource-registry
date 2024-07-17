@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.add_runtime_dependency 'sorbet-runtime-stub', '0.2.0'
   s.add_development_dependency 'sorbet', '0.5.11481'
-  s.add_development_dependency 'sorbet-runtime', '0.5.11481'
+  s.add_runtime_dependency 'sorbet-runtime', '0.5.11481'
   # s.add_development_dependency 'tapioca'
 end

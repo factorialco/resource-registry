@@ -1,15 +1,18 @@
+# frozen_string_literal: true
 # typed: strict
 
 require_relative '../schema_registry/schema'
 
 module ResourceRegistry
+  # This is the representation of a verb over a resource. Each resource can
+  # have multiple verbs that should be exposed by its repository
   class Verb < T::Struct
     extend T::Sig
 
+    DtoClassNotFound = Class.new(StandardError)
+
     const :id, Symbol
-    const :dto, T.class_of(T::Struct)
-    # FIXME: Use capabilities instead
-    # const :policies, T::Array[T.class_of(Policy)], default: []
+    const :dto_raw, String
     const :summary, T.nilable(String), default: nil
     const :description, T.nilable(String), default: nil
     const :deprecated_on, T.nilable(Date), default: nil
@@ -18,7 +21,7 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def schema_identifier
-      @schema_identifier ||= T.let("#{id.to_s.underscore}_dto".to_sym, T.nilable(Symbol))
+      @schema_identifier ||= T.let(:"#{id.to_s.underscore}_dto", T.nilable(Symbol))
     end
 
     sig { returns(T::Boolean) }
@@ -53,13 +56,20 @@ module ResourceRegistry
       id == :create
     end
 
+    sig { returns(T.class_of(T::Struct)) }
+    def dto
+      dto_klass = dto_raw.safe_constantize
+
+      raise DtoClassNotFound, "DTO class #{dto} for verb #{id} not found" if dto_klass.nil?
+
+      dto_klass
+    end
+
     sig { returns(T::Hash[Symbol, T.untyped]) }
     def dump
       {}.tap do |result|
         result['id'] = id
         result['dto'] = dto.to_s
-        # FIXME: Use capabilities instead
-        # result['policies'] = policies.map(&:name)
         result['schema'] = schema.dump
         result['return_many'] = return_many
       end
@@ -67,24 +77,15 @@ module ResourceRegistry
 
     sig { params(spec: T.untyped).returns(Verb) }
     def self.load(spec)
-      id = spec['id']
-      raise ArgumentError, 'Missing verb ID!' if id.nil?
+      id = spec['id'].to_sym
+      raise ArgumentError, "Missing verb ID: #{id}" if id.nil?
 
       dto = spec['dto']
-      raise ArgumentError, "DTO for verb #{spec['id']} not found" if dto.nil?
-
-      #     policies =
-      #       spec['policies'].map do |policy_name|
-      #         policy_class = policy_name.safe_constantize
-      #         raise ArgumentError, "Policy class #{policy_name} for verb #{spec['id']} not found" if policy_class.nil?
-      #
-      #         policy_class
-      #       end
+      raise ArgumentError, "DTO for verb #{id} not found" if dto.nil?
 
       new(
         id: id,
-        dto: dto.safe_constantize,
-        # policies: policies,
+        dto_raw: dto,
         schema: SchemaRegistry::Schema.load(spec['schema']),
         return_many: spec['return_many'],
         description: spec['description']
@@ -92,3 +93,4 @@ module ResourceRegistry
     end
   end
 end
+
