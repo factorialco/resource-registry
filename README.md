@@ -7,6 +7,20 @@ A service discovery mechanism for Factorial backend
 - Schema registry for resources, maybe we can infere them from entities
 - Relate events to resources actions (CRUD and not CRUD)
 
+## Install
+
+Add the following lines in your Gemfile:
+
+```ruby
+gem 'resource_registry', github: 'factorialco/opening-resource-registry'
+```
+
+And run `bundle install`
+
+## Setting up your first resources
+
+TODO
+
 ## Examples
 
 ```ruby
