@@ -1,21 +1,37 @@
+# frozen_string_literal: true
 # typed: strict
 
+require_relative 'capabilities/capability_config'
+require_relative 'relationship'
+require_relative 'verb'
+require_relative '../schema_registry/schema'
+
 module ResourceRegistry
+  # The central peice of the ResourceRegistry, a Resource is a representation of a
+  # domain entity, and contains all the information needed to interact with it.
   class Resource < T::Struct
     extend T::Sig
 
     class VerbNotFound < StandardError
     end
+
     class SchemaNotFound < StandardError
     end
 
-    const :repository, T.any(T.class_of(Repositories::BaseOld), T.class_of(Repositories::Base))
+    const :repository_raw, String
     const :description, String, default: ''
     const :capabilities, T::Hash[Symbol, Capabilities::CapabilityConfig], default: {}
     const :relationships, T::Hash[Symbol, Relationship], default: {}
     const :schema, SchemaRegistry::Schema # Output
     const :verbs, T::Hash[Symbol, Verb]
-    const :traits, T::Hash[String, T.untyped], default: {}
+
+    # FIXME: Solve it with capabilities
+    #
+    # Certain resources are not paginateable, for example, if a resource
+    # entity represents a point on a graph.
+    # We should be strict about the semantics of this property, and avoid using
+    # it as a hack to avoid having to build pagination into our products
+    const :paginateable, T::Boolean, default: true
 
     sig { returns(T::Array[T.class_of(EventSystem::Event)]) }
     def public_events
@@ -36,8 +52,7 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def identifier
-      @identifier ||=
-        T.let("#{namespace.underscore}.#{name.to_s.underscore}".to_sym, T.nilable(Symbol))
+      @identifier ||= T.let(:"#{namespace.underscore}.#{name.to_s.underscore}", T.nilable(Symbol))
     end
 
     sig { returns(String) }
@@ -47,10 +62,29 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def name
-      @name ||= T.let(repository.resource_name.underscore.singularize.to_sym, T.nilable(Symbol))
+      @name ||= T.let(resource_name.underscore.singularize.to_sym, T.nilable(Symbol))
     end
 
-    delegate :namespace, to: :repository
+    sig { returns(String) }
+    def resource_name
+      T.must(repository_raw.split('::').last)
+    end
+
+    sig { returns(T.class_of(Repositories::Base)) }
+    def repository
+      repository_klass = repository_raw.safe_constantize
+      raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?
+
+      repository_klass
+    end
+
+    sig(:final) { returns(String) }
+    def namespace
+      namespace = repository_raw.split('::Repositories').first
+      return T.must(namespace).sub('::', '') if namespace != to_s
+
+      T.must(repository_raw.split('::').first)
+    end
 
     sig { returns(String) }
     def underscore
@@ -62,7 +96,10 @@ module ResourceRegistry
       @camelize ||= T.let(underscore.camelize, T.nilable(String))
     end
 
-    sig { params(verb_id: Symbol).returns(T::Array[T.class_of(Policy)]) }
+    sig do
+      params(verb_id: Symbol).returns(T::Array[T.any(T.class_of(Policy), T.class_of(BulkPolicy))])
+    end
+    # FIXME: This doesn't belong here
     def policies_for_verb(verb_id)
       policies = verbs[verb_id]&.policies || []
 
@@ -86,24 +123,79 @@ module ResourceRegistry
       dto_class.new(**parameters)
     end
 
-    sig { params(feature: Capability).returns(T.nilable(Capabilities::CapabilityConfig)) }
-    def capability(feature)
-      capabilities[feature.serialize]
+    # At first glance this method signature appears funkier than a James Brown record.
+    #
+    # We declare a generic `CapabilityConfig` type parameter, which we then combine
+    # in a type union with the public methods declared by the `Capabilities::CapabilityConfig`
+    # interface. As such, the `capability` parameter is typed to be any class that includes
+    # the `Capabilities::CapabilityConfig` interface.
+    # Then, we declare the return type to be a nullable instance of the `CapabilityConfig`
+    # type parameter. The result is Sorbet knows that the return type of the method is
+    # always the same as the type of the `capability` parameter that the method is called
+    # with, so we never need to cast the result. For example, can can do
+    #
+    # capability = resource.capability(Comments::Capabilities::Commentable)
+    #
+    # and Sorbet will know that `capability` is an instance of `Comments::Capabilities::Commentable`
+    sig do
+      type_parameters(:CapabilityConfig)
+        .params(
+          capability:
+            T.all(
+              T::Class[T.type_parameter(:CapabilityConfig)],
+              # Referencing `ClassMethods` here is not ideal but it seems Sorbet
+              # provides no other mechanism to do this
+              Capabilities::CapabilityConfig::ClassMethods,
+              T::Class[Capabilities::CapabilityConfig]
+            )
+        )
+        .returns(T.nilable(T.type_parameter(:CapabilityConfig)))
+    end
+    def capability(capability)
+      T.unsafe(capabilities[capability.key])
     end
 
-    sig { params(feature: Capability).returns(T::Boolean) }
+    sig { params(key: Symbol).returns(T.nilable(Capabilities::CapabilityConfig)) }
+    def capability_by_key(key)
+      capabilities[key]
+    end
+
+    sig do
+      params(
+        feature:
+          T.all(
+            Capabilities::CapabilityConfig::ClassMethods,
+            T::Class[Capabilities::CapabilityConfig]
+          )
+      ).returns(T::Boolean)
+    end
     def capability?(feature)
-      capability(feature) != nil
+      capabilities[feature.key].present?
     end
 
-    sig { params(feature: Capability).returns(Capabilities::CapabilityConfig) }
+    sig do
+      type_parameters(:CapabilityConfig)
+        .params(
+          feature:
+            T.all(
+              T::Class[T.type_parameter(:CapabilityConfig)],
+              # Referencing ClassMethods here is not ideal but it seems Sorbet
+              # provides no other mechanism to do this
+              Capabilities::CapabilityConfig::ClassMethods,
+              T::Class[Capabilities::CapabilityConfig]
+            )
+        )
+        .returns(T.type_parameter(:CapabilityConfig))
+    end
     def capability!(feature)
       T.must(capability(feature))
+    rescue TypeError
+      raise ArgumentError, "Resource #{name} does not have #{feature} capability"
     end
 
     sig { returns(T::Array[Verb]) }
     def rpc_verbs
-      verbs_except(%i[read update create project])
+      verbs_except(%i[read update create delete project])
     end
 
     sig { returns(T::Array[Verb]) }
@@ -120,10 +212,10 @@ module ResourceRegistry
     def dump
       {
         'identifier' => identifier,
-        'repository' => repository.to_s.to_sym,
+        'repository' => repository.to_s,
         'description' => description,
         'relationships' => relationships.values.map(&:dump),
-        'capabilities' => capabilities.values.map { |cap| Capability.dump(cap) },
+        'capabilities' => capabilities.values.map { |cap| CapabilityFactory.dump(cap) },
         'schema' => schema.dump,
         'verbs' => verbs.values.each_with_object({}) { |verb, memo| memo[verb.id.to_s] = verb.dump }
       }
@@ -131,8 +223,10 @@ module ResourceRegistry
 
     sig { params(spec: T::Hash[String, T.untyped]).returns(Resource) }
     def self.load(spec)
+      repository = spec['repository'].is_a?(Symbol) ? spec['repository'].to_s : spec['repository']
+
       new(
-        repository: spec['repository'].to_s.safe_constantize,
+        repository_raw: repository,
         description: spec['description'],
         relationships:
           spec['relationships'].each_with_object({}) do |rel_def, memo|
@@ -148,12 +242,13 @@ module ResourceRegistry
             end,
         capabilities:
           spec['capabilities'].each_with_object({}) do |config, memo|
-            cap = Capability.load(config)
-            memo[cap.key] = cap
+            cap = CapabilityFactory.load(config)
+            memo[cap.class.key] = cap
           end,
         schema: SchemaRegistry::Schema.load(spec['schema']),
-        traits: spec['traits'] || {}
+        paginateable: spec.fetch('paginateable', true)
       )
     end
   end
 end
+

@@ -1,3 +1,7 @@
+require 'sorbet-runtime'
+
+require 'public/initializer'
+
 # frozen_string_literal: true
 # typed: true
 

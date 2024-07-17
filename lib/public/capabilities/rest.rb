@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative 'capability_config'
+
 module ResourceRegistry
   module Capabilities
     class Rest < T::Struct

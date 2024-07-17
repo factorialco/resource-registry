@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 # typed: strict
+
+require_relative 'capability_config'
 
 module ResourceRegistry
   module Capabilities

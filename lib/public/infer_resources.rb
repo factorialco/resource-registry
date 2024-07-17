@@ -1,17 +1,12 @@
+# frozen_string_literal: true
 # typed: strict
+
+require_relative '../schema_generator'
+require_relative 'repositories/base'
 
 module ResourceRegistry
   class InferResources
     extend T::Sig
-
-    DEFAULT_CAPABILITIES =
-      T.let(
-        {
-          Capability::Rest.serialize => Capabilities::Rest.new,
-          Capability::Graphql.serialize => Capabilities::Graphql.new
-        }.freeze,
-        T::Hash[Symbol, Capabilities::CapabilityConfig]
-      )
 
     sig { void }
     def initialize
@@ -20,9 +15,7 @@ module ResourceRegistry
 
     sig { returns(T::Array[Resource]) }
     def call
-      # FIXME: Change to use Class#subclasses once we upgrade to Ruby 3.1
-      compatible_repositories =
-        (Repositories::BaseOld.descendants + Repositories::Base.descendants).sort_by!(&:name)
+      compatible_repositories = Repositories::Base.subclasses.sort_by!(&:name)
 
       compatible_repositories.filter_map { |repo| generate_resource_from_repository(repo) }
     end
@@ -33,11 +26,7 @@ module ResourceRegistry
     attr_reader :schema_generator
 
     # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    sig do
-      params(
-        repository: T.any(T.class_of(::Repositories::Base), T.class_of(::Repositories::BaseOld))
-      ).returns(T.nilable(Resource))
-    end
+    sig { params(repository: T.class_of(::Repositories::Base)).returns(T.nilable(Resource)) }
     def generate_resource_from_repository(repository)
       schema = schema_generator.generate(repository: repository)
 
@@ -48,8 +37,8 @@ module ResourceRegistry
 
       repo_verbs, verbs_without_hooks =
         repository
-          .public_instance_methods(false)
-          .partition { |method| !method.end_with?('__without_hooks') }
+        .public_instance_methods(false)
+        .partition { |method| !method.end_with?('__without_hooks') }
 
       verbs =
         repo_verbs.each_with_object({}) do |verb, memo|
@@ -74,28 +63,21 @@ module ResourceRegistry
 
           memo[verb] = ResourceRegistry::Verb.new(
             id: verb,
-            dto: dto_klass,
+            dto_raw: dto_klass.to_s,
             schema: verb_schema,
             return_many: returns_many || false
           )
-        rescue NoMethodError
-          next # FIXME: Some sorbet kwarg_types have no raw_type...
         end
 
       ResourceRegistry::Resource.new(
-        repository: repository,
+        repository_raw: repository.to_s,
         schema: schema,
         verbs: verbs,
-        capabilities: {
-          Capability::Rest.serialize => Capabilities::Rest.new,
-          Capability::Graphql.serialize => Capabilities::Graphql.new
-        },
-        relationships: {
-        },
-        traits: {
-        }
+        capabilities: {},
+        relationships: {}
       )
     end
     # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   end
 end
+

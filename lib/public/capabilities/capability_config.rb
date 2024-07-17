@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 # typed: strict
+
+require_relative 'capability_config'
 
 module ResourceRegistry
   module Capabilities
@@ -11,12 +14,10 @@ module ResourceRegistry
       interface!
 
       sig { abstract.returns(Symbol) }
-      def key
-      end
+      def key; end
 
       sig { abstract.returns(T::Hash[String, T.untyped]) }
-      def serialize
-      end
+      def serialize; end
     end
   end
 end
