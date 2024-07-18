@@ -13,6 +13,11 @@ module ResourceRegistry
   class Initializer
     extend T::Sig
 
+    sig { params(repository_base_klass: Class).void }
+    def initialize(repository_base_klass: ResourceRegistry::Repositories::Base)
+      @repository_base_klass = repository_base_klass
+    end
+
     sig do
       returns(
         [ResourceRegistry::Registry, SchemaRegistry::Registry, ResourceRegistry::OverridesLoader]
@@ -24,6 +29,8 @@ module ResourceRegistry
     end
 
     private
+
+    attr_reader :repository_base_klass
 
     sig { returns(ResourceRegistry::Registry) }
     def resource_registry
@@ -83,7 +90,7 @@ module ResourceRegistry
               # Eager loading repository classes to autodiscover resources
               RepositoryWarmer.new.call
 
-              inferred_resources = ResourceRegistry::InferResources.new.call
+              inferred_resources = ResourceRegistry::InferResources.new.call(repositories: repository_base_klass.subclasses.sort_by!(&:name))
 
               overriden_resources = inferred_resources.map(&:dump).map { |res| apply_override(res) }
 

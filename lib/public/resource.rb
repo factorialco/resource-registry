@@ -2,6 +2,7 @@
 # typed: strict
 
 require_relative 'capabilities/capability_config'
+require_relative 'capability_factory'
 require_relative 'relationship'
 require_relative 'verb'
 require_relative '../schema_registry/schema'

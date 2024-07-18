@@ -13,11 +13,9 @@ module ResourceRegistry
       @schema_generator = T.let(SchemaGenerator.new, SchemaGenerator)
     end
 
-    sig { returns(T::Array[Resource]) }
-    def call
-      compatible_repositories = ResourceRegistry::Repositories::Base.subclasses.sort_by!(&:name)
-
-      compatible_repositories.filter_map { |repo| generate_resource_from_repository(repo) }
+    sig { params(repositories: T::Array[ResourceRegistry::Repositories::Base]).returns(T::Array[Resource]) }
+    def call(repositories:)
+      repositories.filter_map { |repo| generate_resource_from_repository(repo) }
     end
 
     private

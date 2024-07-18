@@ -2,6 +2,7 @@
 # typed: strict
 
 require_relative '../../runtime_generic'
+require_relative 'read_result'
 
 module ResourceRegistry
   module Repositories
@@ -27,10 +28,12 @@ module ResourceRegistry
 
       sig do
         overridable
-          .params(dto: T.untyped, context: Repositories::ReadOutputContext)
-          .returns(Repositories::ReadResult[Entity])
+          .params(dto: T.untyped, context: T.untyped)
+          # FIXME: This forces a huge migration
+          # .returns(ResourceRegistry::Repositories::ReadResult[Entity])
+          .returns(T.untyped)
       end
-      def read(dto:, context: ::Repositories::ReadOutputContext.new)
+      def read(dto:, context:)
         raise_error(__method__)
       end
 
@@ -49,7 +52,7 @@ module ResourceRegistry
         raise_error(__method__)
       end
 
-      sig(:final) { params(dto: T.untyped).returns(Outcome[Entity]) }
+      sig { params(dto: T.untyped).returns(Outcome[Entity]) }
       def find(dto:)
         read(dto: dto).entities.map do |array|
           entity = array.first
