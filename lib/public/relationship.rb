@@ -1,4 +1,8 @@
+# frozen_string_literal: true
 # typed: strict
+
+require_relative 'relationship_type'
+require_relative 'relationship_type_factory'
 
 module ResourceRegistry
   class Relationship < T::Struct
