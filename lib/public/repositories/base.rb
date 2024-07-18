@@ -13,29 +13,12 @@ module ResourceRegistry
 
       abstract!
 
-      class BadNameException < StandardError
-      end
-
       sig { returns(T.nilable(ResourceRegistry::Resource)) }
       def self.resource
         Rails.configuration.resource_registry.fetch_for_repository(self)
       end
 
-      sig { params(subclass: T::Class[T.anything]).void }
-      def self.inherited(subclass)
-        super
-
-        return unless subclass.name&.end_with?('Repository')
-
-        raise BadNameException, "#{subclass.name} should not be suffixed with Repository word"
-      end
-
       Entity = type_member { { upper: T::Struct } }
-
-      sig(:final) { params(policy_context: T.nilable(Permissions::PolicyContext)).void }
-      def initialize(policy_context: nil)
-        @policy_context = policy_context
-      end
 
       sig { returns(T.untyped) }
       def self.entity
@@ -94,13 +77,6 @@ module ResourceRegistry
       sig(:final) { returns(String) }
       def self.resource_name
         T.must(to_s.split('::').last)
-      end
-
-      protected
-
-      sig(:final) { returns(Permissions::PolicyContext) }
-      def policy_context
-        T.must(@policy_context)
       end
 
       private
