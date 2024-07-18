@@ -6,7 +6,7 @@ module ResourceRegistry
 
     sig do
       params(
-        repository: T.any(T.class_of(::Repositories::Base), T.class_of(::Repositories::BaseOld))
+        repository: T.any(T.class_of(ResourceRegistry::Repositories::Base))
       ).returns(T.nilable(T.class_of(T::Struct)))
     end
     def self.call(repository:)
@@ -14,12 +14,12 @@ module ResourceRegistry
       entity_klass = repo_klass&.sub('Repository', '')&.singularize
       entity_klass_str =
         repository
-          .to_s
-          .sub('Repositories', 'Entities')
-          .sub('Repository', '')
-          .split('::')
-          .tap(&:pop)
-          .join('::')
+        .to_s
+        .sub('Repositories', 'Entities')
+        .sub('Repository', '')
+        .split('::')
+        .tap(&:pop)
+        .join('::')
 
       entity_klass_str << "::#{entity_klass}"
 

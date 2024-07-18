@@ -68,7 +68,7 @@ module ResourceRegistry
       T.must(repository_raw.split('::').last)
     end
 
-    sig { returns(T.class_of(Repositories::Base)) }
+    sig { returns(T.class_of(ResourceRegistry::Repositories::Base)) }
     def repository
       repository_klass = repository_raw.safe_constantize
       raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?

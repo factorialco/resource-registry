@@ -15,7 +15,7 @@ module ResourceRegistry
 
     sig { returns(T::Array[Resource]) }
     def call
-      compatible_repositories = Repositories::Base.subclasses.sort_by!(&:name)
+      compatible_repositories = ResourceRegistry::Repositories::Base.subclasses.sort_by!(&:name)
 
       compatible_repositories.filter_map { |repo| generate_resource_from_repository(repo) }
     end
@@ -26,7 +26,7 @@ module ResourceRegistry
     attr_reader :schema_generator
 
     # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    sig { params(repository: T.class_of(::Repositories::Base)).returns(T.nilable(Resource)) }
+    sig { params(repository: T.class_of(ResourceRegistry::Repositories::Base)).returns(T.nilable(Resource)) }
     def generate_resource_from_repository(repository)
       schema = schema_generator.generate(repository: repository)
 
@@ -80,4 +80,3 @@ module ResourceRegistry
     # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   end
 end
-
