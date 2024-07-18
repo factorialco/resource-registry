@@ -6,11 +6,14 @@ require_relative 'read_result'
 
 module ResourceRegistry
   module Repositories
-    class Base
+    module Base
       extend T::Sig
+      extend T::Helpers
       # CAUTION This is not supported by sorbet, consider using T::Generic
       # instead if yo don't need to preserve generic runtime information
       extend RuntimeGeneric
+
+      include Kernel
 
       abstract!
 

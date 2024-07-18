@@ -2,6 +2,7 @@ require 'sorbet-runtime'
 
 require 'public/initializer'
 require 'public/configuration'
+require 'public/resource'
 
 # frozen_string_literal: true
 # typed: true
