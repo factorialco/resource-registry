@@ -95,6 +95,11 @@ module ResourceRegistry
       @camelize ||= T.let(underscore.camelize, T.nilable(String))
     end
 
+    sig { returns(String) }
+    def humanize
+      name.to_s.humanize
+    end
+
     sig { returns(I18nKeysForResource) }
     def translation
       I18nKeysForResource.new(self)
