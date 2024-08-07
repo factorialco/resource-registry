@@ -10,6 +10,7 @@ require_relative '../schema_registry/schema'
 module ResourceRegistry
   class Resource < T::Struct
     extend T::Sig
+    include Kernel
 
     class VerbNotFound < StandardError
     end
