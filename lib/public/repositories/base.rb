@@ -17,12 +17,12 @@ module ResourceRegistry
 
       abstract!
 
+      Entity = type_member { { upper: T::Struct } }
+
       sig { returns(T.nilable(ResourceRegistry::Resource)) }
       def self.resource
         Rails.configuration.resource_registry.fetch_for_repository(self)
       end
-
-      Entity = type_member { { upper: T::Struct } }
 
       sig { returns(T.untyped) }
       def self.entity
@@ -65,11 +65,9 @@ module ResourceRegistry
         end
       end
 
-      # sig { overridable.params(entity: Entity, tags: T::Set[SerializationTags]).returns(T::Hash[Symbol, T.untyped]) }
-      # def serialize(entity:, tags: [])
-      sig { overridable.params(entity: Entity).returns(T::Hash[Symbol, T.untyped]) }
-      def serialize(entity:)
-        serializer.serialize(entity: entity, tags: Set[])
+      sig { overridable.params(entity: Entity, tags: T::Set[SerializationTags]).returns(T::Hash[Symbol, T.untyped]) }
+      def serialize(entity:, tags: [])
+        serializer.serialize(entity: entity, tags: tags)
       end
 
       sig(:final) { returns(String) }
