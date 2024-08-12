@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+# typed: true
+
 require 'sorbet-runtime'
 
 require 'public/initializer'
 require 'public/configuration'
 require 'public/resource'
-
-# frozen_string_literal: true
-# typed: true
+require 'public/versions'
 
 # Entry point for ResourceRegistry
 module ResourceRegistry
