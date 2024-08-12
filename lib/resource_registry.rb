@@ -7,6 +7,7 @@ require 'public/initializer'
 require 'public/configuration'
 require 'public/resource'
 require 'public/versions'
+require 'public/versions/version'
 
 # Entry point for ResourceRegistry
 module ResourceRegistry
