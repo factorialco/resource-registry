@@ -44,6 +44,11 @@ module SchemaRegistry
       find_property(name).present?
     end
 
+    sig { returns(String) }
+    def namespace_with_slug
+      "#{namespace.underscore}_#{slug}"
+    end
+
     sig { params(name: String).returns(T.nilable(T::Hash[Symbol, String])) }
     def get_resolver(name)
       property = find_property(name)
