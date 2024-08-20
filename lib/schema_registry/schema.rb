@@ -29,6 +29,11 @@ module SchemaRegistry
       :"#{namespace.underscore}.#{slug}"
     end
 
+    sig { returns(String) }
+    def namespace_with_slug
+      "#{namespace.underscore}_#{slug}"
+    end
+
     sig { params(name: String).returns(T.nilable(Property)) }
     def find_property(name)
       properties.find { |property| property.name == name }

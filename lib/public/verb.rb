@@ -16,6 +16,7 @@ module ResourceRegistry
     const :summary, T.nilable(String), default: nil
     const :description, T.nilable(String), default: nil
     const :deprecated_on, T.nilable(Date), default: nil
+    const :webhook_description, T.nilable(String), default: nil
     const :schema, SchemaRegistry::Schema
     const :return_many, T::Boolean, default: false
 
@@ -88,9 +89,9 @@ module ResourceRegistry
         dto_raw: dto,
         schema: SchemaRegistry::Schema.load(spec['schema']),
         return_many: spec['return_many'],
-        description: spec['description']
+        description: spec['description'],
+        webhook_description: spec['webhook_description']
       )
     end
   end
 end
-
