@@ -3,6 +3,7 @@
 
 require 'spec_helper'
 require_relative '../lib/public/resource_struct_builder'
+require_relative '../lib/schema_registry/maybe/absent'
 
 module ::ResourceRegistry
   module DtoBuilderSpec
@@ -18,7 +19,8 @@ module ::ResourceRegistry
 
       class NestedValueObjectDto < T::Struct
         const :type, String
-        const :period, ::ValueObjects::TimeRange
+        # FIXME: bring this one here?
+        # const :period, ::ValueObjects::TimeRange
       end
 
       class SimpleMaybeDto < T::Struct

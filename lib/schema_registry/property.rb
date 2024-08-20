@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 # typed: strict
 
+require 'date'
+require 'bigdecimal'
 require_relative 'property_type'
 require_relative 'maybe'
 

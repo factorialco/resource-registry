@@ -1,5 +1,8 @@
 # typed: strict
 
+require 'spec_helper'
+require_relative '../lib/public/capability_factory'
+
 RSpec.describe ResourceRegistry::CapabilityFactory do
   let(:capability) { described_class }
   let(:capability_config) { ResourceRegistry::Capabilities::Reports.new(time_dimension: 'foo') }
