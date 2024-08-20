@@ -17,7 +17,7 @@ module ResourceRegistry
 
       abstract!
 
-      Entity = type_member(:out) { { upper: T::Struct } }
+      Entity = type_member(:in) { { upper: T::Struct } }
 
       sig { returns(T.untyped) }
       def self.entity
