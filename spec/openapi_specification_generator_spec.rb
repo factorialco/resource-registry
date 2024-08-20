@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::OpenapiSpecificationGenerator do
   let(:schema) do
     SchemaRegistry::Schema.new(

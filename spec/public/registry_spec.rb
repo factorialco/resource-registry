@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::Registry do
   let(:resources) { [resource] }
   let(:registry) { described_class.new(resources: resources) }

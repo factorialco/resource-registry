@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::Resource do
   let(:capability) { Graphql::Capability.new }
   let(:dummy_struct) { T::Struct }

@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::CapabilityFactory do
   let(:capability) { described_class }
   let(:capability_config) { ResourceRegistry::Capabilities::Reports.new(time_dimension: 'foo') }

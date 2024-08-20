@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::Versions do
   subject do
     described_class.new(

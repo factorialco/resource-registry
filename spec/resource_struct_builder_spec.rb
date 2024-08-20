@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 module ::ResourceRegistry
   module DtoBuilderSpec
     module Dtos

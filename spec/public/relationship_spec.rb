@@ -1,7 +1,5 @@
 # typed: strict
 
-require 'rails_helper'
-
 RSpec.describe ResourceRegistry::Relationship do
   describe '#load' do
     let(:type) { ResourceRegistry::RelationshipTypes::HasOne.new({}) }
