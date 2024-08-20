@@ -17,12 +17,7 @@ module ResourceRegistry
 
       abstract!
 
-      Entity = type_member { { upper: T::Struct } }
-
-      sig { returns(T.nilable(ResourceRegistry::Resource)) }
-      def self.resource
-        Rails.configuration.resource_registry.fetch_for_repository(self)
-      end
+      Entity = type_member(:out)
 
       sig { returns(T.untyped) }
       def self.entity
