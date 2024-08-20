@@ -1,4 +1,8 @@
+# frozen_string_literal: true
 # typed: strict
+
+require 'spec_helper'
+require_relative '../lib/public/resource_struct_builder'
 
 module ::ResourceRegistry
   module DtoBuilderSpec

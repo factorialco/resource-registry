@@ -1,6 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
+require 'spec_helper'
+require_relative '../lib/public/i18n_keys_for_resource'
+
 RSpec.describe ResourceRegistry::I18nKeysForResource do
   subject { described_class.new(resource) }
 

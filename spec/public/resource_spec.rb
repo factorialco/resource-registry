@@ -1,5 +1,8 @@
 # typed: strict
 
+require 'spec_helper'
+require_relative '../../lib/public/resource'
+
 RSpec.describe ResourceRegistry::Resource do
   let(:capability) { Graphql::Capability.new }
   let(:dummy_struct) { T::Struct }

@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative '../../lib/public/relationship'
+
 RSpec.describe ResourceRegistry::Relationship do
   describe '#load' do
     let(:type) { ResourceRegistry::RelationshipTypes::HasOne.new({}) }

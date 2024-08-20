@@ -17,7 +17,9 @@ module ResourceRegistry
     const :optional, T::Boolean
 
     # Are there multiple resources in the other side of the relationship?
-    delegate :many_cardinality?, to: :type
+    def many_cardinality?
+      type.many_cardinality?
+    end
 
     sig { returns(T::Hash[String, T.untyped]) }
     def dump

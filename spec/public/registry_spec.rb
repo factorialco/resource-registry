@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative '../../lib/public/registry'
+
 RSpec.describe ResourceRegistry::Registry do
   let(:resources) { [resource] }
   let(:registry) { described_class.new(resources: resources) }
