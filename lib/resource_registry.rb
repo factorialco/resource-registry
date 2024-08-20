@@ -9,7 +9,6 @@ require 'public/resource'
 require 'public/versions'
 require 'public/versions/version'
 require 'schema_registry/json_schema_mapper'
-require 'schema_registry/maybe/*'
 require 'schema_registry/maybe'
 
 # Entry point for ResourceRegistry
