@@ -8,6 +8,7 @@ require 'public/configuration'
 require 'public/resource'
 require 'public/versions'
 require 'public/versions/version'
+require 'schema_registry/json_schema_mapper'
 
 # Entry point for ResourceRegistry
 module ResourceRegistry
