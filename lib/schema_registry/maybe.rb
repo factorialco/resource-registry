@@ -43,7 +43,7 @@ module Maybe
     #   Maybe.strip({ a: Maybe.from(1), b: Maybe.empty, c: Maybe.from(3) })
     #   # => { a: 1, c: 3 }
     # ```
-    def strip(input) # rubocop:disable Metrics/PerceivedComplexity
+    def self.strip(input) # rubocop:disable Metrics/PerceivedComplexity
       input
         .reject { |_key, value| value == empty }
         .to_h do |key, value|
@@ -63,21 +63,21 @@ module Maybe
 
     # Creates an empty instance.
     sig { returns(Absent) }
-    def empty
-      Absent.new(nil)
+    def self.empty
+      Absent.new
     end
 
     sig { returns(Absent) }
     # Creates an empty instance.
     # Alias for self.empty
-    def none
+    def self.none
       empty
     end
 
     sig { returns(Absent) }
     # Creates an empty instance.
     # Alias for self.empty
-    def absent
+    def self.absent
       empty
     end
 
@@ -89,7 +89,7 @@ module Maybe
     end
     # Creates an instance containing the specified value.
     # Necessary to make this work with sorbet-coerce
-    def new(value)
+    def self.new(value)
       from(value)
     end
 
@@ -99,7 +99,7 @@ module Maybe
         .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
     end
     # Creates an instance containing the specified value.
-    def from(value)
+    def self.from(value)
       Present[T.all(BasicObject, T.type_parameter(:Value))].new(value)
     end
   end

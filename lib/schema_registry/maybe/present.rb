@@ -66,7 +66,7 @@ module Maybe
     def filter(&_block)
       return self if yield value
 
-      Absent.new(value)
+      Absent.new
     end
 
     sig(:final) do
