@@ -5,7 +5,6 @@
 # typed: false
 
 module ::Employees::Repositories::Employees; end
-module ::Graphql::Capability; end
 module ::Rails; end
 module ::Rails::Engine; end
 module ::Repositories::Base; end
