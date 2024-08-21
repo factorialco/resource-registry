@@ -1,4 +1,4 @@
-name: Run RSpec tests
+name: Run tests
 on:
   push:
     branches:
@@ -15,6 +15,9 @@ jobs:
           ruby-version: 3.3.3
           # runs 'bundle install' and caches installed gems automatically
           bundler-cache: true
-      - name: Run tests
+      - name: Run sorbet typechecks
+        run: |
+          bundle exec srb
+      - name: Run rspec tests
         run: |
           bundle exec rspec
