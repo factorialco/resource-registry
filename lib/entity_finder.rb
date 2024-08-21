@@ -6,7 +6,7 @@ module ResourceRegistry
 
     sig do
       params(
-        repository: T.any(T.class_of(ResourceRegistry::Repositories::Base))
+        repository: T.class_of(ResourceRegistry::Repositories::Base)
       ).returns(T.nilable(T.class_of(T::Struct)))
     end
     def self.call(repository:)

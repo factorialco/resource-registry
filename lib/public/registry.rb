@@ -39,7 +39,9 @@ module ResourceRegistry
       raise UnableToFindResourceError, "#{identifier} does not exist"
     end
 
-    sig { params(repository_class: T::Class[ResourceRegistry::Repositories::Base]).returns(T.nilable(Resource)) }
+    sig do
+      params(repository_class: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource))
+    end
     def fetch_for_repository(repository_class)
       fetch_all.values.find { |r| r.repository == repository_class }
     end
@@ -65,7 +67,7 @@ module ResourceRegistry
       end
     end
 
-    sig { params(repository: T::Class[ResourceRegistry::Repositories::Base]).returns(T.nilable(Resource)) }
+    sig { params(repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource)) }
     def find_by_repository(repository)
       fetch_all.values.find { |resource| resource.repository == repository }
     end

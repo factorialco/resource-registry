@@ -1,15 +1,19 @@
 # typed: false
 
+require_relative '../lib/public/repositories/base'
+require_relative '../lib/public/repositories/read_output_context'
+
 class DummyEntity < T::Struct
   const :id, Integer
 end
 
-class DummyRepo < Repositories::Base
+class DummyRepo
+  include ResourceRegistry::Repositories::Base
+
   Entity = type_member { { upper: DummyEntity } }
 
   sig do
-    override
-      .params(dto: T::Struct, context: ::Repositories::ReadOutputContext)
+    params(dto: T::Struct, context: ::Repositories::ReadOutputContext)
       .returns(::Repositories::ReadResult[Entity])
   end
   def read(dto:, context: ::Repositories::ReadOutputContext.new)
@@ -18,10 +22,5 @@ class DummyRepo < Repositories::Base
       context: Repositories::ReadOutputContext.new,
       list: entities
     )
-  end
-
-  sig { override.params(entity: DummyEntity).returns(T::Hash[Symbol, T.untyped]) }
-  def serialize(entity:)
-    entity.serialize.symbolize_keys
   end
 end
