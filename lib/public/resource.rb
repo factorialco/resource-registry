@@ -33,12 +33,6 @@ module ResourceRegistry
     # it as a hack to avoid having to build pagination into our products
     const :paginateable, T::Boolean, default: true
 
-    sig { returns(T::Array[T.class_of(EventSystem::Event)]) }
-    def public_events
-      @public_events = T.let([], T.nilable(T::Array[T.class_of(EventSystem::Event)]))
-      @public_events ||= verbs.values.filter_map(&:event)
-    end
-
     sig { returns(String) }
     def path
       @path = T.let(@path, T.nilable(String))
@@ -70,7 +64,7 @@ module ResourceRegistry
       T.must(repository_raw.split('::').last)
     end
 
-    sig { returns(T::Class[ResourceRegistry::Repositories::Base]) }
+    sig { returns(T::Class[ResourceRegistry::Repositories::Base[T.untyped]]) }
     def repository
       repository_klass = repository_raw.safe_constantize
       raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?
@@ -163,7 +157,7 @@ module ResourceRegistry
       ).returns(T::Boolean)
     end
     def capability?(feature)
-      capabilities[feature.key].present?
+      !!capabilities[feature.key]
     end
 
     sig do

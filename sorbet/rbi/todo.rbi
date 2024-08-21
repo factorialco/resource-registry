@@ -34,7 +34,6 @@ module ResourceRegistry::Repositories::OutputContexts::Sort; end
 module ResourceRegistry::Repositories::ReadOutputContext; end
 module ResourceRegistry::Repositories::ReadResult::Outcome; end
 module ResourceRegistry::Repositories::ReadResult::OutputContexts::PageInfoDto; end
-module ResourceRegistry::Resource::EventSystem::Event; end
 module ResourceRegistry::Serializer; end
 module ResourceRegistry::Tracer::Telemetry::Tracer; end
 module SchemaRegistry::GenerateFromStruct::ActionDispatch::Http::UploadedFile; end
