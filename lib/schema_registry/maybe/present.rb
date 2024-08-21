@@ -11,6 +11,8 @@ module Maybe
 
     Value = type_member(:out) { { upper: BasicObject } }
 
+    requires_ancestor { Object }
+
     sig(:final) { params(value: Value).void }
     def initialize(value)
       @value = value
@@ -64,7 +66,7 @@ module Maybe
     def filter(&_block)
       return self if yield value
 
-      Absent.new
+      Absent.new(value)
     end
 
     sig(:final) do
@@ -84,6 +86,7 @@ module Maybe
     sig(:final) { override.params(other: BasicObject).returns(T::Boolean) }
     def ==(other)
       return false unless self.class === other # rubocop:disable Style/CaseEquality
+
       value == other.value
     end
 

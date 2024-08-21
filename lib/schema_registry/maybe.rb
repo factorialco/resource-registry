@@ -14,87 +14,96 @@ module Maybe
   extend RuntimeGeneric
   include Kernel
   interface!
+
   # NOTE: Beware of implementing a `Maybe#value` method in the interface so you can call it without
   # type safety. >:(
 
   Value = type_member(:out) { { upper: BasicObject } }
 
-  sig do
-    type_parameters(:Key)
-      .params(input: T::Hash[T.type_parameter(:Key), T.untyped])
-      .returns(T::Hash[T.type_parameter(:Key), T.untyped])
-  end
-  # You can use this method to easily transform a Hash with `Maybe` values into one without them,
-  # filtering out `Maybe` instances that are empty and unwrapping the present ones.
-  #
-  # Given a hash containing `Maybe` instances, returns a hash with only the values that are present.
-  # It also unwraps the present values.
-  #
-  # For convenience, it also recursively serializes nested T::Structs and strips nested hashes,
-  # arrays and sets.
-  #
-  # ```ruby
-  #   Maybe.strip({ a: Maybe.from(1), b: Maybe.empty, c: Maybe.from(3) })
-  #   # => { a: 1, c: 3 }
-  # ```
-  def self.strip(input) # rubocop:disable Metrics/PerceivedComplexity
-    input
-      .reject { |_key, value| value == Maybe.empty }
-      .to_h do |key, value|
-        unwrapped = value.is_a?(Maybe::Present) ? value.value : value
-        enumerated =
-          if unwrapped.is_a?(Array) || unwrapped.is_a?(Set)
-            unwrapped.map { |v| v.is_a?(T::Struct) ? Maybe.strip(v.serialize) : Maybe.strip(v) }
-          else
-            unwrapped
-          end
-        serialized = enumerated.is_a?(T::Struct) ? enumerated.serialize : enumerated
-        stripped = serialized.is_a?(Hash) ? Maybe.strip(serialized) : serialized
+  module ClassMethods
+    extend T::Sig
+    extend T::Helpers
+    abstract!
 
-        [key, stripped]
-      end
+    sig do
+      type_parameters(:Key)
+        .params(input: T::Hash[T.type_parameter(:Key), T.untyped])
+        .returns(T::Hash[T.type_parameter(:Key), T.untyped])
+    end
+    # You can use this method to easily transform a Hash with `Maybe` values into one without them,
+    # filtering out `Maybe` instances that are empty and unwrapping the present ones.
+    #
+    # Given a hash containing `Maybe` instances, returns a hash with only the values that are present.
+    # It also unwraps the present values.
+    #
+    # For convenience, it also recursively serializes nested T::Structs and strips nested hashes,
+    # arrays and sets.
+    #
+    # ```ruby
+    #   Maybe.strip({ a: Maybe.from(1), b: Maybe.empty, c: Maybe.from(3) })
+    #   # => { a: 1, c: 3 }
+    # ```
+    def strip(input) # rubocop:disable Metrics/PerceivedComplexity
+      input
+        .reject { |_key, value| value == empty }
+        .to_h do |key, value|
+          unwrapped = value.is_a?(Maybe::Present) ? value.value : value
+          enumerated =
+            if unwrapped.is_a?(Array) || unwrapped.is_a?(Set)
+              unwrapped.map { |v| v.is_a?(T::Struct) ? strip(v.serialize) : strip(v) }
+            else
+              unwrapped
+            end
+          serialized = enumerated.is_a?(T::Struct) ? enumerated.serialize : enumerated
+          stripped = serialized.is_a?(Hash) ? strip(serialized) : serialized
+
+          [key, stripped]
+        end
+    end
+
+    # Creates an empty instance.
+    sig { returns(Absent) }
+    def empty
+      Absent.new
+    end
+
+    sig { returns(Absent) }
+    # Creates an empty instance.
+    # Alias for self.empty
+    def none
+      empty
+    end
+
+    sig { returns(Absent) }
+    # Creates an empty instance.
+    # Alias for self.empty
+    def absent
+      empty
+    end
+
+    sig do
+      type_parameters(:Value)
+        .params(value: T.all(BasicObject, T.type_parameter(:Value)))
+        .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
+    end
+    # Creates an instance containing the specified value.
+    # Necessary to make this work with sorbet-coerce
+    def new(value)
+      from(value)
+    end
+
+    sig do
+      type_parameters(:Value)
+        .params(value: T.all(BasicObject, T.type_parameter(:Value)))
+        .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
+    end
+    # Creates an instance containing the specified value.
+    def from(value)
+      Present[T.all(BasicObject, T.type_parameter(:Value))].new(value)
+    end
   end
 
-  sig { returns(Absent) }
-  # Creates an empty instance.
-  def self.empty
-    Absent.new
-  end
-
-  sig { returns(Absent) }
-  # Creates an empty instance.
-  # Alias for self.empty
-  def self.none
-    empty
-  end
-
-  sig { returns(Absent) }
-  # Creates an empty instance.
-  # Alias for self.empty
-  def self.absent
-    empty
-  end
-
-  sig do
-    type_parameters(:Value)
-      .params(value: T.all(BasicObject, T.type_parameter(:Value)))
-      .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
-  end
-  # Creates an instance containing the specified value.
-  # Necessary to make this work with sorbet-coerce
-  def self.new(value)
-    from(value)
-  end
-
-  sig do
-    type_parameters(:Value)
-      .params(value: T.all(BasicObject, T.type_parameter(:Value)))
-      .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
-  end
-  # Creates an instance containing the specified value.
-  def self.from(value)
-    Present[T.all(BasicObject, T.type_parameter(:Value))].new(value)
-  end
+  mixes_in_class_methods(ClassMethods)
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` contains a value, `false` otherwise.
