@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.5.1)
+    polyfill (1.9.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -15,8 +16,13 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.1)
+    safe_type (1.1.1)
     sorbet (0.5.11531)
       sorbet-static (= 0.5.11531)
+    sorbet-coerce (0.7.0)
+      polyfill (~> 1.8)
+      safe_type (~> 1.1, >= 1.1.1)
+      sorbet-runtime (>= 0.4.4704)
     sorbet-runtime (0.5.11531)
     sorbet-static (0.5.11531-x86_64-linux)
     sorbet-static-and-runtime (0.5.11531)
@@ -29,6 +35,7 @@ PLATFORMS
 
 DEPENDENCIES
   rspec
+  sorbet-coerce (>= 0.2.6)
   sorbet-static-and-runtime (>= 0.5.11511)
 
 BUNDLED WITH

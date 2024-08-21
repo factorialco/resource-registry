@@ -3,7 +3,6 @@
 
 require 'spec_helper'
 require_relative '../lib/public/resource_struct_builder'
-require_relative '../lib/schema_registry/maybe/absent'
 
 module ::ResourceRegistry
   module DtoBuilderSpec

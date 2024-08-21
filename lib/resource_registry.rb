@@ -10,6 +10,9 @@ require 'public/versions'
 require 'public/versions/version'
 require 'schema_registry/json_schema_mapper'
 require 'schema_registry/maybe'
+require 'schema_registry/maybe/absent'
+require 'schema_registry/maybe/present'
+require 'runtime_generic'
 
 # Entry point for ResourceRegistry
 module ResourceRegistry

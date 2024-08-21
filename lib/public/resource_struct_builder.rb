@@ -1,5 +1,7 @@
 # typed: strict
 
+require 'sorbet-coerce'
+
 module ResourceRegistry
   # Constructs a resource struct (like Dtos and Entities) from a hash of arguments
   # It's different from the usual T::Struct::new in that it can handle
@@ -50,7 +52,7 @@ module ResourceRegistry
 
     sig { returns(T::Boolean) }
     def generic?
-      resource_type.is_a?(T::RuntimeGeneric::TypedGeneric)
+      resource_type.is_a?(RuntimeGeneric::TypedGeneric)
     end
 
     sig { returns(T::Boolean) }
@@ -91,7 +93,7 @@ module ResourceRegistry
     # Calculates the inner type of a complex type
     def inner_type(outer_type)
       case outer_type
-      when T::RuntimeGeneric::TypedGeneric
+      when RuntimeGeneric::TypedGeneric
         outer_type.inner_type
       when T::Types::Simple
         outer_type.raw_type
