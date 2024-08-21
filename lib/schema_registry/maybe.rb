@@ -64,7 +64,7 @@ module Maybe
     # Creates an empty instance.
     sig { returns(Absent) }
     def empty
-      Absent.new
+      Absent.new(nil)
     end
 
     sig { returns(Absent) }
@@ -84,7 +84,8 @@ module Maybe
     sig do
       type_parameters(:Value)
         .params(value: T.all(BasicObject, T.type_parameter(:Value)))
-        .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
+        # .returns(Maybe[T.all(BasicObject, T.type_parameter(:Value))])
+        .returns(T.untyped)
     end
     # Creates an instance containing the specified value.
     # Necessary to make this work with sorbet-coerce
