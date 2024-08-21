@@ -4,7 +4,7 @@
 require 'spec_helper'
 require_relative '../lib/public/resource_struct_builder'
 
-module ::ResourceRegistry
+module ResourceRegistry
   module DtoBuilderSpec
     module Dtos
       class SimpleDto < T::Struct
@@ -133,7 +133,8 @@ RSpec.describe ResourceRegistry::ResourceStructBuilder do
       end
     end
 
-    context 'with a nested value-object dto' do
+    # ValueObjects is an internal detail of Factorial
+    xcontext 'with a nested value-object dto' do
       let(:dto) { ResourceRegistry::DtoBuilderSpec::Dtos::NestedValueObjectDto }
       let(:period) { ValueObjects::TimeRange.new(from: Time.zone.now, to: Time.zone.now.tomorrow) }
       let(:args) { { type: 'one-type', period: { from: period.from, to: period.to } } }

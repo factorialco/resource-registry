@@ -1,6 +1,7 @@
 # typed: strict
 
 require 'sorbet-coerce'
+require 'active_support/hash_with_indifferent_access'
 
 module ResourceRegistry
   # Constructs a resource struct (like Dtos and Entities) from a hash of arguments
@@ -38,13 +39,6 @@ module ResourceRegistry
         build_other(value)
       end
     rescue TypeError, ArgumentError, TypeCoerce::CoercionError => e
-      CustomLogger.info(
-        message: "Failed to parse provided arguments into #{resource_type}",
-        payload: {
-          request: value,
-          response: e.to_s
-        }
-      )
       raise ParseInputError, e.message
     end
 
