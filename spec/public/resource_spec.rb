@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require_relative '../../lib/public/resource'
+require_relative '../dummy_repo'
 
 RSpec.describe ResourceRegistry::Resource do
   let(:capability) { Graphql::Capability.new }
@@ -24,7 +25,7 @@ RSpec.describe ResourceRegistry::Resource do
   end
   let(:resource) do
     ResourceRegistry::Resource.new(
-      repository_raw: Employees::Repositories::Employees.to_s,
+      repository_raw: DummyRepo.to_s,
       description: 'foo',
       schema: schema,
       verbs: verbs,
