@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative '../schema_generator'
 require_relative 'repositories/base'

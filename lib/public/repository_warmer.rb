@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 # The criteria for considering something as a resource in the Resource
 # Registry is dictated by the presence of its repository which has

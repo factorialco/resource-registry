@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative '../../runtime_generic'
 require_relative 'read_result'

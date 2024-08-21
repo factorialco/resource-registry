@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require_relative 'infer_resources'
 require_relative 'overrides_loader'

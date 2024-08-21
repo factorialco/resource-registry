@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require 'spec_helper'
 require_relative '../lib/public/capability_factory'

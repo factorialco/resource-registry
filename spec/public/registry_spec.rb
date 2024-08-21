@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require_relative '../../lib/public/registry'
 

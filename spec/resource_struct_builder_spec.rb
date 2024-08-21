@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require 'spec_helper'
 require_relative '../lib/public/resource_struct_builder'

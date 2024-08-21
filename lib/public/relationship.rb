@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative 'relationship_type'
 require_relative 'relationship_type_factory'

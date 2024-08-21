@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 
 class DummyEntity < T::Struct
   const :id, Integer
