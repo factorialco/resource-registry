@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: false
+# typed: strict
 
 require_relative 'capabilities/capability_config'
 require_relative 'capability_factory'
@@ -8,6 +8,7 @@ require_relative 'verb'
 require_relative '../schema_registry/schema'
 
 module ResourceRegistry
+  # The main class that represents a resource in the system.
   class Resource < T::Struct
     extend T::Sig
 
