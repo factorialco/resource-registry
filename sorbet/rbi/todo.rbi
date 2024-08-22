@@ -4,9 +4,7 @@
 
 # typed: false
 
-module ::Rails; end
 module ::Rails::Engine; end
-module ::Repositories::Base; end
 module ::Repositories::ReadOutputContext; end
 module ::Repositories::ReadResult; end
 module ::ValueObjects::TimeRange; end
@@ -18,10 +16,6 @@ module ResourceRegistry::Capabilities::Reports; end
 module ResourceRegistry::Capabilities::Rest; end
 module ResourceRegistry::InferResources::Rails; end
 module ResourceRegistry::LoadResourcesFromCache; end
-module ResourceRegistry::Oas::ParameterMapper; end
-module ResourceRegistry::Oas::PayloadMapper; end
-module ResourceRegistry::OpenapiSpecificationGenerator::Oas::SchemaMapper; end
-module ResourceRegistry::Relationship::Rails; end
 module ResourceRegistry::Repositories::Base::Permissions::Target; end
 module ResourceRegistry::Repositories::Base::SerializationTags; end
 module ResourceRegistry::Repositories::OutputContexts::Filter; end
@@ -34,8 +28,3 @@ module ResourceRegistry::Tracer::Telemetry::Tracer; end
 module SchemaRegistry::GenerateFromStruct::ActionDispatch::Http::UploadedFile; end
 module T::CompatibilityPatches::RSpecCompatibility::MethodDoubleExtensions; end
 module T::CompatibilityPatches::RSpecCompatibility::RecorderExtensions; end
-module T::Private::Abstract::Hooks; end
-module T::Private::Final::NoInherit; end
-module T::Private::Methods::MethodHooks; end
-module T::Private::Methods::SingletonMethodHooks; end
-module T::Private::MixesInClassMethods; end

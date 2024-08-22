@@ -1,5 +1,12 @@
 # typed: false
 
+module Outcome
+  extend T::Sig
+  extend T::Generic
+
+  Elem = type_member(:out)
+end
+
 module ResourceRegistry
   module Repositories
     module ReadResult
