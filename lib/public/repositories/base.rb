@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: strict
 # typed: false
 
 require_relative '../../runtime_generic'
@@ -17,7 +17,7 @@ module ResourceRegistry
 
       abstract!
 
-      Entity = type_member
+      Entity = type_member(:out)
 
       sig { returns(T.untyped) }
       def self.entity

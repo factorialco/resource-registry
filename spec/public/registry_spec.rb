@@ -20,13 +20,12 @@ RSpec.describe ResourceRegistry::Registry do
   end
   let(:resource) do
     ResourceRegistry::Resource.new(
-      repository_raw: Employees::Repositories::Employees.to_s,
+      repository_raw: DummyRepo.to_s,
       capabilities: {
         rest: ResourceRegistry::Capabilities::Rest.new,
         power_bi: ResourceRegistry::Capabilities::PowerBi.new
       },
-      verbs: {
-      },
+      verbs: {},
       schema: schema
     )
   end
@@ -50,7 +49,7 @@ RSpec.describe ResourceRegistry::Registry do
 
   describe '#fetch_for_repository' do
     it do
-      expect(registry.fetch_for_repository(Employees::Repositories::Employees)).to(eq(resource))
+      expect(registry.fetch_for_repository(DummyRepo)).to(eq(resource))
     end
   end
 
