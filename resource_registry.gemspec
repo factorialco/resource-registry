@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.description = 'A declarative approach to define resources and their relationships'
   s.authors     = ['Genar Trias Ortiz']
   s.email       = 'genar.factorial@factorial.co'
-  s.files       = ['lib/resource_registry.rb', 'lib/public/repositories/base.rb']
+  s.files       = ['lib/resource_registry.rb', 'lib/public/repositories/base.rb', 'rbi/resource_registry.rbi']
   s.homepage    =
     'https://rubygems.org/gems/resource_registry'
   s.license = 'MIT'
