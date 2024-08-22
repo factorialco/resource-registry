@@ -84,6 +84,7 @@ module Maybe
     sig(:final) { override.params(other: BasicObject).returns(T::Boolean) }
     def ==(other)
       return false unless self.class === other # rubocop:disable Style/CaseEquality
+
       value == other.value
     end
 

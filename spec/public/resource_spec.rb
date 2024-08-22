@@ -3,35 +3,11 @@
 require 'spec_helper'
 require_relative '../../lib/public/resource'
 require_relative '../dummy_repo'
-
-module Graphql
-  class Capability < T::Struct
-    extend T::Sig
-
-    include ResourceRegistry::Capabilities::CapabilityConfig
-
-    sig { override.returns(Symbol) }
-    def self.key
-      :graphql
-    end
-  end
-end
-
-module Rest
-  class Capability < T::Struct
-    extend T::Sig
-
-    include ResourceRegistry::Capabilities::CapabilityConfig
-
-    sig { override.returns(Symbol) }
-    def self.key
-      :rest
-    end
-  end
-end
+require_relative '../dummy_capability'
+require_relative '../void_capability'
 
 RSpec.describe ResourceRegistry::Resource do
-  let(:capability) { Graphql::Capability.new }
+  let(:capability) { DummyCapability.new }
   let(:dummy_struct) { T::Struct }
   let(:schema) do
     SchemaRegistry::Schema.new(
@@ -56,7 +32,7 @@ RSpec.describe ResourceRegistry::Resource do
       schema: schema,
       verbs: verbs,
       capabilities: {
-        graphql: capability
+        dummy_capability: capability
       }
     )
   end
@@ -100,14 +76,14 @@ RSpec.describe ResourceRegistry::Resource do
     end
 
     describe '#capability!' do
-      let(:feature) { Graphql::Capability }
+      let(:feature) { DummyCapability }
 
       subject { resource.capability!(feature) }
 
       it { expect(subject).to eq(capability) }
 
       context 'The resource don\'t have such capability' do
-        let(:feature) { Rest::Capability }
+        let(:feature) { VoidCapability }
 
         it { expect { subject }.to raise_error(ArgumentError) }
       end

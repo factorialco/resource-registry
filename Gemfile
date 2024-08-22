@@ -11,3 +11,4 @@ gem 'tapioca', '~> 0.15.1', require: false
 
 gem 'guard'
 gem 'guard-rspec'
+gem 'rspec-sorbet', '~> 1.9.2'

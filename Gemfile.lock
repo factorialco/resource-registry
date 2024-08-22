@@ -75,6 +75,8 @@ GEM
     rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
+    rspec-sorbet (1.9.2)
+      sorbet-runtime
     rspec-support (3.13.1)
     safe_type (1.1.1)
     securerandom (0.3.1)
@@ -121,6 +123,7 @@ DEPENDENCIES
   guard
   guard-rspec
   rspec
+  rspec-sorbet (~> 1.9.2)
   sorbet-coerce (>= 0.2.6)
   sorbet-static-and-runtime (>= 0.5.11511)
   tapioca (~> 0.15.1)

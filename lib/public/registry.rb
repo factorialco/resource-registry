@@ -57,6 +57,7 @@ module ResourceRegistry
     def fetch_with_capabilities(*capabilities)
       # FIXME: This is a hack to avoid having to change the interface of the method
       capabilities_set = T.unsafe(capabilities).to_set(&:key)
+
       fetch_all.values.select { |resource| capabilities_set <= resource.capabilities.keys.to_set }
     end
 
