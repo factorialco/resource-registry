@@ -3,6 +3,7 @@
 
 require_relative('../runtime_generic')
 require_relative('maybe/absent')
+require_relative('maybe/present')
 
 # Represents an instance of an object that may or may not be present. This can be useful in certain
 # cases where `nil` represents a valid value instead of an absent value, i.e. update DTOs.

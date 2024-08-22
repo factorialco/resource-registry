@@ -9899,24 +9899,6 @@ class MatchData
   def match_length(arg); end
 end
 
-class Maybe::Absent
-  extend ::T::Private::Final::NoInherit
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
-class Maybe::Present
-  extend ::T::Private::Final::NoInherit
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
-module Maybe
-  extend ::T::Private::Abstract::Hooks
-  extend ::T::Private::Methods::MethodHooks
-  extend ::T::Private::Methods::SingletonMethodHooks
-end
-
 module Minitest
   VERSION = ::T.let(nil, ::T.untyped)
 end
