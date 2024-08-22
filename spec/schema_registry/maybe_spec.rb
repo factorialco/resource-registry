@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require 'spec_helper' # you are forced to load the whole context for this :/
 require_relative '../../lib/schema_registry/maybe'

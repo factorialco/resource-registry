@@ -17,8 +17,6 @@ module ResourceRegistry
 
       abstract!
 
-      Entity = type_member(:out)
-
       sig { returns(T.untyped) }
       def self.entity
         T.unsafe(const_get(:Entity)).inner_type[:fixed]
