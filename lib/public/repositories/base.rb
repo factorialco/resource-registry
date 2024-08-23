@@ -3,10 +3,13 @@
 
 require_relative '../../runtime_generic'
 require_relative 'read_result'
+require_relative '../serializer'
 
-class SerializationTags < T::Enum
-  enums do
-  end
+module SerializationTags
+  extend T::Sig
+  extend T::Helpers
+
+  interface!
 end
 
 module ResourceRegistry
