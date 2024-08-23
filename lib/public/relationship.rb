@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: false
+# typed: true
 
 require_relative 'relationship_type'
 require_relative 'relationship_type_factory'
@@ -17,6 +17,7 @@ module ResourceRegistry
     const :optional, T::Boolean
 
     # Are there multiple resources in the other side of the relationship?
+    sig { returns(T::Boolean) }
     def many_cardinality?
       type.many_cardinality?
     end
@@ -47,11 +48,6 @@ module ResourceRegistry
         fixed_dto_params: spec['fixed_dto_params'],
         optional: !spec['optional'].to_s.casecmp('false').zero?
       )
-    end
-
-    sig { params(resource_registry: Registry).returns(Resource) }
-    def target_resource!(resource_registry: Rails.configuration.resource_registry)
-      resource_registry.fetch!(resource_id.to_s)
     end
 
     # We provide this in the dataloader, we encourage not to perform joins in

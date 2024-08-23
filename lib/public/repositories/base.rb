@@ -4,6 +4,11 @@
 require_relative '../../runtime_generic'
 require_relative 'read_result'
 
+class SerializationTags < T::Enum
+  enums do
+  end
+end
+
 module ResourceRegistry
   module Repositories
     module Base
@@ -89,15 +94,6 @@ module ResourceRegistry
             T.nilable(ResourceRegistry::Serializer)
           )
       end
-
-      # FIXME: should be abstract instead of overridable, but to please
-      # the Gods of Incremental Migration
-      sig do
-        overridable
-          .params(dto: T::Struct)
-          .returns(T.nilable(T.any(Permissions::Target, T::Array[Permissions::Target])))
-      end
-      def target_from(dto); end
 
       sig { params(method: T.nilable(Symbol)).returns(T.noreturn) }
       def raise_error(method)

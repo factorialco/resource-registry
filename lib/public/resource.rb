@@ -95,11 +95,6 @@ module ResourceRegistry
       name.to_s.humanize
     end
 
-    sig { returns(I18nKeysForResource) }
-    def translation
-      I18nKeysForResource.new(self)
-    end
-
     sig { params(verb: Symbol, parameters: T.untyped).returns(T::Struct) }
     # Build a DTO instance for the given verb.
     def build_dto(verb, **parameters)
