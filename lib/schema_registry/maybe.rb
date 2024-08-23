@@ -10,14 +10,15 @@ require_relative('maybe/present')
 #
 # An useful way to think about `Maybe` is as a collection, like `Array` or `Set` but that can only
 # hold a maximum of 1 elements at a time.
-#
-# NOTE: Beware of implementing a `Maybe#value` method in the interface so you can call it without
-# type safety. >:(
 module Maybe
   extend T::Sig
   extend RuntimeGeneric
   include Kernel
   interface!
+  # NOTE: Beware of implementing a `Maybe#value` method in the interface so you can call it without
+  # type safety. >:(
+
+  Value = type_member(:out) { { upper: BasicObject } }
 
   sig do
     type_parameters(:Key)

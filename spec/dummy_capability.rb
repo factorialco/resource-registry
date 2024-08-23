@@ -6,6 +6,8 @@ class DummyCapability < T::Struct
 
   include ResourceRegistry::Capabilities::CapabilityConfig
 
+  const :time_dimension, T.nilable(String), default: 'day'
+
   sig { override.returns(Symbol) }
   def self.key
     :dummy_capability

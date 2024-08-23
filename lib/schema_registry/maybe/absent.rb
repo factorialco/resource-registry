@@ -9,6 +9,8 @@ module Maybe
     include Maybe
     final!
 
+    Value = type_member { { fixed: T.noreturn } }
+
     sig(:final) { override.returns(FalseClass) }
     def present?
       false

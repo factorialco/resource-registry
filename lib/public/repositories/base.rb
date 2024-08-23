@@ -1,4 +1,4 @@
-# frozen_string_literal: strict
+# frozen_string_literal: true
 # typed: false
 
 require_relative '../../runtime_generic'
@@ -9,6 +9,7 @@ module ResourceRegistry
     module Base
       extend T::Sig
       extend T::Helpers
+      extend T::Generic
       # CAUTION This is not supported by sorbet, consider using T::Generic
       # instead if yo don't need to preserve generic runtime information
       extend RuntimeGeneric
@@ -16,6 +17,8 @@ module ResourceRegistry
       include Kernel
 
       abstract!
+
+      Entity = type_member { { upper: T::Struct } }
 
       sig { returns(T.untyped) }
       def self.entity

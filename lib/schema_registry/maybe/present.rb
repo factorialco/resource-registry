@@ -9,6 +9,8 @@ module Maybe
     include Maybe
     final!
 
+    Value = type_member(:out) { { upper: BasicObject } }
+
     sig(:final) { params(value: Value).void }
     def initialize(value)
       @value = value
