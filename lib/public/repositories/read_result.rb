@@ -1,10 +1,14 @@
-# typed: false
+# typed: true
+
+require_relative './output_contexts/page_info_dto'
 
 module Outcome
-  extend T::Sig
+  extend T::Helpers
   extend T::Generic
 
   Elem = type_member(:out)
+
+  interface!
 end
 
 module ResourceRegistry
