@@ -4,7 +4,6 @@
 require 'sorbet-runtime'
 
 require 'public/initializer'
-require 'public/registry_singleton'
 require 'public/configuration'
 require 'public/resource'
 require 'public/versions'
