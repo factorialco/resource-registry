@@ -2,6 +2,7 @@
 # typed: false
 
 require_relative '../../runtime_generic'
+require_relative './outcome'
 require_relative 'read_result'
 require_relative '../serializer'
 
