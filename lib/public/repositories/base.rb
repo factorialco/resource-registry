@@ -5,13 +5,6 @@ require_relative '../../runtime_generic'
 require_relative 'read_result'
 require_relative '../serializer'
 
-module SerializationTags
-  extend T::Sig
-  extend T::Helpers
-
-  interface!
-end
-
 module ResourceRegistry
   module Repositories
     module Base
@@ -69,7 +62,7 @@ module ResourceRegistry
         end
       end
 
-      sig { overridable.params(entity: Entity, tags: T::Set[SerializationTags]).returns(T::Hash[Symbol, T.untyped]) }
+      sig { overridable.params(entity: Entity, tags: T::Set[T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
       def serialize(entity:, tags: [])
         serializer.serialize(entity: entity, tags: tags)
       end

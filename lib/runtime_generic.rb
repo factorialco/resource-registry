@@ -1,5 +1,12 @@
 # typed: true
 
+require 'tapioca'
+require 'tapioca/gem/listeners/base'
+require 'tapioca/sorbet_ext/generic_name_patch'
+require 'tapioca/runtime/reflection'
+require 'tapioca/runtime/generic_type_registry'
+require 'tapioca/gem/listeners/sorbet_type_variables'
+
 # This module allows using type introspection to serialize/deserialize custom generics in
 # T::Structs.
 #
