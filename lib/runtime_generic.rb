@@ -63,7 +63,8 @@ module RuntimeGeneric
       blk
     ).tap do |type_variable|
       Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
-      MyTypeMember.new(variance, &blk)
     end
+
+    MyTypeMember.new(variance, &blk)
   end
 end
