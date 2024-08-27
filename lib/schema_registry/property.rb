@@ -23,7 +23,7 @@ module SchemaRegistry
             Time,
             DateTime,
             T::Array[T.untyped],
-            T::Hash[Symbol, T.untyped],
+            T::Hash[String, T.untyped],
             Maybe[T.untyped]
           )
         )
