@@ -14,10 +14,10 @@ module ResourceRegistry
 
       interface!
 
-      sig { abstract.returns(Outcome[T::Array[Entity]]) }
+      sig { abstract.returns(T.untyped) }
       def entities; end
 
-      sig { abstract.returns(Outcome[T::Array[T::Hash[String, T.untyped]]]) }
+      sig { abstract.returns(T.untyped) }
       def projections; end
 
       sig { abstract.returns(OutputContexts::PageInfoDto) }
