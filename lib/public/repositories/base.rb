@@ -38,31 +38,6 @@ module ResourceRegistry
         raise_error(__method__)
       end
 
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def create(dto:)
-        raise_error(__method__)
-      end
-
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def update(dto:)
-        raise_error(__method__)
-      end
-
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def delete(dto:)
-        raise_error(__method__)
-      end
-
-      sig { params(dto: T.untyped).returns(Outcome[Entity]) }
-      def find(dto:)
-        read(dto: dto).entities.map do |array|
-          entity = array.first
-          return Outcome.missing_resource if entity.nil?
-
-          entity
-        end
-      end
-
       sig { overridable.params(entity: Entity, tags: T::Set[T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
       def serialize(entity:, tags: [])
         serializer.serialize(entity: entity, tags: tags)

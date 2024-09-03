@@ -10,9 +10,6 @@ module ResourceRegistry
       Elem = type_member(:out)
 
       interface!
-
-      sig { abstract.returns(Elem) }
-      def unwrap!; end
     end
   end
 end
