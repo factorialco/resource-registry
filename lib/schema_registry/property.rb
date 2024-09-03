@@ -24,7 +24,8 @@ module SchemaRegistry
             DateTime,
             T::Array[T.untyped],
             T::Hash[String, T.untyped],
-            Maybe[T.untyped]
+            Maybe[T.untyped],
+            ResourceRegistry::Versions::Version
           )
         )
       end
