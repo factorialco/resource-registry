@@ -1,6 +1,5 @@
 # typed: true
 
-require_relative './outcome'
 require_relative './output_contexts/page_info_dto'
 
 module ResourceRegistry
