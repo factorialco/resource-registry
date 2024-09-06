@@ -17,7 +17,7 @@ RSpec.describe ResourceRegistry::CapabilityFactory do
     let(:data) { { 'key' => 'dummy_capability', :time_dimension => 'bar' } }
 
     it do
-      cap = capability.load(data)
+      cap = capability.load(data, capabilities: { dummy_capability: DummyCapability })
       expect(described_class.dump(cap)).to include_json(time_dimension: 'bar')
     end
   end
