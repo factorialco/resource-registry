@@ -227,7 +227,7 @@ RSpec.describe Maybe do
       let(:maybe) { present }
 
       it 'returns an instance containing the result of the block' do
-        expect(subject).to eq Maybe.from(7)
+        expect(subject.value).to eq Maybe.from(7).value
       end
     end
 
@@ -235,7 +235,7 @@ RSpec.describe Maybe do
       let(:maybe) { nilable }
 
       it 'returns an instance containing the result of the block' do
-        expect(subject).to eq Maybe.from(1)
+        expect(subject.value).to eq Maybe.from(1).value
       end
     end
 
