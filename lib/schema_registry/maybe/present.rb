@@ -7,7 +7,7 @@ module Maybe
     extend T::Sig
     extend T::Generic
     include Maybe
-    final!
+    # final! FIXME
 
     Value = type_member(:out) { { upper: BasicObject } }
 
