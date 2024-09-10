@@ -54,8 +54,13 @@ RSpec.describe ResourceRegistry::Resource do
 
   describe '#load' do
     let(:spec) { resource.dump }
+    let(:configuration) do
+      ResourceRegistry::Configuration.new.tap do |conf|
+        conf.register_capability(:dummy_capability, DummyCapability)
+      end
+    end
 
-    subject { described_class.load(spec) }
+    subject { described_class.load(spec, configuration: configuration) }
 
     it { expect(subject).to be_a(described_class) }
 
