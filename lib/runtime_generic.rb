@@ -13,6 +13,10 @@ module RuntimeGeneric
   extend T::Sig
   include T::Generic
 
+  def self.extended(base)
+    base.extend(T::Generic)
+  end
+
   class TypedGeneric < T::Types::Simple
     extend T::Sig
 
@@ -41,9 +45,11 @@ module RuntimeGeneric
 
   def [](inner_type)
     RuntimeGeneric::TypedGeneric.new(self, inner_type)
+    super
   end
 
   def type_member(variance = :invariant, &blk)
     MyTypeMember.new(variance, &blk)
+    super
   end
 end
