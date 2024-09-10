@@ -12,6 +12,7 @@ require_relative('maybe/present')
 # hold a maximum of 1 elements at a time.
 module Maybe
   extend T::Sig
+  extend T::Helpers
   extend RuntimeGeneric
   include Kernel
   interface!
