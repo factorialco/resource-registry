@@ -44,8 +44,6 @@ module RuntimeGeneric
   end
 
   def type_member(variance = :invariant, &blk)
-    # Calling supper to make it compatible with Tapioca
-    super.type_member(variance, &blk)
     MyTypeMember.new(variance, &blk)
   end
 end
