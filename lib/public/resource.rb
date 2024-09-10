@@ -203,8 +203,13 @@ module ResourceRegistry
       }
     end
 
-    sig { params(spec: T::Hash[String, T.untyped]).returns(Resource) }
-    def self.load(spec)
+    sig do
+      params(
+        spec: T::Hash[String, T.untyped],
+        configuration: ResourceRegistry::Configuration
+      ).returns(Resource)
+    end
+    def self.load(spec, configuration: ResourceRegistry.configuration)
       repository = spec['repository'].is_a?(Symbol) ? spec['repository'].to_s : spec['repository']
 
       new(
@@ -224,7 +229,7 @@ module ResourceRegistry
             end,
         capabilities:
           spec['capabilities'].each_with_object({}) do |config, memo|
-            cap = CapabilityFactory.load(config)
+            cap = CapabilityFactory.load(config, capabilities: configuration.capabilities)
             memo[cap.class.key] = cap
           end,
         schema: SchemaRegistry::Schema.load(spec['schema']),
