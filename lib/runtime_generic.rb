@@ -44,10 +44,11 @@ module RuntimeGeneric
   end
 
   def type_member(variance = :invariant, &blk)
-    if defined?(Tapioca)
+    if defined?(Tapioca::TypeVariableModule)
+      puts 'Patching tapioca inference'
       # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
       # We use that when registering the type member and then later return it from this method.
-      Tapioca::TypeVariableModule.new(
+      return Tapioca::TypeVariableModule.new(
         T.cast(self, Module),
         Tapioca::TypeVariableModule::Type::Member,
         variance,
