@@ -1,14 +1,5 @@
 # typed: true
 
-# Fix tapioca prepend issue
-module T
-  module Generic
-    def self.prepended(mod)
-      RuntimeGeneric.prepend(mod)
-    end
-  end
-end
-
 # This module allows using type introspection to serialize/deserialize custom generics in
 # T::Structs.
 #
@@ -53,7 +44,19 @@ module RuntimeGeneric
   end
 
   def type_member(variance = :invariant, &blk)
-    super(variance, &blk)
+    if defined?(Tapioca)
+      # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
+      # We use that when registering the type member and then later return it from this method.
+      Tapioca::TypeVariableModule.new(
+        T.cast(self, Module),
+        Tapioca::TypeVariableModule::Type::Member,
+        variance,
+        blk
+      ).tap do |type_variable|
+        Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
+      end
+    end
+
     MyTypeMember.new(variance, &blk)
   end
 end
