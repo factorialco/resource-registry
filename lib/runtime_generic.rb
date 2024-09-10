@@ -11,12 +11,7 @@
 module RuntimeGeneric
   extend T::Helpers
   extend T::Sig
-  include T::Generic
-
-  # NOTE: This is needed in order to make tapioca compatible with RuntimeGeneric
-  def self.extended(base)
-    base.extend(T::Generic)
-  end
+  extend T::Generic
 
   class TypedGeneric < T::Types::Simple
     extend T::Sig
@@ -46,12 +41,11 @@ module RuntimeGeneric
 
   def [](inner_type)
     RuntimeGeneric::TypedGeneric.new(self, inner_type)
-    super
   end
 
   def type_member(variance = :invariant, &blk)
-    super
-
+    # Calling supper to make it compatible with Tapioca
+    super.type_member(variance, &blk)
     MyTypeMember.new(variance, &blk)
   end
 end
