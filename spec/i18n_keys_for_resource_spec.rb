@@ -7,11 +7,16 @@ require_relative '../lib/public/i18n_keys_for_resource'
 RSpec.describe ResourceRegistry::I18nKeysForResource do
   subject { described_class.new(resource) }
 
-  let(:resource) { instance_double(ResourceRegistry::Resource) }
-
-  before do
-    allow(resource).to receive(:namespace).and_return('TestDomain')
-    allow(resource).to receive(:slug).and_return('test_resource')
+  let(:resource) do
+    ResourceRegistry::Resource.new(
+      repository_raw: 'TestDomain::Repositories::TestResource',
+      schema: SchemaRegistry::Schema.new(
+        name: 'TestResource',
+        namespace: 'TestNamespace',
+        properties: []
+      ),
+      verbs: {}
+    )
   end
 
   describe '#resource_name_key' do
