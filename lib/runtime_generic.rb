@@ -44,6 +44,7 @@ module RuntimeGeneric
   end
 
   def type_member(variance = :invariant, &blk)
+    super(variance, &blk)
     MyTypeMember.new(variance, &blk)
   end
 end
