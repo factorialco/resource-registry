@@ -20,6 +20,10 @@ module RuntimeGeneric
   extend T::Sig
   include T::Generic
 
+  def [](inner_type)
+    T::Types::Simple.new(inner_type)
+  end
+
   def type_member(variance = :invariant, &blk)
     # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
     # We use that when registering the type member and then later return it from this method.
