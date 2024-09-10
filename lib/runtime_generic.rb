@@ -11,7 +11,7 @@
 module RuntimeGeneric
   extend T::Helpers
   extend T::Sig
-  extend T::Generic
+  include T::Generic
 
   class TypedGeneric < T::Types::Simple
     extend T::Sig
