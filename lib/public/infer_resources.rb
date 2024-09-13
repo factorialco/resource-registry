@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative '../schema_generator'
 require_relative 'repositories/base'
@@ -13,7 +13,7 @@ module ResourceRegistry
       @schema_generator = T.let(SchemaGenerator.new, SchemaGenerator)
     end
 
-    sig { params(repositories: T::Array[ResourceRegistry::Repositories::Base]).returns(T::Array[Resource]) }
+    sig { params(repositories: T::Array[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T::Array[Resource]) }
     def call(repositories:)
       repositories.filter_map { |repo| generate_resource_from_repository(repo) }
     end

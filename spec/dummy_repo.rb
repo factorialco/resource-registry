@@ -1,27 +1,29 @@
-# typed: true
+# typed: false
+
+require_relative '../lib/public/repositories/base'
 
 class DummyEntity < T::Struct
   const :id, Integer
 end
 
-class DummyRepo < Repositories::Base
+class DummyRepo
+  extend T::Sig
+  extend T::Helpers
+  extend T::Generic
+
+  include ResourceRegistry::Repositories::Base
+
   Entity = type_member { { upper: DummyEntity } }
 
   sig do
-    override
-      .params(dto: T::Struct, context: ::Repositories::ReadOutputContext)
+    params(dto: T::Struct, context: T.untyped)
       .returns(::Repositories::ReadResult[Entity])
   end
   def read(dto:, context: ::Repositories::ReadOutputContext.new)
     entities = (1..10).map { |i| DummyEntity.new(id: i) }
     Repositories::InMemoryReadResult.new(
-      context: Repositories::ReadOutputContext.new,
+      context: context.new,
       list: entities
     )
-  end
-
-  sig { override.params(entity: DummyEntity).returns(T::Hash[Symbol, T.untyped]) }
-  def serialize(entity:)
-    entity.serialize.symbolize_keys
   end
 end

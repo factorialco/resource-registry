@@ -1,8 +1,10 @@
-# typed: strict
+# frozen_string_literal: true
+# typed: false
 
-require 'rails_helper'
+require 'spec_helper'
+require_relative '../lib/public/resource_struct_builder'
 
-module ::ResourceRegistry
+module ResourceRegistry
   module DtoBuilderSpec
     module Dtos
       class SimpleDto < T::Struct
@@ -16,14 +18,15 @@ module ::ResourceRegistry
 
       class NestedValueObjectDto < T::Struct
         const :type, String
-        const :period, ::ValueObjects::TimeRange
+        # FIXME: bring this one here?
+        # const :period, ::ValueObjects::TimeRange
       end
 
       class SimpleMaybeDto < T::Struct
         const :basic, String
         const :absent, Maybe[T.nilable(String)], default: Maybe.empty
         const :present, Maybe[T.nilable(Integer)], default: Maybe.empty
-        const :integer, Maybe[Integer], default: Maybe.empty
+        const :integer, Maybe[Integer]
       end
 
       class ArrayDto < T::Struct
@@ -130,7 +133,8 @@ RSpec.describe ResourceRegistry::ResourceStructBuilder do
       end
     end
 
-    context 'with a nested value-object dto' do
+    # ValueObjects is an internal detail of Factorial
+    xcontext 'with a nested value-object dto' do
       let(:dto) { ResourceRegistry::DtoBuilderSpec::Dtos::NestedValueObjectDto }
       let(:period) { ValueObjects::TimeRange.new(from: Time.zone.now, to: Time.zone.now.tomorrow) }
       let(:args) { { type: 'one-type', period: { from: period.from, to: period.to } } }

@@ -1,4 +1,6 @@
-# typed: strict
+# typed: true
+
+require_relative './output_contexts/page_info_dto'
 
 module ResourceRegistry
   module Repositories
@@ -11,10 +13,10 @@ module ResourceRegistry
 
       interface!
 
-      sig { abstract.returns(Outcome[T::Array[Entity]]) }
+      sig { abstract.returns(T.untyped) }
       def entities; end
 
-      sig { abstract.returns(Outcome[T::Array[T::Hash[String, T.untyped]]]) }
+      sig { abstract.returns(T.untyped) }
       def projections; end
 
       sig { abstract.returns(OutputContexts::PageInfoDto) }

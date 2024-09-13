@@ -11,11 +11,13 @@ module ResourceRegistry
 
       interface!
 
+      # Class methods interface for capability configuration
       module ClassMethods
         extend T::Sig
         extend T::Helpers
         abstract!
 
+        # The key of the capability, this key will be used to take it from yaml configuration
         sig { abstract.returns(Symbol) }
         def key; end
       end

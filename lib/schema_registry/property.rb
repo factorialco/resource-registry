@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 # typed: strict
 
+require 'date'
+require 'bigdecimal'
 require_relative 'property_type'
 require_relative 'maybe'
+require_relative '../public/versions/version'
 
 module SchemaRegistry
   class Property < T::Struct
@@ -21,8 +24,9 @@ module SchemaRegistry
             Time,
             DateTime,
             T::Array[T.untyped],
-            T::Hash[Symbol, T.untyped],
-            Maybe[T.untyped]
+            T::Hash[String, T.untyped],
+            Maybe[T.untyped],
+            ResourceRegistry::Versions::Version
           )
         )
       end

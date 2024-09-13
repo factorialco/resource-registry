@@ -6,10 +6,15 @@ module ResourceRegistry
   class CapabilityFactory
     extend T::Sig
 
-    sig { params(data: T::Hash[String, T.untyped]).returns(Capabilities::CapabilityConfig) }
-    def self.load(data)
+    sig do
+      params(
+        data: T::Hash[String, T.untyped],
+        capabilities: T::Hash[Symbol, T.all(T::Class[Capabilities::CapabilityConfig], T.class_of(T::Struct))]
+      ).returns(Capabilities::CapabilityConfig)
+    end
+    def self.load(data, capabilities: ResourceRegistry.configuration.capabilities)
       key = data['key']
-      capability = ResourceRegistry.configuration.capabilities.fetch(key.to_sym)
+      capability = capabilities.fetch(key.to_sym)
       # FIXME: This T.let should not be needed
       T.let(capability, T.class_of(T::Struct)).from_hash(data)
     end

@@ -1,14 +1,16 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative '../../runtime_generic'
 require_relative 'read_result'
+require_relative '../serializer'
 
 module ResourceRegistry
   module Repositories
     module Base
       extend T::Sig
       extend T::Helpers
+      extend T::Generic
       # CAUTION This is not supported by sorbet, consider using T::Generic
       # instead if yo don't need to preserve generic runtime information
       extend RuntimeGeneric
@@ -17,7 +19,7 @@ module ResourceRegistry
 
       abstract!
 
-      Entity = type_member
+      Entity = type_member { { upper: T::Struct } }
 
       sig { returns(T.untyped) }
       def self.entity
@@ -35,32 +37,7 @@ module ResourceRegistry
         raise_error(__method__)
       end
 
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def create(dto:)
-        raise_error(__method__)
-      end
-
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def update(dto:)
-        raise_error(__method__)
-      end
-
-      sig { overridable.params(dto: T.untyped).returns(Outcome[Entity]) }
-      def delete(dto:)
-        raise_error(__method__)
-      end
-
-      sig { params(dto: T.untyped).returns(Outcome[Entity]) }
-      def find(dto:)
-        read(dto: dto).entities.map do |array|
-          entity = array.first
-          return Outcome.missing_resource if entity.nil?
-
-          entity
-        end
-      end
-
-      sig { overridable.params(entity: Entity, tags: T::Set[SerializationTags]).returns(T::Hash[Symbol, T.untyped]) }
+      sig { overridable.params(entity: Entity, tags: T::Set[T.untyped]).returns(T::Hash[Symbol, T.untyped]) }
       def serialize(entity:, tags: [])
         serializer.serialize(entity: entity, tags: tags)
       end
@@ -88,15 +65,6 @@ module ResourceRegistry
             T.nilable(ResourceRegistry::Serializer)
           )
       end
-
-      # FIXME: should be abstract instead of overridable, but to please
-      # the Gods of Incremental Migration
-      sig do
-        overridable
-          .params(dto: T::Struct)
-          .returns(T.nilable(T.any(Permissions::Target, T::Array[Permissions::Target])))
-      end
-      def target_from(dto); end
 
       sig { params(method: T.nilable(Symbol)).returns(T.noreturn) }
       def raise_error(method)

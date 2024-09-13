@@ -1,6 +1,8 @@
-# typed: strict
+# frozen_string_literal: true
+# typed: false
 
-require 'rails_helper'
+require 'spec_helper'
+require_relative '../../lib/public/versions'
 
 RSpec.describe ResourceRegistry::Versions do
   subject do

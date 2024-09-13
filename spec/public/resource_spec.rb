@@ -1,9 +1,13 @@
-# typed: strict
+# typed: false
 
-require 'rails_helper'
+require 'spec_helper'
+require_relative '../../lib/public/resource'
+require_relative '../dummy_repo'
+require_relative '../dummy_capability'
+require_relative '../void_capability'
 
 RSpec.describe ResourceRegistry::Resource do
-  let(:capability) { Graphql::Capability.new }
+  let(:capability) { DummyCapability.new }
   let(:dummy_struct) { T::Struct }
   let(:schema) do
     SchemaRegistry::Schema.new(
@@ -23,12 +27,12 @@ RSpec.describe ResourceRegistry::Resource do
   end
   let(:resource) do
     ResourceRegistry::Resource.new(
-      repository_raw: Employees::Repositories::Employees.to_s,
+      repository_raw: DummyRepo.to_s,
       description: 'foo',
       schema: schema,
       verbs: verbs,
       capabilities: {
-        graphql: capability
+        dummy_capability: capability
       }
     )
   end
@@ -37,11 +41,11 @@ RSpec.describe ResourceRegistry::Resource do
   it { expect(resource.schema.properties.first.name).to eq 'foo' }
 
   describe '#collection_name' do
-    it { expect(resource.collection_name).to eq('employees') }
+    it { expect(resource.collection_name).to eq('dummy_repos') }
   end
 
   describe '#path' do
-    it { expect(resource.path).to eq('employees/employee') }
+    it { expect(resource.path).to eq('dummyrepo/dummy_repo') }
   end
 
   describe '#dump' do
@@ -50,8 +54,13 @@ RSpec.describe ResourceRegistry::Resource do
 
   describe '#load' do
     let(:spec) { resource.dump }
+    let(:configuration) do
+      ResourceRegistry::Configuration.new.tap do |conf|
+        conf.register_capability(:dummy_capability, DummyCapability)
+      end
+    end
 
-    subject { described_class.load(spec) }
+    subject { described_class.load(spec, configuration: configuration) }
 
     it { expect(subject).to be_a(described_class) }
 
@@ -72,14 +81,14 @@ RSpec.describe ResourceRegistry::Resource do
     end
 
     describe '#capability!' do
-      let(:feature) { Graphql::Capability }
+      let(:feature) { DummyCapability }
 
       subject { resource.capability!(feature) }
 
       it { expect(subject).to eq(capability) }
 
       context 'The resource don\'t have such capability' do
-        let(:feature) { ResourceRegistry::Capabilities::Rest }
+        let(:feature) { VoidCapability }
 
         it { expect { subject }.to raise_error(ArgumentError) }
       end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require_relative 'resource'
 require_relative 'capabilities/capability_config'
@@ -39,7 +39,9 @@ module ResourceRegistry
       raise UnableToFindResourceError, "#{identifier} does not exist"
     end
 
-    sig { params(repository_class: T::Class[ResourceRegistry::Repositories::Base]).returns(T.nilable(Resource)) }
+    sig do
+      params(repository_class: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource))
+    end
     def fetch_for_repository(repository_class)
       fetch_all.values.find { |r| r.repository == repository_class }
     end
@@ -55,6 +57,7 @@ module ResourceRegistry
     def fetch_with_capabilities(*capabilities)
       # FIXME: This is a hack to avoid having to change the interface of the method
       capabilities_set = T.unsafe(capabilities).to_set(&:key)
+
       fetch_all.values.select { |resource| capabilities_set <= resource.capabilities.keys.to_set }
     end
 
@@ -65,7 +68,7 @@ module ResourceRegistry
       end
     end
 
-    sig { params(repository: T::Class[ResourceRegistry::Repositories::Base]).returns(T.nilable(Resource)) }
+    sig { params(repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource)) }
     def find_by_repository(repository)
       fetch_all.values.find { |resource| resource.repository == repository }
     end

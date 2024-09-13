@@ -1,4 +1,4 @@
-# typed: strict
+# typed: false
 
 require_relative 'infer_resources'
 require_relative 'overrides_loader'
@@ -13,7 +13,7 @@ module ResourceRegistry
   class Initializer
     extend T::Sig
 
-    sig { params(repository_base_klass: Class).void }
+    sig { params(repository_base_klass: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).void }
     def initialize(repository_base_klass: ResourceRegistry::Repositories::Base)
       @repository_base_klass = repository_base_klass
     end

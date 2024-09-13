@@ -1,5 +1,8 @@
 # typed: strict
 
+require 'sorbet-coerce'
+require 'active_support/hash_with_indifferent_access'
+
 module ResourceRegistry
   # Constructs a resource struct (like Dtos and Entities) from a hash of arguments
   # It's different from the usual T::Struct::new in that it can handle
@@ -36,13 +39,6 @@ module ResourceRegistry
         build_other(value)
       end
     rescue TypeError, ArgumentError, TypeCoerce::CoercionError => e
-      CustomLogger.info(
-        message: "Failed to parse provided arguments into #{resource_type}",
-        payload: {
-          request: value,
-          response: e.to_s
-        }
-      )
       raise ParseInputError, e.message
     end
 
@@ -50,7 +46,7 @@ module ResourceRegistry
 
     sig { returns(T::Boolean) }
     def generic?
-      resource_type.is_a?(T::RuntimeGeneric::TypedGeneric)
+      resource_type.is_a?(RuntimeGeneric::TypedGeneric)
     end
 
     sig { returns(T::Boolean) }
@@ -91,7 +87,7 @@ module ResourceRegistry
     # Calculates the inner type of a complex type
     def inner_type(outer_type)
       case outer_type
-      when T::RuntimeGeneric::TypedGeneric
+      when RuntimeGeneric::TypedGeneric
         outer_type.inner_type
       when T::Types::Simple
         outer_type.raw_type

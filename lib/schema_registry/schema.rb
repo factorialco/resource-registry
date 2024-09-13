@@ -3,6 +3,7 @@
 
 require_relative 'property'
 require_relative 'filter_field'
+require_relative 'property_mapper'
 
 module SchemaRegistry
   class Schema < T::Struct

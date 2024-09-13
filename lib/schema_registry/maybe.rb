@@ -2,6 +2,8 @@
 # frozen_string_literal: true
 
 require_relative('../runtime_generic')
+require_relative('maybe/absent')
+require_relative('maybe/present')
 
 # Represents an instance of an object that may or may not be present. This can be useful in certain
 # cases where `nil` represents a valid value instead of an absent value, i.e. update DTOs.
@@ -10,7 +12,7 @@ require_relative('../runtime_generic')
 # hold a maximum of 1 elements at a time.
 module Maybe
   extend T::Sig
-  extend T::Generic
+  extend T::Helpers
   extend RuntimeGeneric
   include Kernel
   interface!
@@ -98,20 +100,17 @@ module Maybe
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` contains a value, `false` otherwise.
-  def present?
-  end
+  def present?; end
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` does not contain a value, `false` otherwise.
-  def absent?
-  end
+  def absent?; end
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` does not contain a value, `false` otherwise.
   #
   # alias of `#absent`
-  def empty?
-  end
+  def empty?; end
 
   sig do
     abstract
@@ -120,8 +119,7 @@ module Maybe
       .returns(T.any(Value, T.type_parameter(:Default)))
   end
   # Returns the value if there's one, else, it returns the provided default.
-  def or_default(default)
-  end
+  def or_default(default); end
 
   sig do
     abstract
@@ -132,8 +130,7 @@ module Maybe
   # Executes the given code block if there's a value present, the code block will receive the value
   # as an argument and the method will return whatever the code block returns or `nil` if no value
   # present.
-  def when_present(&_block)
-  end
+  def when_present(&_block); end
 
   sig do
     abstract
@@ -143,8 +140,7 @@ module Maybe
   end
   # Executes the given code block if a value isn't present, returns whatever the code block returned
   # or `nil` if if the value was present.
-  def when_absent(&_block)
-  end
+  def when_absent(&_block); end
 
   sig do
     abstract.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value])
@@ -156,8 +152,7 @@ module Maybe
   #
   # This is analogous to the `Array#filter` method if the `Maybe` class were an `Array` that can
   # hold one element at maximum.
-  def filter(&_block)
-  end
+  def filter(&_block); end
 
   sig do
     abstract
@@ -172,6 +167,5 @@ module Maybe
   #
   # This is analogous to the `Array#map` method if the `Maybe` class were an `Array` that can
   # hold one element at maximum.
-  def map(&_block)
-  end
+  def map(&_block); end
 end

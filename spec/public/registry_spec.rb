@@ -1,6 +1,24 @@
-# typed: strict
+# typed: false
 
-require 'rails_helper'
+require 'spec_helper'
+require_relative '../../lib/public/registry'
+require_relative '../dummy_repo'
+
+class DummyCapability < T::Struct
+  include ResourceRegistry::Capabilities::CapabilityConfig
+
+  def self.key
+    :dummy_capability
+  end
+end
+
+class VoidCapability < T::Struct
+  include ResourceRegistry::Capabilities::CapabilityConfig
+
+  def self.key
+    :void_capability
+  end
+end
 
 RSpec.describe ResourceRegistry::Registry do
   let(:resources) { [resource] }
@@ -20,13 +38,11 @@ RSpec.describe ResourceRegistry::Registry do
   end
   let(:resource) do
     ResourceRegistry::Resource.new(
-      repository_raw: Employees::Repositories::Employees.to_s,
+      repository_raw: DummyRepo.to_s,
       capabilities: {
-        rest: ResourceRegistry::Capabilities::Rest.new,
-        power_bi: ResourceRegistry::Capabilities::PowerBi.new
+        dummy_capability: DummyCapability.new
       },
-      verbs: {
-      },
+      verbs: {},
       schema: schema
     )
   end
@@ -50,19 +66,19 @@ RSpec.describe ResourceRegistry::Registry do
 
   describe '#fetch_for_repository' do
     it do
-      expect(registry.fetch_for_repository(Employees::Repositories::Employees)).to(eq(resource))
+      expect(registry.fetch_for_repository(DummyRepo)).to(eq(resource))
     end
   end
 
   describe '#fetch_with_capabilities' do
-    let(:features) { [ResourceRegistry::Capabilities::PowerBi] }
+    let(:features) { [DummyCapability] }
 
     subject { registry.fetch_with_capabilities(*features) }
 
     it { expect(subject.size).to eq(1) }
 
     context 'the resource doesn\t have the capability' do
-      let(:features) { [Graphql::Capability] }
+      let(:features) { [VoidCapability] }
 
       it { expect(subject.size).to eq(0) }
     end

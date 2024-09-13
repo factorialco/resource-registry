@@ -8,6 +8,7 @@ require_relative 'verb'
 require_relative '../schema_registry/schema'
 
 module ResourceRegistry
+  # The main class that represents a resource in the system.
   class Resource < T::Struct
     extend T::Sig
 
@@ -31,12 +32,6 @@ module ResourceRegistry
     # We should be strict about the semantics of this property, and avoid using
     # it as a hack to avoid having to build pagination into our products
     const :paginateable, T::Boolean, default: true
-
-    sig { returns(T::Array[T.class_of(EventSystem::Event)]) }
-    def public_events
-      @public_events = T.let([], T.nilable(T::Array[T.class_of(EventSystem::Event)]))
-      @public_events ||= verbs.values.filter_map(&:event)
-    end
 
     sig { returns(String) }
     def path
@@ -69,7 +64,7 @@ module ResourceRegistry
       T.must(repository_raw.split('::').last)
     end
 
-    sig { returns(T::Class[ResourceRegistry::Repositories::Base]) }
+    sig { returns(T::Class[ResourceRegistry::Repositories::Base[T.untyped]]) }
     def repository
       repository_klass = repository_raw.safe_constantize
       raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?
@@ -98,11 +93,6 @@ module ResourceRegistry
     sig { returns(String) }
     def humanize
       name.to_s.humanize
-    end
-
-    sig { returns(I18nKeysForResource) }
-    def translation
-      I18nKeysForResource.new(self)
     end
 
     sig { params(verb: Symbol, parameters: T.untyped).returns(T::Struct) }
@@ -162,7 +152,7 @@ module ResourceRegistry
       ).returns(T::Boolean)
     end
     def capability?(feature)
-      capabilities[feature.key].present?
+      !!capabilities[feature.key]
     end
 
     sig do
@@ -213,8 +203,13 @@ module ResourceRegistry
       }
     end
 
-    sig { params(spec: T::Hash[String, T.untyped]).returns(Resource) }
-    def self.load(spec)
+    sig do
+      params(
+        spec: T::Hash[String, T.untyped],
+        configuration: ResourceRegistry::Configuration
+      ).returns(Resource)
+    end
+    def self.load(spec, configuration: ResourceRegistry.configuration)
       repository = spec['repository'].is_a?(Symbol) ? spec['repository'].to_s : spec['repository']
 
       new(
@@ -234,7 +229,7 @@ module ResourceRegistry
             end,
         capabilities:
           spec['capabilities'].each_with_object({}) do |config, memo|
-            cap = CapabilityFactory.load(config)
+            cap = CapabilityFactory.load(config, capabilities: configuration.capabilities)
             memo[cap.class.key] = cap
           end,
         schema: SchemaRegistry::Schema.load(spec['schema']),
