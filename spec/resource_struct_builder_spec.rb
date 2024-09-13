@@ -24,8 +24,8 @@ module ResourceRegistry
 
       class SimpleMaybeDto < T::Struct
         const :basic, String
-        const :absent, Maybe[T.nilable(String)]
-        const :present, Maybe[T.nilable(Integer)]
+        const :absent, Maybe[T.nilable(String)], default: Maybe.empty
+        const :present, Maybe[T.nilable(Integer)], default: Maybe.empty
         const :integer, Maybe[Integer]
       end
 
