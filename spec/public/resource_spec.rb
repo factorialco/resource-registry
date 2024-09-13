@@ -41,11 +41,11 @@ RSpec.describe ResourceRegistry::Resource do
   it { expect(resource.schema.properties.first.name).to eq 'foo' }
 
   describe '#collection_name' do
-    it { expect(resource.collection_name).to eq('employees') }
+    it { expect(resource.collection_name).to eq('dummy_repos') }
   end
 
   describe '#path' do
-    it { expect(resource.path).to eq('employees/employee') }
+    it { expect(resource.path).to eq('dummyrepo/dummy_repo') }
   end
 
   describe '#dump' do
