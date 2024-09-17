@@ -78,7 +78,7 @@ module ResourceRegistry
 
     sig { params(spec: T.untyped).returns(Verb) }
     def self.load(spec)
-      id = spec['id'].to_sym
+      id = spec['id']&.to_sym
       raise ArgumentError, "Missing verb ID: #{id}" if id.nil?
 
       dto = spec['dto']

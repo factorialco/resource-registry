@@ -64,6 +64,15 @@ RSpec.describe ResourceRegistry::Resource do
 
     it { expect(subject).to be_a(described_class) }
 
+    context 'when verb has no id' do
+      let(:dump) { resource.dump }
+      let(:spec) do
+        resource.dump.tap { |s| s['verbs']['copy'].delete('id') }
+      end
+
+      it { expect { subject }.to raise_error(ArgumentError) }
+    end
+
     describe 'paginateable' do
       context 'when the paginateable property is not provided' do
         it 'is true by default' do
