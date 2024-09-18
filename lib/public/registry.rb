@@ -61,13 +61,6 @@ module ResourceRegistry
       fetch_all.values.select { |resource| capabilities_set <= resource.capabilities.keys.to_set }
     end
 
-    sig { returns(T::Array[Resource]) }
-    def fetch_with_public_rest_capability
-      fetch_with_capabilities(ResourceRegistry::Capabilities::Rest).select do |res|
-        T.must(res.capabilities[:rest]).serialize['is_public']
-      end
-    end
-
     sig { params(repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource)) }
     def find_by_repository(repository)
       fetch_all.values.find { |resource| resource.repository == repository }
