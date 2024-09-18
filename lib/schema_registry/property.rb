@@ -39,6 +39,7 @@ module SchemaRegistry
     const :description, T.nilable(String), default: nil
     const :resolver, T.nilable(T::Hash[Symbol, String]), default: nil
     const :resolvable, T::Boolean, default: false
+    const :deprecated, T::Boolean, default: false
     const :deprecated_on, T.nilable(Date), default: nil
     const :example, T.nilable(ValueType), default: nil
     const :enum_values, T.nilable(T::Array[String]), default: []
