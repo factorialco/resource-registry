@@ -1,8 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.2.0)
+    activesupport (7.2.2)
       base64
+      benchmark (>= 0.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
@@ -13,6 +14,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
     base64 (0.2.0)
+    benchmark (0.3.0)
     bigdecimal (3.1.8)
     coderay (1.1.3)
     concurrent-ruby (1.3.4)
@@ -37,12 +39,12 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.6.0)
+    logger (1.6.1)
     lumberjack (1.2.10)
     method_source (1.1.0)
     minitest (5.25.1)

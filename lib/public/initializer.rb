@@ -28,6 +28,12 @@ module ResourceRegistry
       [resource_registry, schema_registry, overrides_loader]
     end
 
+    sig { void }
+    def warm!
+      # Eager loading repository classes to autodiscover resources
+      RepositoryWarmer.new.call
+    end
+
     private
 
     attr_reader :repository_base_klass
@@ -48,30 +54,12 @@ module ResourceRegistry
 
     sig { void }
     # Registering Resource schemas to SchemaRegistry
-    def register_resources! # rubocop:disable Metrics/AbcSize
+    def register_resources!
       resources.each do |res|
         schema_registry.register(res.schema)
 
         res.verbs.values.each { |v| schema_registry.register(v.schema) }
       end
-
-      # TODO: kill all this custom schema loading. Instead, just include schema overrides
-      # in the resource yml file. We are already doing this across the app, so we have a
-      # mix of schema definitions in resource.ymls and schema.ymls
-      paths =
-        ::Rails::Engine
-        .subclasses
-        .map(&:instance)
-        .filter { |instance| instance.paths.path.dirname.to_s.include?('components') }
-        .map do |instance|
-          pathname = instance.paths.path
-          [
-            instance.class.module_parent.to_s,
-            File.join(pathname.dirname, pathname.basename, 'app', 'schemas').to_s
-          ]
-        end
-
-      SchemaRegistry::SchemaLoader.new(schema_registry: schema_registry).load(paths)
 
       schema_registry
     end
@@ -87,9 +75,6 @@ module ResourceRegistry
               ResourceRegistry::LoadResourcesFromCache.new.call
             else
               puts '-> Loading RR resources from inference system'
-              # Eager loading repository classes to autodiscover resources
-              RepositoryWarmer.new.call
-
               inferred_resources = ResourceRegistry::InferResources.new.call(repositories: repository_base_klass.subclasses.sort_by!(&:name))
 
               overriden_resources = inferred_resources.map(&:dump).map { |res| apply_override(res) }
