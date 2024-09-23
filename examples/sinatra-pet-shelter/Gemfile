@@ -9,4 +9,5 @@ gem 'sinatra-contrib'
 group :development, :test do
   gem 'pry'
   gem 'rspec'
+  gem 'rspec-html-matchers'
 end
