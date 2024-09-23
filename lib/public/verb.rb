@@ -88,6 +88,7 @@ module ResourceRegistry
         id: id,
         dto_raw: dto,
         schema: SchemaRegistry::Schema.load(spec['schema']),
+        summary: spec['summary'],
         return_many: spec['return_many'],
         description: spec['description'],
         webhook_description: spec['webhook_description']
