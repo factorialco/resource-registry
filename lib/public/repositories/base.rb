@@ -23,6 +23,8 @@ module ResourceRegistry
 
       sig { returns(T.untyped) }
       def self.entity
+        return nil if defined?(Tapioca)
+
         T.unsafe(const_get(:Entity)).inner_type[:fixed]
       end
 
