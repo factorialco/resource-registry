@@ -22,17 +22,17 @@ module SchemaRegistry
 
     sig { returns(String) }
     def slug
-      name.underscore
+      inflector.underscore(name)
     end
 
     sig { returns(Symbol) }
     def identifier
-      :"#{namespace.underscore}.#{slug}"
+      :"#{inflector.underscore(namespace)}.#{slug}"
     end
 
     sig { returns(String) }
     def namespace_with_slug
-      "#{namespace.underscore}_#{slug}"
+      "#{inflector.underscore(namespace)}_#{slug}"
     end
 
     sig { params(name: String).returns(T.nilable(Property)) }
@@ -47,12 +47,12 @@ module SchemaRegistry
 
     sig { params(name: String).returns(T::Boolean) }
     def has_property?(name)
-      find_property(name).present?
+      !!find_property(name)
     end
 
     sig { returns(String) }
     def namespace_with_slug
-      "#{namespace.underscore}_#{slug}"
+      "#{inflector.underscore(namespace)}_#{slug}"
     end
 
     sig { params(name: String).returns(T.nilable(T::Hash[Symbol, String])) }
@@ -65,7 +65,7 @@ module SchemaRegistry
 
     sig { returns(T::Hash[String, T.untyped]) }
     def raw_json_schema
-      return @raw_json_schema if @raw_json_schema.present?
+      return @raw_json_schema if defined?(@raw_json_schema)
 
       properties = PropertyMapper.new(schema: self).call
 
@@ -83,6 +83,13 @@ module SchemaRegistry
     sig { params(spec: T.untyped).returns(Schema) }
     def self.load(spec)
       JsonSchemaMapper.new(namespace: spec['namespace'], definition: spec['raw_json_schema']).call
+    end
+
+    private
+
+    sig { returns(Dry::Inflector) }
+    def inflector
+      @inflector ||= Dry::Inflector.new
     end
   end
 end

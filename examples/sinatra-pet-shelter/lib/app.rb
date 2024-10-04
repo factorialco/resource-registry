@@ -18,10 +18,8 @@ class App < Sinatra::Base
   registry, = ResourceRegistry::Initializer.new(repository_base_klass: Repository).call
   resources = registry.fetch_all
 
-  # binding.pry
-
-  resources.each do |resource|
-    route :get, "/#{resource}" do
+  resources.each do |id, resource|
+    route :get, "/#{resource.collection_name}" do
       content_type :json
       { data: [] }.to_json
     end

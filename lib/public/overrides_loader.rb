@@ -6,6 +6,8 @@ module ResourceRegistry
 
     sig { returns(T::Array[T::Hash[String, T.untyped]]) }
     def overrides
+      return [] unless defined?(::Rails)
+
       @overrides ||=
         T.let(
           paths.filter_map { |_, path| load_path_files(path) }.flatten,

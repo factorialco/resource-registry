@@ -1,9 +1,10 @@
 GIT
   remote: https://github.com/factorialco/resource-registry.git
-  revision: 961588ae9a96f8540c8dbed5cfd78e04f467d203
+  revision: 178710e89db589a96e5d7c7d612d0c243bc0eed0
   branch: adding-example-app
   specs:
     resource_registry (0.0.0)
+      dry-inflector (= 1.1.0)
       sorbet-coerce (>= 0.2.6)
       sorbet-runtime (= 0.5.11511)
 
@@ -13,6 +14,7 @@ GEM
     base64 (0.2.0)
     coderay (1.1.3)
     diff-lcs (1.5.1)
+    dry-inflector (1.1.0)
     json (2.7.2)
     method_source (1.1.0)
     multi_json (1.15.0)
