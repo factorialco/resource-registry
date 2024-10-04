@@ -2,7 +2,6 @@
 
 source 'https://rubygems.org'
 
-gem 'activesupport'
 gem 'rspec'
 gem 'rspec-json_expectations', require: true
 gem 'rspec-sorbet', '~> 1.9.2'
