@@ -19,6 +19,8 @@ class App < Sinatra::Base
   resources = registry.fetch_all
 
   resources.each do |id, resource|
+    next unless resource.verbs.include?(:read)
+
     route :get, "/#{resource.collection_name}" do
       content_type :json
       { data: [] }.to_json
