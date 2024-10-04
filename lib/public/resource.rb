@@ -9,6 +9,12 @@ require_relative 'relationship'
 require_relative 'verb'
 require_relative '../schema_registry/schema'
 
+# FIXME: Move it somewhere else
+def parameterize(string)
+  # Convert to ASCII, downcase, and replace non-word characters with dashes
+  string.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/, '')
+end
+
 module ResourceRegistry
   # The main class that represents a resource in the system.
   class Resource < T::Struct
@@ -38,12 +44,12 @@ module ResourceRegistry
     sig { returns(String) }
     def path
       @path = T.let(@path, T.nilable(String))
-      @path ||= "#{namespace.parameterize}/#{slug}"
+      @path ||= "#{parameterize(namespace)}/#{slug}"
     end
 
     sig { returns(String) }
     def slug
-      @slug ||= T.let(name.to_s.parameterize, T.nilable(String))
+      @slug ||= T.let(parameterize(name.to_s), T.nilable(String))
     end
 
     sig { returns(Symbol) }
@@ -53,7 +59,7 @@ module ResourceRegistry
 
     sig { returns(String) }
     def collection_name
-      @collection_name ||= T.let(name.to_s.pluralize, T.nilable(String))
+      @collection_name ||= T.let(inflector.pluralize(name.to_s), T.nilable(String))
     end
 
     sig { returns(Symbol) }
@@ -68,7 +74,7 @@ module ResourceRegistry
 
     sig { returns(T::Class[ResourceRegistry::Repositories::Base[T.untyped]]) }
     def repository
-      repository_klass = repository_raw.safe_constantize
+      repository_klass = inflector.constantize(repository_raw)
       raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?
 
       repository_klass

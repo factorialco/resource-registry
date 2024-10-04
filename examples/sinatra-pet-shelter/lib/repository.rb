@@ -17,11 +17,9 @@ class Repository
   end
 
   # Migrate to RR gem
+  # FIXME: Review
   sig(:final) { returns(String) }
   def self.namespace
-    namespace = to_s.split('::Repositories').first
-    return T.must(namespace).sub('::', '') if namespace != to_s
-
-    T.must(to_s.split('::').first)
+    ''
   end
 end
