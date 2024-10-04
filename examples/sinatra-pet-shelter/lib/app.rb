@@ -5,12 +5,20 @@ require 'sinatra/multi_route'
 require 'resource_registry'
 
 require 'sinatra/reloader' if development?
+require 'pry'
+
+require_relative 'repository'
+
+Dir[File.expand_path('lib/resources/*.rb')].each { |f| require_relative(f) }
 
 # Main entrypoint of the application
 class App < Sinatra::Base
   register Sinatra::MultiRoute
 
-  resources = ResourceRegistry::Registry.new(resources: []).fetch_all
+  registry, = ResourceRegistry::Initializer.new(repository_base_klass: Repository).call
+  resources = registry.fetch_all
+
+  # binding.pry
 
   resources.each do |resource|
     route :get, "/#{resource}" do

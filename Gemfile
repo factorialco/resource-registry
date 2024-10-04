@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'dry-inflector'
 gem 'rspec'
 gem 'rspec-json_expectations', require: true
 gem 'rspec-sorbet', '~> 1.9.2'

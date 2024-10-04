@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 # typed: strict
 
+require 'dry/inflector'
+
 require_relative 'capabilities/capability_config'
 require_relative 'capability_factory'
 require_relative 'relationship'
@@ -46,7 +48,7 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def identifier
-      @identifier ||= T.let(:"#{namespace.underscore}.#{name.to_s.underscore}", T.nilable(Symbol))
+      @identifier ||= T.let(:"#{inflector.underscore(namespace)}.#{inflector.underscore(name.to_s)}", T.nilable(Symbol))
     end
 
     sig { returns(String) }
@@ -56,7 +58,7 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def name
-      @name ||= T.let(resource_name.underscore.singularize.to_sym, T.nilable(Symbol))
+      @name ||= T.let(inflector.singularize(inflector.underscore(resource_name)).to_sym, T.nilable(Symbol))
     end
 
     sig { returns(String) }
@@ -235,6 +237,13 @@ module ResourceRegistry
         schema: SchemaRegistry::Schema.load(spec['schema']),
         paginateable: spec.fetch('paginateable', true)
       )
+    end
+
+    private
+
+    sig { returns(Dry::Inflector) }
+    def inflector
+      @inflector ||= Dry::Inflector.new
     end
   end
 end
