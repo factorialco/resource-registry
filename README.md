@@ -12,7 +12,7 @@ A service discovery mechanism for Factorial backend
 Add the following lines in your Gemfile:
 
 ```ruby
-gem 'resource_registry', github: 'factorialco/opening-resource-registry'
+gem 'resource_registry', github: 'factorialco/resource-registry'
 ```
 
 And run `bundle install`
