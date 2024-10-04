@@ -1,7 +1,6 @@
 # typed: strict
 
 require 'sorbet-coerce'
-require 'active_support/hash_with_indifferent_access'
 
 module ResourceRegistry
   # Constructs a resource struct (like Dtos and Entities) from a hash of arguments
