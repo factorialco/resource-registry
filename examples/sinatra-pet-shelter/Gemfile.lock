@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/factorialco/resource-registry.git
-  revision: 6bbde8294838cb9d29cf339021afd3ca8855d1d7
+  revision: 34ab98a96724dee4ec239e206b8e29ef48513c06
+  branch: adding-example-app
   specs:
     resource_registry (0.0.0)
       sorbet-coerce (>= 0.2.6)
