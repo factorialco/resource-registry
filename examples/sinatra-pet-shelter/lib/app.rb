@@ -10,7 +10,7 @@ require 'sinatra/reloader' if development?
 class App < Sinatra::Base
   register Sinatra::MultiRoute
 
-  resources = ResourceRegistry::Registry.new.resources
+  resources = ResourceRegistry::Registry.new(resources: []).fetch_all
 
   resources.each do |resource|
     route :get, "/#{resource}" do

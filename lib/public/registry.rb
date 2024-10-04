@@ -4,6 +4,19 @@
 require_relative 'resource'
 require_relative 'capabilities/capability_config'
 
+# Picked from active_support:
+module Enumerable
+  def index_by
+    if block_given?
+      result = {}
+      each { |elem| result[yield(elem)] = elem }
+      result
+    else
+      to_enum(:index_by) { size if respond_to?(:size) }
+    end
+  end
+end
+
 module ResourceRegistry
   class Registry
     extend T::Sig
