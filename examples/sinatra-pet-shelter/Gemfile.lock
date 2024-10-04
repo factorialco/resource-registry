@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/factorialco/resource-registry.git
-  revision: 178710e89db589a96e5d7c7d612d0c243bc0eed0
+  revision: 680356f322abe5aff20c104fae9db205b9efe2c8
   branch: adding-example-app
   specs:
     resource_registry (0.0.0)

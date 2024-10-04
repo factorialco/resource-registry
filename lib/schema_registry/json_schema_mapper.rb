@@ -95,7 +95,7 @@ module SchemaRegistry
           end
 
         default =
-          if enum_values.any? && value['default'].kind_of?(Array)
+          if enum_values.any? && value['default'].is_a?(Array)
             # Handle arrays
             value['default']&.map do |v|
               next v if v.is_a?(String)
@@ -148,14 +148,14 @@ module SchemaRegistry
     def handle_resolver(resolver)
       if resolver.is_a?(String)
         { all: resolver }
-      elsif resolver.present?
-        resolver.symbolize_keys
+      elsif resolver.is_a?(Hash)
+        resolver
       end
     end
 
     sig { params(serialization_groups: T.any(NilClass, T::Array[String])).returns(T::Set[Symbol]) }
     def handle_serialization_groups(serialization_groups)
-      return Set[] if serialization_groups.blank?
+      return Set[] if serialization_groups.nil? || serialization_groups.empty?
 
       serialization_groups.compact.to_set(&:to_sym)
     end

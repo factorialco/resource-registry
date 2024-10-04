@@ -49,8 +49,10 @@ module ResourceRegistry
 
           next unless dto_klass # FIXME: Throw an exception?
 
+          return_type = (signature.return_type[:raw_type] if signature.return_type.respond_to?(:raw_type))
+
           returns_many =
-            signature.return_type.try(:raw_type)&.ancestors&.include?(::Repositories::ReadResult)
+            return_type&.ancestors&.include?(::Repositories::ReadResult)
 
           definition = SchemaRegistry::GenerateFromStruct.new(struct_klass: dto_klass).call
           verb_schema =

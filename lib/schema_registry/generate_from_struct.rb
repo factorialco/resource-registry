@@ -73,6 +73,7 @@ module SchemaRegistry
     sig { params(klass: T.untyped).returns(T.nilable(T::Array[String])) }
     def calculate_required(klass)
       return unless klass.respond_to?(:decorator)
+
       klass.decorator.props.filter_map { |prop| prop[0].to_s if required?(prop[1]) }
     end
 
@@ -110,9 +111,7 @@ module SchemaRegistry
         'enum' => (typedef.type.raw_type.values.map(&:serialize) if enum?(typedef.type.raw_type)),
         'properties' =>
           (
-            if can_resolve_type?(typedef.type.raw_type)
-              deep_generate_properties(typedef.type.raw_type)
-            end
+            deep_generate_properties(typedef.type.raw_type) if can_resolve_type?(typedef.type.raw_type)
           ),
         'format' => sorbet_type_to_json_format(type: typedef.type.raw_type),
         'required' => calculate_required(typedef.type.raw_type)
@@ -147,21 +146,19 @@ module SchemaRegistry
         nilable: T::Boolean
       ).returns(T.any(String, T::Array[String]))
     end
-    #rubocop:disable Metrics/PerceivedComplexity
     def sorbet_type_to_json(type:, type_object: nil, nilable: false)
       return nilable_sorbet_type_to_json(type: type, type_object: type_object) if nilable
 
       return 'integer' if type == Integer
       return 'number' if type == Float
       return 'boolean' if type.is_a?(T::Types::Union) || type == T::Boolean
-      return 'string' if type == ActionDispatch::Http::UploadedFile
+      # FIXME: Review this
+      # return 'string' if type == ActionDispatch::Http::UploadedFile
       return 'array' if type.is_a?(T::Types::TypedArray)
       return 'string' if represented_as_string?(type)
 
       'object'
     end
-    #rubocop:enable Metrics/PerceivedComplexity
-
     sig do
       params(type: T.any(Integer, T::Types::Union, T.untyped), type_object: T.untyped).returns(
         T::Array[String]
@@ -175,20 +172,25 @@ module SchemaRegistry
 
     sig { params(type: T.untyped).returns(T::Boolean) }
     def represented_as_string?(type)
-      enum?(type) || [String, DateTime, ActiveSupport::TimeWithZone, Date, Time].include?(type)
+      # FIXME: Review this
+      # enum?(type) || [String, DateTime, ActiveSupport::TimeWithZone, Date, Time].include?(type)
+      true
     end
 
     sig { params(type: T.untyped).returns(T::Boolean) }
     def enum?(type)
       return true if type.is_a?(Class) && type <= T::Enum
+
       false
     end
 
     sig { params(type: T.untyped).returns(T.nilable(String)) }
     def sorbet_type_to_json_format(type:)
-      return 'binary' if type == ActionDispatch::Http::UploadedFile
+      # FIXME: Review this
+      # return 'binary' if type == ActionDispatch::Http::UploadedFile
       return 'date-time' if type == DateTime
-      return 'time' if [ActiveSupport::TimeWithZone, Time].include?(type)
+      # FIXME: Review this
+      # return 'time' if [ActiveSupport::TimeWithZone, Time].include?(type)
       return 'date' if type == Date
 
       nil

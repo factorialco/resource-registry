@@ -59,7 +59,7 @@ module ResourceRegistry
 
     sig { returns(T.class_of(T::Struct)) }
     def dto
-      dto_klass = dto_raw.safe_constantize
+      dto_klass = inflector.constantize(dto_raw)
 
       raise DtoClassNotFound, "DTO class #{dto} for verb #{id} not found" if dto_klass.nil?
 
@@ -93,6 +93,13 @@ module ResourceRegistry
         description: spec['description'],
         webhook_description: spec['webhook_description']
       )
+    end
+
+    private
+
+    sig { returns(Dry::Inflector) }
+    def inflector
+      @inflector ||= Dry::Inflector.new
     end
   end
 end
