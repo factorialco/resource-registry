@@ -56,7 +56,7 @@ RSpec.describe ResourceRegistry::Registry do
     end
   end
 
-  describe '#fetch' do
+  describe '#fetch(identifier)' do
     it { expect(registry.fetch(identifier)).to be(resource) }
   end
 
