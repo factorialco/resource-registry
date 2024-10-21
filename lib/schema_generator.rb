@@ -1,5 +1,7 @@
 # typed: strict
 
+require_relative './schema_registry/generate_from_struct'
+
 module ResourceRegistry
   class SchemaGenerator
     extend T::Sig

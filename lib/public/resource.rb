@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 # typed: strict
 
+require 'dry/inflector'
+
 require_relative 'capabilities/capability_config'
 require_relative 'capability_factory'
 require_relative 'relationship'
 require_relative 'verb'
 require_relative '../schema_registry/schema'
+
+# FIXME: Move it somewhere else
+def parameterize(string)
+  # Convert to ASCII, downcase, and replace non-word characters with dashes
+  string.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/, '')
+end
 
 module ResourceRegistry
   # The main class that represents a resource in the system.
@@ -36,27 +44,27 @@ module ResourceRegistry
     sig { returns(String) }
     def path
       @path = T.let(@path, T.nilable(String))
-      @path ||= "#{namespace.parameterize}/#{slug}"
+      @path ||= "#{parameterize(namespace)}/#{slug}"
     end
 
     sig { returns(String) }
     def slug
-      @slug ||= T.let(name.to_s.parameterize, T.nilable(String))
+      @slug ||= T.let(parameterize(name.to_s), T.nilable(String))
     end
 
     sig { returns(Symbol) }
     def identifier
-      @identifier ||= T.let(:"#{namespace.underscore}.#{name.to_s.underscore}", T.nilable(Symbol))
+      @identifier ||= T.let(:"#{inflector.underscore(namespace)}.#{inflector.underscore(name.to_s)}", T.nilable(Symbol))
     end
 
     sig { returns(String) }
     def collection_name
-      @collection_name ||= T.let(name.to_s.pluralize, T.nilable(String))
+      @collection_name ||= T.let(inflector.pluralize(name.to_s), T.nilable(String))
     end
 
     sig { returns(Symbol) }
     def name
-      @name ||= T.let(resource_name.underscore.singularize.to_sym, T.nilable(Symbol))
+      @name ||= T.let(inflector.singularize(inflector.underscore(resource_name)).to_sym, T.nilable(Symbol))
     end
 
     sig { returns(String) }
@@ -66,7 +74,7 @@ module ResourceRegistry
 
     sig { returns(T::Class[ResourceRegistry::Repositories::Base[T.untyped]]) }
     def repository
-      repository_klass = repository_raw.safe_constantize
+      repository_klass = inflector.constantize(repository_raw)
       raise ArgumentError, "Repository #{repository_raw} not found, did you misspell it?" if repository_klass.nil?
 
       repository_klass
@@ -235,6 +243,13 @@ module ResourceRegistry
         schema: SchemaRegistry::Schema.load(spec['schema']),
         paginateable: spec.fetch('paginateable', true)
       )
+    end
+
+    private
+
+    sig { returns(Dry::Inflector) }
+    def inflector
+      @inflector ||= Dry::Inflector.new
     end
   end
 end
