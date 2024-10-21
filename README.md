@@ -97,7 +97,7 @@ And run `bundle install`
 
 ## Setting up your first resources
 
-TODO
+- [Check this project to see an example Sinatra based app using Resource Registry](examples/sinatra-pet-shelter)
 
 ## Similar projects
 

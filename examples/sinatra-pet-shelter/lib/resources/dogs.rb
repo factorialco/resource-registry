@@ -17,6 +17,5 @@ class Dogs < Repository
 
   # FIXME: Review `context`
   sig { override.params(dto: ReadDto, context: T.untyped).returns(T::Array[Dog]) }
-  def read(dto:, context:)
-  end
+  def read(dto:, context:); end
 end
