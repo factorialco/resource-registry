@@ -26,6 +26,11 @@ module ResourceRegistry
       def matches?(str)
         [name, *aliases].include?(str)
       end
+
+      sig { params(other: Version).returns(T.nilable(Integer)) }
+      def <=>(other)
+        name <=> other.name
+      end
     end
   end
 end
