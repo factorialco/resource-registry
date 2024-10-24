@@ -25,6 +25,19 @@ module ResourceRegistry
       find(name) || raise("Version '#{name}' not found")
     end
 
+    sig { params(name: String).returns(T.nilable(Version)) }
+    def find_next(name)
+      version = find!(name)
+      index = T.must(sorted_versions.index(version))
+
+      sorted_versions[index + 1]
+    end
+
+    sig { returns(T::Array[Version]) }
+    def sorted_versions
+      versions.sort
+    end
+
     private
 
     sig { returns(T::Array[Version]) }
