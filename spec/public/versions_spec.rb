@@ -60,7 +60,7 @@ RSpec.describe ResourceRegistry::Versions do
 
     context 'when given a random value' do
       it 'does not returns a version' do
-        expect(subject.find_next('2024-04-01')).to be_nil
+        expect { subject.find_next('2025-04-01') }.to raise_error(RuntimeError, 'Version \'2025-04-01\' not found')
       end
     end
 
@@ -75,6 +75,45 @@ RSpec.describe ResourceRegistry::Versions do
 
       it 'orders and returns the following version' do
         expect(subject.find_next('2024-02-01').to_s).to eq('2024-03-01')
+      end
+    end
+  end
+
+  describe '#in_range' do
+    let(:versions) do
+      [
+        ResourceRegistry::Versions::Version.new('2024-01-01'),
+        ResourceRegistry::Versions::Version.new('2024-04-28'),
+        ResourceRegistry::Versions::Version.new('2024-09-20'),
+        ResourceRegistry::Versions::Version.new('2025-01-09')
+      ]
+    end
+
+    it 'filters versions by >= from and <= to' do
+      expect(subject.in_range('2024-04-28', '2024-09-20').count).to eq(2)
+    end
+
+    context 'with only from' do
+      it 'filters versions by >= from' do
+        expect(subject.in_range('2024-04-28', nil).count).to eq(3)
+      end
+    end
+
+    context 'with only to' do
+      it 'filters versions by <= to' do
+        expect(subject.in_range(nil, '2024-09-20').count).to eq(3)
+      end
+    end
+
+    context 'with unexisting version' do
+      it 'raises error with wrong name' do
+        expect { subject.in_range('2022-01-01', '2022-01-01') }.to raise_error(RuntimeError, 'Version \'2022-01-01\' not found')
+      end
+    end
+
+    context 'without from and to' do
+      it 'does not apply any filter' do
+        expect(subject.in_range(nil, nil).count).to eq(4)
       end
     end
   end

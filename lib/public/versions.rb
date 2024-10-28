@@ -38,6 +38,17 @@ module ResourceRegistry
       versions.sort
     end
 
+    sig do
+      params(from: T.nilable(String), to: T.nilable(String)).returns(
+        T::Array[ResourceRegistry::Versions::Version]
+      )
+    end
+    def in_range(from, to)
+      from = find!(from) unless from.nil?
+      to = find!(to) unless to.nil?
+      versions.select { |version| (from.nil? || version >= from) && (to.nil? || version <= to) }
+    end
+
     private
 
     sig { returns(T::Array[Version]) }
