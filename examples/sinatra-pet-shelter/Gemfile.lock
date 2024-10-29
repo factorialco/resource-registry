@@ -1,12 +1,12 @@
 GIT
   remote: https://github.com/factorialco/resource-registry.git
-  revision: 680356f322abe5aff20c104fae9db205b9efe2c8
+  revision: 2b73ddd272417ca8026e5f13e1103b4c72897824
   branch: adding-example-app
   specs:
     resource_registry (0.0.0)
       dry-inflector (= 1.1.0)
       sorbet-coerce (>= 0.2.6)
-      sorbet-runtime (= 0.5.11511)
+      sorbet-runtime (= 0.5.11609)
 
 GEM
   remote: https://rubygems.org/
@@ -60,7 +60,7 @@ GEM
       polyfill (~> 1.8)
       safe_type (~> 1.1, >= 1.1.1)
       sorbet-runtime (>= 0.4.4704)
-    sorbet-runtime (0.5.11511)
+    sorbet-runtime (0.5.11609)
     tilt (2.4.0)
 
 PLATFORMS
