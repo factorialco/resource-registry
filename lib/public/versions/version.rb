@@ -31,6 +31,16 @@ module ResourceRegistry
       def <=>(other)
         name <=> other.name
       end
+
+      sig { params(other: Version).returns(T::Boolean) }
+      def >=(other)
+        name >= other.name
+      end
+
+      sig { params(other: Version).returns(T::Boolean) }
+      def <=(other)
+        name <= other.name
+      end
     end
   end
 end
