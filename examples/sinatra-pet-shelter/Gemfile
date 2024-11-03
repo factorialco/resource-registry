@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'json'
+gem 'resource_registry', github: 'factorialco/resource-registry', branch: 'adding-example-app'
+gem 'sinatra'
+gem 'sinatra-contrib'
+
+group :development, :test do
+  gem 'pry'
+  gem 'rack-test'
+  gem 'rspec'
+end
