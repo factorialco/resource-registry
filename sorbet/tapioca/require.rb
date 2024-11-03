@@ -1,4 +1,25 @@
 # typed: true
 # frozen_string_literal: true
 
-# Add your extra requires here (`bin/tapioca require` can be used to bootstrap this list)
+require "active_support/all"
+require "bigdecimal"
+require "date"
+require "pry"
+require "public/configuration"
+require "public/entity_finder"
+require "public/initializer"
+require "public/resource"
+require "public/versions"
+require "public/versions/version"
+require "rack/test"
+require "rbi"
+require "rspec"
+require "rspec/json_expectations"
+require "rspec/sorbet"
+require "schema_registry/json_schema_mapper"
+require "schema_registry/maybe"
+require "sinatra"
+require "sinatra/multi_route"
+require "sinatra/reloader"
+require "sorbet-coerce"
+require "sorbet-runtime"

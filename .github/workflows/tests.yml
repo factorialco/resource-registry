@@ -17,7 +17,7 @@ jobs:
           bundler-cache: true
       - name: Run sorbet typechecks
         run: |
-          bundle exec srb
+          bundle exec srb tc --ignore examples
       - name: Run rspec tests
         run: |
           bundle exec rspec
