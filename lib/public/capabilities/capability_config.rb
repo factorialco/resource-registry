@@ -19,7 +19,8 @@ module ResourceRegistry
 
         # The key of the capability, this key will be used to take it from yaml configuration
         sig { abstract.returns(Symbol) }
-        def key; end
+        def key
+        end
       end
 
       requires_ancestor { Object }
@@ -27,7 +28,8 @@ module ResourceRegistry
       mixes_in_class_methods(ClassMethods)
 
       sig { abstract.returns(T::Hash[String, T.untyped]) }
-      def serialize; end
+      def serialize
+      end
     end
   end
 end

@@ -25,11 +25,15 @@ module SchemaRegistry
     sig { returns(SchemaRegistry::Registry) }
     attr_reader :schema_registry
 
-    sig { params(namespace: String, path: String).returns(T::Array[SchemaRegistry::Schema]) }
+    sig do
+      params(namespace: String, path: String).returns(
+        T::Array[SchemaRegistry::Schema]
+      )
+    end
     def load_path_files(namespace, path)
       # TODO: Maybe load graphql schemas too?
       # TODO: Support yml extension too
-      files = Dir[File.join(path, '*.yaml')]
+      files = Dir[File.join(path, "*.yaml")]
 
       processed_schemas =
         files.map do |file|

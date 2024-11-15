@@ -1,6 +1,6 @@
 # typed: true
 
-require 'rbi'
+require "rbi"
 
 module SchemaRegistry
   class RbiGenerator
@@ -15,9 +15,9 @@ module SchemaRegistry
     sig { returns(String) }
     def string
       rbi =
-        RBI::File.new(strictness: 'strong') do |file|
+        RBI::File.new(strictness: "strong") do |file|
           file << RBI::Module.new(schema.namespace.camelize) do |ns_module|
-            ns_module << RBI::Module.new('Schemas') do |mod|
+            ns_module << RBI::Module.new("Schemas") do |mod|
               mod << RBI::Module.new(schema.schema_module_name) do |schema_mod|
                 append_content(schema_mod)
               end
@@ -32,14 +32,17 @@ module SchemaRegistry
 
     sig { params(schema_mod: T.untyped).void }
     def append_content(schema_mod)
-      schema_mod << RBI::Extend.new('T::Sig')
-      schema_mod << RBI::Extend.new('T::Helpers')
+      schema_mod << RBI::Extend.new("T::Sig")
+      schema_mod << RBI::Extend.new("T::Helpers")
       # Adds the `interface!` helper call
-      schema_mod << RBI::Helper.new('interface')
+      schema_mod << RBI::Helper.new("interface")
 
       schema.properties.each do |prop|
         schema_mod << RBI::Method.new(prop.name) do |method|
-          method.sigs << RBI::Sig.new(return_type: to_rbi_type(prop), is_abstract: true)
+          method.sigs << RBI::Sig.new(
+            return_type: to_rbi_type(prop),
+            is_abstract: true
+          )
         end
       end
     end
@@ -51,7 +54,14 @@ module SchemaRegistry
     def to_rbi_type(prop)
       types = prop.types.map(&:sorbet_type)
 
-      rbi_type = (types.length > 1 ? "T.any(#{prop.types.join(', ')})" : T.must(types.first))
+      rbi_type =
+        (
+          if types.length > 1
+            "T.any(#{prop.types.join(", ")})"
+          else
+            T.must(types.first)
+          end
+        )
 
       rbi_type = "T.nilable(#{rbi_type})" if prop.nilable?
 

@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 # typed: true
 
-require 'sorbet-runtime'
+require "sorbet-runtime"
 
-require 'public/initializer'
-require 'public/configuration'
-require 'public/resource'
-require 'public/versions'
-require 'public/versions/version'
-require 'public/entity_finder'
-require 'schema_registry/json_schema_mapper'
-require 'schema_registry/maybe'
-require 'runtime_generic'
+require "public/configuration"
+require "public/resource"
+require "public/versions"
+require "public/versions/version"
+require "public/entity_finder"
+require "schema_registry/json_schema_mapper"
+require "schema_registry/maybe"
+require "schema_registry/generate_from_struct"
+require "runtime_generic"
+require "public/resource_struct_builder"
 
 # Entry point for ResourceRegistry
 module ResourceRegistry

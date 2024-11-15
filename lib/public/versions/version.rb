@@ -5,7 +5,12 @@ module ResourceRegistry
     class Version
       extend T::Sig
 
-      sig { params(name: String, aliases: T.nilable(T.any(String, T::Array[String]))).void }
+      sig do
+        params(
+          name: String,
+          aliases: T.nilable(T.any(String, T::Array[String]))
+        ).void
+      end
       def initialize(name, aliases: nil)
         @name = name
         @aliases = T.let(Array(aliases), T::Array[String])

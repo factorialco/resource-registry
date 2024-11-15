@@ -32,7 +32,10 @@ module Maybe
     end
 
     sig(:final) do
-      override.type_parameters(:Default).params(_default: T.type_parameter(:Default)).returns(Value)
+      override
+        .type_parameters(:Default)
+        .params(_default: T.type_parameter(:Default))
+        .returns(Value)
     end
     def or_default(_default)
       value
@@ -41,7 +44,9 @@ module Maybe
     sig(:final) do
       override
         .type_parameters(:Return)
-        .params(_block: T.proc.params(v: Value).returns(T.type_parameter(:Return)))
+        .params(
+          _block: T.proc.params(v: Value).returns(T.type_parameter(:Return))
+        )
         .returns(T.nilable(T.type_parameter(:Return)))
     end
     def when_present(&_block)
@@ -59,7 +64,9 @@ module Maybe
     end
 
     sig(:final) do
-      override.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value])
+      override
+        .params(_block: T.proc.params(value: Value).returns(T::Boolean))
+        .returns(Maybe[Value])
     end
     def filter(&_block)
       return self if yield value
@@ -72,7 +79,10 @@ module Maybe
         .type_parameters(:Default)
         .params(
           _block:
-            T.proc.params(value: Value).returns(T.all(BasicObject, T.type_parameter(:Default)))
+            T
+              .proc
+              .params(value: Value)
+              .returns(T.all(BasicObject, T.type_parameter(:Default)))
         )
         .returns(Maybe[T.all(BasicObject, T.type_parameter(:Default))])
     end

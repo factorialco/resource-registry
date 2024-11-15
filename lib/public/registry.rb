@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 # typed: false
 
-require_relative 'resource'
-require_relative 'capabilities/capability_config'
+require_relative "resource"
+require_relative "capabilities/capability_config"
 
 module ResourceRegistry
   class Registry
@@ -22,7 +22,10 @@ module ResourceRegistry
       end
 
       @resources =
-        T.let(resources.index_by { |res| res.identifier.to_s }, T::Hash[String, Resource])
+        T.let(
+          resources.index_by { |res| res.identifier.to_s },
+          T::Hash[String, Resource]
+        )
     end
 
     sig { params(identifier: String).returns(T.nilable(Resource)) }
@@ -40,7 +43,10 @@ module ResourceRegistry
     end
 
     sig do
-      params(repository_class: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource))
+      params(
+        repository_class:
+          T::Class[ResourceRegistry::Repositories::Base[T.untyped]]
+      ).returns(T.nilable(Resource))
     end
     def fetch_for_repository(repository_class)
       fetch_all.values.find { |r| r.repository == repository_class }
@@ -52,16 +58,24 @@ module ResourceRegistry
     end
 
     sig do
-      params(capabilities: T::Class[Capabilities::CapabilityConfig]).returns(T::Array[Resource])
+      params(capabilities: T::Class[Capabilities::CapabilityConfig]).returns(
+        T::Array[Resource]
+      )
     end
     def fetch_with_capabilities(*capabilities)
       # FIXME: This is a hack to avoid having to change the interface of the method
       capabilities_set = T.unsafe(capabilities).to_set(&:key)
 
-      fetch_all.values.select { |resource| capabilities_set <= resource.capabilities.keys.to_set }
+      fetch_all.values.select do |resource|
+        capabilities_set <= resource.capabilities.keys.to_set
+      end
     end
 
-    sig { params(repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).returns(T.nilable(Resource)) }
+    sig do
+      params(
+        repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]
+      ).returns(T.nilable(Resource))
+    end
     def find_by_repository(repository)
       fetch_all.values.find { |resource| resource.repository == repository }
     end

@@ -12,7 +12,14 @@ module ResourceRegistry
 
     ResultShape =
       T.type_alias do
-        T::Array[T.nilable(T.any(T::Hash[String, T.untyped], T::Array[T::Hash[String, T.untyped]]))]
+        T::Array[
+          T.nilable(
+            T.any(
+              T::Hash[String, T.untyped],
+              T::Array[T::Hash[String, T.untyped]]
+            )
+          )
+        ]
       end
 
     sig { params(spec: T::Hash[String, T.untyped]).void }
@@ -21,17 +28,25 @@ module ResourceRegistry
     end
 
     sig { abstract.returns(String) }
-    def serialize; end
+    def serialize
+    end
 
-    sig { abstract.params(argument: String, relationship: Relationship).returns(T::Boolean) }
-    def should_skip_argument?(argument, relationship); end
+    sig do
+      abstract
+        .params(argument: String, relationship: Relationship)
+        .returns(T::Boolean)
+    end
+    def should_skip_argument?(argument, relationship)
+    end
 
     sig { abstract.returns(T::Boolean) }
-    def many_cardinality?; end
+    def many_cardinality?
+    end
 
     # The field defined to resolve the other side of the relationship, it can be field or primary_key
     sig { abstract.params(relationship: Relationship).returns(Symbol) }
-    def reference_id(relationship); end
+    def reference_id(relationship)
+    end
 
     sig do
       abstract
@@ -42,10 +57,12 @@ module ResourceRegistry
         )
         .returns(ResultShape)
     end
-    def shape_result(loaded_data, ids, relationship); end
+    def shape_result(loaded_data, ids, relationship)
+    end
 
     sig { abstract.returns(Integer) }
-    def complexity; end
+    def complexity
+    end
 
     sig { returns(T::Boolean) }
     def forward_entities?
@@ -68,7 +85,8 @@ module ResourceRegistry
         )
         .returns(T::Hash[Symbol, T.untyped])
     end
-    def prepare_dto(dto, ids, rel, parent_resource); end
+    def prepare_dto(dto, ids, rel, parent_resource)
+    end
 
     sig { returns(T::Array[T::Hash[String, T.untyped]]) }
     def nested_fields
@@ -77,25 +95,29 @@ module ResourceRegistry
 
     sig { returns(String) }
     def name
-      @spec['name']
+      @spec["name"]
     end
 
     sig { returns(Symbol) }
     def resource_id
-      @spec['resource_id']&.to_sym
+      @spec["resource_id"]&.to_sym
     end
 
     sig { returns(Symbol) }
     def field
-      @spec['field']&.to_sym
+      @spec["field"]&.to_sym
     end
 
     sig { returns(Symbol) }
     def primary_key
-      @spec['primary_key']&.to_sym || :id
+      @spec["primary_key"]&.to_sym || :id
     end
 
-    sig { overridable.params(read_dto: T.nilable(T.class_of(T::Struct))).returns(T::Boolean) }
+    sig do
+      overridable
+        .params(read_dto: T.nilable(T.class_of(T::Struct)))
+        .returns(T::Boolean)
+    end
     def valid_relationship_field?(read_dto)
       return true unless relationship_field_name
 
@@ -103,6 +125,7 @@ module ResourceRegistry
     end
 
     sig { overridable.returns(T.nilable(Symbol)) }
-    def relationship_field_name; end
+    def relationship_field_name
+    end
   end
 end

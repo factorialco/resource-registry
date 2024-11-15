@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 # typed: true
 
-require_relative 'relationship_types/has_many'
-require_relative 'relationship_types/has_many_through'
-require_relative 'relationship_types/has_one'
-require_relative 'relationship_types/belongs_to'
+require_relative "relationship_types/has_many"
+require_relative "relationship_types/has_many_through"
+require_relative "relationship_types/has_one"
+require_relative "relationship_types/belongs_to"
 
 module ResourceRegistry
   class Configuration
     extend T::Sig
 
     DEFAULT_RELATIONSHIP_TYPES = {
-      'has_many_through' => RelationshipTypes::HasManyThrough,
-      'has_many' => RelationshipTypes::HasMany,
-      'has_one' => RelationshipTypes::HasOne,
-      'belongs_to' => RelationshipTypes::BelongsTo
+      "has_many_through" => RelationshipTypes::HasManyThrough,
+      "has_many" => RelationshipTypes::HasMany,
+      "has_one" => RelationshipTypes::HasOne,
+      "belongs_to" => RelationshipTypes::BelongsTo
     }.freeze
 
     sig { void }
@@ -28,7 +28,12 @@ module ResourceRegistry
       @relationship_types[type] = klass
     end
 
-    sig { params(capability: Symbol, klass: T.class_of(Capabilities::CapabilityConfig)).void }
+    sig do
+      params(
+        capability: Symbol,
+        klass: T.class_of(Capabilities::CapabilityConfig)
+      ).void
+    end
     def register_capability(capability, klass)
       @capabilities[capability] = klass
     end
@@ -38,7 +43,10 @@ module ResourceRegistry
 
     sig do
       returns(
-        T::Hash[Symbol, T.all(T::Class[Capabilities::CapabilityConfig], T.class_of(T::Struct))]
+        T::Hash[
+          Symbol,
+          T.all(T::Class[Capabilities::CapabilityConfig], T.class_of(T::Struct))
+        ]
       )
     end
     attr_reader :capabilities

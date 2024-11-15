@@ -35,33 +35,33 @@ module SchemaRegistry
     def sorbet_type
       case self
       when String
-        'String'
+        "String"
       when Number
-        'Float'
+        "Float"
       when Integer, BigInteger
-        'Integer'
+        "Integer"
       when Object
-        'T::Hash[Symbol, T.untyped]'
+        "T::Hash[Symbol, T.untyped]"
       when Array
-        'T::Array[T.untyped]'
+        "T::Array[T.untyped]"
       when Boolean
-        'T::Boolean'
+        "T::Boolean"
       when Null
-        'NilClass'
+        "NilClass"
       when DateTime, Time
-        'Time'
+        "Time"
       when Date
-        'Date'
+        "Date"
       when Duration
-        'ActiveSupport::Duration'
+        "ActiveSupport::Duration"
       when Email
-        'Mail::Address'
+        "Mail::Address"
       when Uri
-        'URI::Generic'
+        "URI::Generic"
       when Regex
-        'Regexp'
+        "Regexp"
       when File
-        'ActionDispatch::Http::UploadedFile'
+        "ActionDispatch::Http::UploadedFile"
       else
         T.absurd(self)
       end
