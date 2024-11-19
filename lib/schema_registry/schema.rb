@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 # typed: strict
 
-require_relative 'property'
-require_relative 'filter_field'
-require_relative 'property_mapper'
+require_relative "property"
+require_relative "filter_field"
+require_relative "property_mapper"
 
 module SchemaRegistry
   class Schema < T::Struct
@@ -58,7 +58,9 @@ module SchemaRegistry
     sig { params(name: String).returns(T.nilable(T::Hash[Symbol, String])) }
     def get_resolver(name)
       property = find_property(name)
-      raise "No resolvable schema property of name #{name} exists" unless property&.resolvable
+      unless property&.resolvable
+        raise "No resolvable schema property of name #{name} exists"
+      end
 
       property.resolver
     end
@@ -69,20 +71,23 @@ module SchemaRegistry
 
       properties = PropertyMapper.new(schema: self).call
 
-      { name => { 'type' => 'object', 'properties' => properties } }
+      { name => { "type" => "object", "properties" => properties } }
     end
 
     sig { returns(T::Hash[Symbol, T.untyped]) }
     def dump
       {}.tap do |result|
-        result['namespace'] = namespace
-        result['raw_json_schema'] = raw_json_schema
+        result["namespace"] = namespace
+        result["raw_json_schema"] = raw_json_schema
       end
     end
 
     sig { params(spec: T.untyped).returns(Schema) }
     def self.load(spec)
-      JsonSchemaMapper.new(namespace: spec['namespace'], definition: spec['raw_json_schema']).call
+      JsonSchemaMapper.new(
+        namespace: spec["namespace"],
+        definition: spec["raw_json_schema"]
+      ).call
     end
   end
 end

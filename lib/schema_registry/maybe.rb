@@ -1,9 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
-require_relative('../runtime_generic')
-require_relative('maybe/absent')
-require_relative('maybe/present')
+require_relative("../runtime_generic")
+require_relative("maybe/absent")
+require_relative("maybe/present")
 
 # Represents an instance of an object that may or may not be present. This can be useful in certain
 # cases where `nil` represents a valid value instead of an absent value, i.e. update DTOs.
@@ -46,11 +46,14 @@ module Maybe
         unwrapped = value.is_a?(Maybe::Present) ? value.value : value
         enumerated =
           if unwrapped.is_a?(Array) || unwrapped.is_a?(Set)
-            unwrapped.map { |v| v.is_a?(T::Struct) ? Maybe.strip(v.serialize) : Maybe.strip(v) }
+            unwrapped.map do |v|
+              v.is_a?(T::Struct) ? Maybe.strip(v.serialize) : Maybe.strip(v)
+            end
           else
             unwrapped
           end
-        serialized = enumerated.is_a?(T::Struct) ? enumerated.serialize : enumerated
+        serialized =
+          enumerated.is_a?(T::Struct) ? enumerated.serialize : enumerated
         stripped = serialized.is_a?(Hash) ? Maybe.strip(serialized) : serialized
 
         [key, stripped]
@@ -100,17 +103,20 @@ module Maybe
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` contains a value, `false` otherwise.
-  def present?; end
+  def present?
+  end
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` does not contain a value, `false` otherwise.
-  def absent?; end
+  def absent?
+  end
 
   sig { abstract.returns(T::Boolean) }
   # `true` if this `Maybe` does not contain a value, `false` otherwise.
   #
   # alias of `#absent`
-  def empty?; end
+  def empty?
+  end
 
   sig do
     abstract
@@ -119,18 +125,22 @@ module Maybe
       .returns(T.any(Value, T.type_parameter(:Default)))
   end
   # Returns the value if there's one, else, it returns the provided default.
-  def or_default(default); end
+  def or_default(default)
+  end
 
   sig do
     abstract
       .type_parameters(:Return)
-      .params(_block: T.proc.params(v: Value).returns(T.type_parameter(:Return)))
+      .params(
+        _block: T.proc.params(v: Value).returns(T.type_parameter(:Return))
+      )
       .returns(T.nilable(T.type_parameter(:Return)))
   end
   # Executes the given code block if there's a value present, the code block will receive the value
   # as an argument and the method will return whatever the code block returns or `nil` if no value
   # present.
-  def when_present(&_block); end
+  def when_present(&_block)
+  end
 
   sig do
     abstract
@@ -140,10 +150,13 @@ module Maybe
   end
   # Executes the given code block if a value isn't present, returns whatever the code block returned
   # or `nil` if if the value was present.
-  def when_absent(&_block); end
+  def when_absent(&_block)
+  end
 
   sig do
-    abstract.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value])
+    abstract
+      .params(_block: T.proc.params(value: Value).returns(T::Boolean))
+      .returns(Maybe[Value])
   end
   # Evaluate the specified block passing it the value if one is present, if the block returns true,
   # returns an instance containing the same value, if the block returns false, returns an empty
@@ -152,13 +165,18 @@ module Maybe
   #
   # This is analogous to the `Array#filter` method if the `Maybe` class were an `Array` that can
   # hold one element at maximum.
-  def filter(&_block); end
+  def filter(&_block)
+  end
 
   sig do
     abstract
       .type_parameters(:Default)
       .params(
-        _block: T.proc.params(value: Value).returns(T.all(BasicObject, T.type_parameter(:Default)))
+        _block:
+          T
+            .proc
+            .params(value: Value)
+            .returns(T.all(BasicObject, T.type_parameter(:Default)))
       )
       .returns(Maybe[T.all(BasicObject, T.type_parameter(:Default))])
   end
@@ -167,5 +185,6 @@ module Maybe
   #
   # This is analogous to the `Array#map` method if the `Maybe` class were an `Array` that can
   # hold one element at maximum.
-  def map(&_block); end
+  def map(&_block)
+  end
 end

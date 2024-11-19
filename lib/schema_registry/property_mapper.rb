@@ -16,9 +16,9 @@ module SchemaRegistry
         .properties
         .each_with_object({}) do |property, memo|
           json_type = sorbet_to_json_schema(property)
-          json_type = ['null', json_type] if property.nilable?
+          json_type = ["null", json_type] if property.nilable?
 
-          memo[property.name] = { 'type' => json_type }
+          memo[property.name] = { "type" => json_type }
         end
     end
 
@@ -31,11 +31,11 @@ module SchemaRegistry
     def sorbet_to_json_schema(property)
       properties = property.types.map(&:serialize)
 
-      return 'integer' if properties.include?('integer')
-      return 'boolean' if properties.include?('boolean')
-      return 'number' if properties.include?('number')
+      return "integer" if properties.include?("integer")
+      return "boolean" if properties.include?("boolean")
+      return "number" if properties.include?("number")
 
-      'string'
+      "string"
     end
   end
 end

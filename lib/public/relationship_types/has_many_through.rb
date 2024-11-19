@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # typed: strict
 
-require_relative '../relationship_type'
+require_relative "../relationship_type"
 
 module ResourceRegistry
   module RelationshipTypes
@@ -12,10 +12,14 @@ module ResourceRegistry
 
       sig { override.returns(String) }
       def serialize
-        'has_many_through'
+        "has_many_through"
       end
 
-      sig { override.params(argument: String, relationship: Relationship).returns(T::Boolean) }
+      sig do
+        override
+          .params(argument: String, relationship: Relationship)
+          .returns(T::Boolean)
+      end
       def should_skip_argument?(argument, relationship)
         argument == relationship.primary_key.to_s.pluralize
       end
@@ -39,12 +43,19 @@ module ResourceRegistry
           )
           .returns(
             T::Array[
-              T.nilable(T.any(T::Hash[String, T.untyped], T::Array[T::Hash[String, T.untyped]]))
+              T.nilable(
+                T.any(
+                  T::Hash[String, T.untyped],
+                  T::Array[T::Hash[String, T.untyped]]
+                )
+              )
             ]
           )
       end
       def shape_result(loaded_data, ids, _relationship)
-        ids.map { |many_ids| loaded_data.filter { |r| many_ids.include?(r['id']) } }
+        ids.map do |many_ids|
+          loaded_data.filter { |r| many_ids.include?(r["id"]) }
+        end
       end
 
       sig { override.returns(Integer) }

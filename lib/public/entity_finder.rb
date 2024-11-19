@@ -5,7 +5,9 @@ module ResourceRegistry
     extend T::Sig
 
     sig do
-      params(repository: T.class_of(Repositories::Base)).returns(T.nilable(T.class_of(T::Struct)))
+      params(repository: T.class_of(Repositories::Base)).returns(
+        T.nilable(T.class_of(T::Struct))
+      )
     end
     def self.call(repository:)
       entity = repository.entity

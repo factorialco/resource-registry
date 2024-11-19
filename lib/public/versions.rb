@@ -43,7 +43,9 @@ module ResourceRegistry
     def in_range(from, to)
       from = find!(from) unless from.nil?
       to = find!(to) unless to.nil?
-      versions.select { |version| (from.nil? || version >= from) && (to.nil? || version <= to) }
+      versions.select do |version|
+        (from.nil? || version >= from) && (to.nil? || version <= to)
+      end
     end
 
     private

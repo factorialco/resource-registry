@@ -1,19 +1,23 @@
 # typed: strict
 
-require_relative './schema_registry/generate_from_struct'
+require_relative "./schema_registry/generate_from_struct"
 
 module ResourceRegistry
   class SchemaGenerator
     extend T::Sig
 
-    Repository = T.type_alias { T.class_of(ResourceRegistry::Repositories::Base) }
+    Repository =
+      T.type_alias { T.class_of(ResourceRegistry::Repositories::Base) }
 
-    sig { params(repository: Repository).returns(T.nilable(SchemaRegistry::Schema)) }
+    sig do
+      params(repository: Repository).returns(T.nilable(SchemaRegistry::Schema))
+    end
     def generate(repository:)
       struct_klass = ResourceRegistry::EntityFinder.call(repository: repository)
       return nil unless struct_klass
 
-      definition = SchemaRegistry::GenerateFromStruct.new(struct_klass: struct_klass).call
+      definition =
+        SchemaRegistry::GenerateFromStruct.new(struct_klass: struct_klass).call
       SchemaRegistry::JsonSchemaMapper.new(
         namespace: repository.namespace,
         definition: definition

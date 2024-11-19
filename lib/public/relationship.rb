@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 # typed: true
 
-require_relative 'relationship_type'
-require_relative 'relationship_type_factory'
+require_relative "relationship_type"
+require_relative "relationship_type_factory"
 
 module ResourceRegistry
   class Relationship < T::Struct
@@ -25,13 +25,13 @@ module ResourceRegistry
     sig { returns(T::Hash[String, T.untyped]) }
     def dump
       {}.tap do |result|
-        result['name'] = name
-        result['resource_id'] = resource_id
-        result['primary_key'] = primary_key
-        result['field'] = field
-        result['type'] = type.serialize
-        result['optional'] = optional
-        result['fixed_dto_params'] = fixed_dto_params
+        result["name"] = name
+        result["resource_id"] = resource_id
+        result["primary_key"] = primary_key
+        result["field"] = field
+        result["type"] = type.serialize
+        result["optional"] = optional
+        result["fixed_dto_params"] = fixed_dto_params
       end
     end
 
@@ -45,8 +45,8 @@ module ResourceRegistry
         field: type.field,
         primary_key: type.primary_key,
         type: type,
-        fixed_dto_params: spec['fixed_dto_params'],
-        optional: !spec['optional'].to_s.casecmp('false').zero?
+        fixed_dto_params: spec["fixed_dto_params"],
+        optional: !spec["optional"].to_s.casecmp("false").zero?
       )
     end
 

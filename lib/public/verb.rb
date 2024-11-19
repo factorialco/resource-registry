@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # typed: strict
 
-require_relative '../schema_registry/schema'
+require_relative "../schema_registry/schema"
 
 module ResourceRegistry
   # This is the representation of a verb over a resource. Each resource can
@@ -22,7 +22,8 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def schema_identifier
-      @schema_identifier ||= T.let(:"#{id.to_s.underscore}_dto", T.nilable(Symbol))
+      @schema_identifier ||=
+        T.let(:"#{id.to_s.underscore}_dto", T.nilable(Symbol))
     end
 
     sig { returns(T::Boolean) }
@@ -61,7 +62,9 @@ module ResourceRegistry
     def dto
       dto_klass = dto_raw.safe_constantize
 
-      raise DtoClassNotFound, "DTO class #{dto} for verb #{id} not found" if dto_klass.nil?
+      if dto_klass.nil?
+        raise DtoClassNotFound, "DTO class #{dto} for verb #{id} not found"
+      end
 
       dto_klass
     end
@@ -69,29 +72,29 @@ module ResourceRegistry
     sig { returns(T::Hash[Symbol, T.untyped]) }
     def dump
       {}.tap do |result|
-        result['id'] = id
-        result['dto'] = dto.to_s
-        result['schema'] = schema.dump
-        result['return_many'] = return_many
+        result["id"] = id
+        result["dto"] = dto.to_s
+        result["schema"] = schema.dump
+        result["return_many"] = return_many
       end
     end
 
     sig { params(spec: T.untyped).returns(Verb) }
     def self.load(spec)
-      id = spec['id']&.to_sym
+      id = spec["id"]&.to_sym
       raise ArgumentError, "Missing verb ID: #{id}" if id.nil?
 
-      dto = spec['dto']
+      dto = spec["dto"]
       raise ArgumentError, "DTO for verb #{id} not found" if dto.nil?
 
       new(
         id: id,
         dto_raw: dto,
-        schema: SchemaRegistry::Schema.load(spec['schema']),
-        summary: spec['summary'],
-        return_many: spec['return_many'],
-        description: spec['description'],
-        webhook_description: spec['webhook_description']
+        schema: SchemaRegistry::Schema.load(spec["schema"]),
+        summary: spec["summary"],
+        return_many: spec["return_many"],
+        description: spec["description"],
+        webhook_description: spec["webhook_description"]
       )
     end
   end

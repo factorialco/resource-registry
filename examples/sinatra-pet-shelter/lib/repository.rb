@@ -7,6 +7,8 @@ class Repository
   include ::ResourceRegistry::Repositories::Base
   extend RuntimeGeneric
 
+  Entity = type_member { { upper: T::Struct } }
+
   sig { returns(T.untyped) }
   def self.entity
     # Dirty hack to make Tapioca work with `tapioca dsl` command, our
@@ -20,6 +22,6 @@ class Repository
   # FIXME: Review
   sig(:final) { returns(String) }
   def self.namespace
-    ''
+    ""
   end
 end

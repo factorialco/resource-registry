@@ -18,14 +18,20 @@ module SchemaRegistry
       self
     end
 
-    sig { params(identifier: Symbol).returns(T.nilable(SchemaRegistry::Schema)) }
+    sig do
+      params(identifier: Symbol).returns(T.nilable(SchemaRegistry::Schema))
+    end
     def fetch!(identifier)
-      raise SchemaNotFound, "Schema for #{identifier} can not be found" unless @schemas[identifier]
+      unless @schemas[identifier]
+        raise SchemaNotFound, "Schema for #{identifier} can not be found"
+      end
 
       @schemas[identifier]
     end
 
-    sig { params(identifier: Symbol).returns(T.nilable(SchemaRegistry::Schema)) }
+    sig do
+      params(identifier: Symbol).returns(T.nilable(SchemaRegistry::Schema))
+    end
     def fetch(identifier)
       @schemas[identifier]
     end

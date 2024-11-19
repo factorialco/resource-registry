@@ -1,8 +1,8 @@
 # typed: false
 
-require 'spec_helper'
-require_relative '../../lib/public/registry'
-require_relative '../dummy_repo'
+require "spec_helper"
+require_relative "../../lib/public/registry"
+require_relative "../dummy_repo"
 
 class DummyCapability < T::Struct
   include ResourceRegistry::Capabilities::CapabilityConfig
@@ -25,11 +25,11 @@ RSpec.describe ResourceRegistry::Registry do
   let(:registry) { described_class.new(resources: resources) }
   let(:schema) do
     SchemaRegistry::Schema.new(
-      name: 'employees',
-      namespace: 'employees',
+      name: "employees",
+      namespace: "employees",
       properties: [
         SchemaRegistry::Property.new(
-          name: 'foo',
+          name: "foo",
           types: [SchemaRegistry::PropertyType::String],
           required: true
         )
@@ -42,35 +42,36 @@ RSpec.describe ResourceRegistry::Registry do
       capabilities: {
         dummy_capability: DummyCapability.new
       },
-      verbs: {},
+      verbs: {
+      },
       schema: schema
     )
   end
   let(:identifier) { resource.identifier.to_s }
 
-  describe '#initialize' do
+  describe "#initialize" do
     let(:resources) { [resource, resource] }
 
-    it 'not allow duplicated identifiers' do
-      expect { registry }.to raise_error(ResourceRegistry::Registry::DuplicatedIdentifierError)
+    it "not allow duplicated identifiers" do
+      expect { registry }.to raise_error(
+        ResourceRegistry::Registry::DuplicatedIdentifierError
+      )
     end
   end
 
-  describe '#fetch' do
+  describe "#fetch" do
     it { expect(registry.fetch(identifier)).to be(resource) }
   end
 
-  describe '#fetch_all' do
+  describe "#fetch_all" do
     it { expect(registry.fetch_all).to eq({ identifier => resource }) }
   end
 
-  describe '#fetch_for_repository' do
-    it do
-      expect(registry.fetch_for_repository(DummyRepo)).to(eq(resource))
-    end
+  describe "#fetch_for_repository" do
+    it { expect(registry.fetch_for_repository(DummyRepo)).to(eq(resource)) }
   end
 
-  describe '#fetch_with_capabilities' do
+  describe "#fetch_with_capabilities" do
     let(:features) { [DummyCapability] }
 
     subject { registry.fetch_with_capabilities(*features) }

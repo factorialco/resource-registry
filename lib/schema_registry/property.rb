@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 # typed: strict
 
-require 'date'
-require 'bigdecimal'
-require_relative 'property_type'
-require_relative 'maybe'
-require_relative '../public/versions/version'
+require "date"
+require "bigdecimal"
+require_relative "property_type"
+require_relative "maybe"
+require_relative "../public/versions/version"
 
 module SchemaRegistry
   class Property < T::Struct
@@ -80,7 +80,7 @@ module SchemaRegistry
 
     sig { returns(T::Boolean) }
     def value_object?
-      !!type_name.to_s.split('::').any?('ValueObjects')
+      !!type_name.to_s.split("::").any?("ValueObjects")
     end
 
     sig { params(group: Symbol).returns(T::Boolean) }

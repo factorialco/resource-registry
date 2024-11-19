@@ -1,7 +1,7 @@
 # typed: strict
 
-require 'sorbet-coerce'
-require 'active_support/all'
+require "sorbet-coerce"
+require "active_support/all"
 
 module ResourceRegistry
   # Constructs a resource struct (like Dtos and Entities) from a hash of arguments
@@ -54,20 +54,28 @@ module ResourceRegistry
       (type.is_a?(Class) && type.ancestors.include?(T::Struct)) ||
         (
           resource_type.is_a?(T::Types::Union) &&
-            resource_type.types.any? { |t| t.raw_type.ancestors.include?(T::Struct) }
+            resource_type.types.any? do |t|
+              t.raw_type.ancestors.include?(T::Struct)
+            end
         )
     end
 
     sig { returns(T::Boolean) }
     def array?
       resource_type.is_a?(T::Types::TypedArray) ||
-        (resource_type.is_a?(T::Types::Union) && resource_type.types.any?(T::Types::TypedArray))
+        (
+          resource_type.is_a?(T::Types::Union) &&
+            resource_type.types.any?(T::Types::TypedArray)
+        )
     end
 
     sig { returns(T::Boolean) }
     def set?
       resource_type.is_a?(T::Types::TypedSet) ||
-        (resource_type.is_a?(T::Types::Union) && resource_type.types.any?(T::Types::TypedSet))
+        (
+          resource_type.is_a?(T::Types::Union) &&
+            resource_type.types.any?(T::Types::TypedSet)
+        )
     end
 
     sig { returns(T.untyped) }
@@ -95,7 +103,9 @@ module ResourceRegistry
         inner_type(outer_type.type)
       when T::Types::Union
         inner_type(
-          resource_type.types.find { |t| !t.is_a?(T::Types::Simple) || t.raw_type != NilClass }
+          resource_type.types.find do |t|
+            !t.is_a?(T::Types::Simple) || t.raw_type != NilClass
+          end
         )
       else
         outer_type
@@ -105,11 +115,18 @@ module ResourceRegistry
     sig { params(args: T::Hash[T.untyped, T.untyped]).returns(T::Struct) }
     def build_struct(args)
       inner_type(resource_type).new(
-        args.symbolize_keys.filter_map { |key, value| build_struct_property(key, value) }.to_h
+        args
+          .symbolize_keys
+          .filter_map { |key, value| build_struct_property(key, value) }
+          .to_h
       )
     end
 
-    sig { params(key: Symbol, value: T.untyped).returns(T.nilable([Symbol, T.untyped])) }
+    sig do
+      params(key: Symbol, value: T.untyped).returns(
+        T.nilable([Symbol, T.untyped])
+      )
+    end
     def build_struct_property(key, value)
       prop = inner_type(resource_type).decorator&.props&.[](key)
       return if prop.nil? # filter out props that are not defined in the struct
@@ -120,7 +137,11 @@ module ResourceRegistry
       [key, resolved]
     end
 
-    sig { params(args: T.nilable(T.all(Object, T::Enumerable[T.untyped]))).returns(T.untyped) }
+    sig do
+      params(args: T.nilable(T.all(Object, T::Enumerable[T.untyped]))).returns(
+        T.untyped
+      )
+    end
     def build_enumerable(args)
       return args if args.nil?
 

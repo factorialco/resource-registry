@@ -6,9 +6,9 @@ module SchemaRegistry
 
     class SolvableNestedTypes < T::Enum
       enums do
-        Dtos = new('Dtos')
-        Entities = new('Entities')
-        ValueObjects = new('ValueObjects')
+        Dtos = new("Dtos")
+        Entities = new("Entities")
+        ValueObjects = new("ValueObjects")
       end
     end
 
@@ -19,14 +19,14 @@ module SchemaRegistry
 
     sig { returns(T::Hash[Symbol, T.untyped]) }
     def call
-      struct_key = struct_klass.to_s.split('::').last
+      struct_key = struct_klass.to_s.split("::").last
 
       schema = {}
 
-      schema[struct_key] = { 'type' => 'object', 'properties' => {} }
+      schema[struct_key] = { "type" => "object", "properties" => {} }
 
-      schema[struct_key]['properties'] = deep_generate_properties(struct_klass)
-      schema[struct_key]['required'] = calculate_required(struct_klass)
+      schema[struct_key]["properties"] = deep_generate_properties(struct_klass)
+      schema[struct_key]["required"] = calculate_required(struct_klass)
 
       schema
     end
@@ -36,7 +36,9 @@ module SchemaRegistry
     sig { returns(T.class_of(T::Struct)) }
     attr_reader :struct_klass
 
-    sig { params(klass: T.class_of(T::Struct)).returns(T::Hash[Symbol, T.untyped]) }
+    sig do
+      params(klass: T.class_of(T::Struct)).returns(T::Hash[Symbol, T.untyped])
+    end
     def deep_generate_properties(klass)
       props = klass.decorator.props
 
@@ -57,13 +59,18 @@ module SchemaRegistry
                 nilable: !required?(definition)
               )
             {
-              'type' => type,
-              'typedef' => typedef,
-              'enum' => (typedef.values.map(&:serialize) if enum?(typedef)),
-              'properties' => (deep_generate_properties(typedef) if can_resolve_type?(typedef)),
-              'required' => calculate_required(typedef),
-              'format' => sorbet_type_to_json_format(type: typedef),
-              'default' => compute_default(definition)
+              "type" => type,
+              "typedef" => typedef,
+              "enum" => (typedef.values.map(&:serialize) if enum?(typedef)),
+              "properties" =>
+                (
+                  if can_resolve_type?(typedef)
+                    deep_generate_properties(typedef)
+                  end
+                ),
+              "required" => calculate_required(typedef),
+              "format" => sorbet_type_to_json_format(type: typedef),
+              "default" => compute_default(definition)
             }.compact
           end
         )
@@ -73,7 +80,9 @@ module SchemaRegistry
     sig { params(klass: T.untyped).returns(T.nilable(T::Array[String])) }
     def calculate_required(klass)
       return unless klass.respond_to?(:decorator)
-      klass.decorator.props.filter_map { |prop| prop[0].to_s if required?(prop[1]) }
+      klass.decorator.props.filter_map do |prop|
+        prop[0].to_s if required?(prop[1])
+      end
     end
 
     sig { params(definition: T.untyped).returns(T::Boolean) }
@@ -82,48 +91,63 @@ module SchemaRegistry
       typedef != Maybe && !definition[:fully_optional]
     end
 
-    sig { params(typedef: T.untyped, prop: T.untyped).returns(T::Hash[T.untyped, T.untyped]) }
+    sig do
+      params(typedef: T.untyped, prop: T.untyped).returns(
+        T::Hash[T.untyped, T.untyped]
+      )
+    end
     def deep_generate_array(typedef, prop)
       if typedef.type.respond_to?(:raw_type)
-        array_type = sorbet_type_to_json(type: typedef.type.raw_type, nilable: false)
+        array_type =
+          sorbet_type_to_json(type: typedef.type.raw_type, nilable: false)
         {
-          'type' => sorbet_type_to_json(type: typedef, nilable: !required?(prop[1])),
-          'typedef' => typedef.type.raw_type,
-          'items' => deep_generate_items(array_type, typedef),
-          'default' => compute_default(prop[1])
+          "type" =>
+            sorbet_type_to_json(type: typedef, nilable: !required?(prop[1])),
+          "typedef" => typedef.type.raw_type,
+          "items" => deep_generate_items(array_type, typedef),
+          "default" => compute_default(prop[1])
         }.compact
       else
         # Gate to algebraic data types in arrays
-        { 'type' => 'string' }
+        { "type" => "string" }
       end
     end
 
     sig do
-      params(array_type: T.any(T::Array[String], String), typedef: T.untyped).returns(
-        T::Hash[T.untyped, T.untyped]
-      )
+      params(
+        array_type: T.any(T::Array[String], String),
+        typedef: T.untyped
+      ).returns(T::Hash[T.untyped, T.untyped])
     end
     def deep_generate_items(array_type, typedef)
       {
-        'type' => array_type,
-        'typedef' => typedef.type.raw_type,
-        'enum' => (typedef.type.raw_type.values.map(&:serialize) if enum?(typedef.type.raw_type)),
-        'properties' =>
+        "type" => array_type,
+        "typedef" => typedef.type.raw_type,
+        "enum" =>
+          (
+            if enum?(typedef.type.raw_type)
+              typedef.type.raw_type.values.map(&:serialize)
+            end
+          ),
+        "properties" =>
           (
             if can_resolve_type?(typedef.type.raw_type)
               deep_generate_properties(typedef.type.raw_type)
             end
           ),
-        'format' => sorbet_type_to_json_format(type: typedef.type.raw_type),
-        'required' => calculate_required(typedef.type.raw_type)
+        "format" => sorbet_type_to_json_format(type: typedef.type.raw_type),
+        "required" => calculate_required(typedef.type.raw_type)
       }.compact
     end
 
     sig { params(typedef: T.untyped).returns(T::Boolean) }
     def can_resolve_type?(typedef)
       type = sorbet_type_to_json(type: typedef)
-      type == 'object' &&
-        typedef.to_s.split('::').any? { |t| SolvableNestedTypes.has_serialized?(t) }
+      type == "object" &&
+        typedef
+          .to_s
+          .split("::")
+          .any? { |t| SolvableNestedTypes.has_serialized?(t) }
     end
 
     sig { params(prop: T.untyped).returns(SchemaRegistry::Property::ValueType) }
@@ -149,33 +173,39 @@ module SchemaRegistry
     end
     #rubocop:disable Metrics/PerceivedComplexity
     def sorbet_type_to_json(type:, type_object: nil, nilable: false)
-      return nilable_sorbet_type_to_json(type: type, type_object: type_object) if nilable
+      if nilable
+        return nilable_sorbet_type_to_json(type: type, type_object: type_object)
+      end
 
-      return 'integer' if type == Integer
-      return 'number' if type == Float
-      return 'boolean' if type.is_a?(T::Types::Union) || type == T::Boolean
-      return 'string' if type == ActionDispatch::Http::UploadedFile
-      return 'array' if type.is_a?(T::Types::TypedArray)
-      return 'string' if represented_as_string?(type)
+      return "integer" if type == Integer
+      return "number" if type == Float
+      return "boolean" if type.is_a?(T::Types::Union) || type == T::Boolean
+      return "string" if type == ActionDispatch::Http::UploadedFile
+      return "array" if type.is_a?(T::Types::TypedArray)
+      return "string" if represented_as_string?(type)
 
-      'object'
+      "object"
     end
     #rubocop:enable Metrics/PerceivedComplexity
 
     sig do
-      params(type: T.any(Integer, T::Types::Union, T.untyped), type_object: T.untyped).returns(
-        T::Array[String]
-      )
+      params(
+        type: T.any(Integer, T::Types::Union, T.untyped),
+        type_object: T.untyped
+      ).returns(T::Array[String])
     end
     def nilable_sorbet_type_to_json(type:, type_object: nil)
       fixed_type = sorbet_type_to_json(type: type)
 
-      (['null'] + [fixed_type]).flatten.uniq
+      (["null"] + [fixed_type]).flatten.uniq
     end
 
     sig { params(type: T.untyped).returns(T::Boolean) }
     def represented_as_string?(type)
-      enum?(type) || [String, DateTime, ActiveSupport::TimeWithZone, Date, Time].include?(type)
+      enum?(type) ||
+        [String, DateTime, ActiveSupport::TimeWithZone, Date, Time].include?(
+          type
+        )
     end
 
     sig { params(type: T.untyped).returns(T::Boolean) }
@@ -186,15 +216,17 @@ module SchemaRegistry
 
     sig { params(type: T.untyped).returns(T.nilable(String)) }
     def sorbet_type_to_json_format(type:)
-      return 'binary' if type == ActionDispatch::Http::UploadedFile
-      return 'date-time' if type == DateTime
-      return 'time' if [ActiveSupport::TimeWithZone, Time].include?(type)
-      return 'date' if type == Date
+      return "binary" if type == ActionDispatch::Http::UploadedFile
+      return "date-time" if type == DateTime
+      return "time" if [ActiveSupport::TimeWithZone, Time].include?(type)
+      return "date" if type == Date
 
       nil
     end
 
-    sig { params(definition: T.untyped, type_object: T.untyped).returns(T.untyped) }
+    sig do
+      params(definition: T.untyped, type_object: T.untyped).returns(T.untyped)
+    end
     def type_definition(definition, type_object)
       typedef = definition[:type]
       typedef = typedef.returns if typedef.is_a?(T::Types::Proc)
@@ -212,7 +244,10 @@ module SchemaRegistry
     def union_type_definition(type)
       # For unions (T.nilable, T::Boolean...), we must first remove the nils.
       # Otherwise, it will be confused with a Boolean.
-      non_nil_types = type.types.filter { |t| !t.is_a?(T::Types::Simple) || t.raw_type != NilClass }
+      non_nil_types =
+        type.types.filter do |t|
+          !t.is_a?(T::Types::Simple) || t.raw_type != NilClass
+        end
 
       if non_nil_types.count > 1
         # T.nilable(T::Boolean) is an union with 3 types. We merge it again as one
