@@ -12,13 +12,13 @@ generic features for the whole catalog of resources at once.
 This is very useful to scale big projects codebases in order to implement
 generic features for the whole catalog or resources.
 
-It uses few basic concepts to construct this registry:
+Resource Registry defines a few basic concepts to build this catalog.
 
-## Anatomy of a resource, `ResourceRegistry::Resource`
+### Anatomy of a resource, `ResourceRegistry::Resource`
 
-A resource represents the centric part of this library. They should contain and
-provide all the necessary information to generate features around. This
-includes Capabilities, Repository, verbs and Entity/DTOs schemas.
+Resource represent the central part of this library. They should contain and
+provide all the necessary information to generate features. This includes
+Capabilities, Repository, verbs and Entity/DTOs schemas.
 
 An example of a resource:
 
@@ -66,7 +66,7 @@ ResourceRegistry::Resource.new(
 )
 ```
 
-## The registry itself, `ResourceRegistry::Registry`
+### The registry itself, `ResourceRegistry::Registry`
 
 Gives you access to the whole library using the following API:
 
@@ -80,7 +80,7 @@ registry.fetch(:employees)
 registry.fetch_rall
 ```
 
-## What brings this gem to the table?
+## What does this gem bring to the table?
 
 - Schema registry for resources, maybe we can infere them from entities
 - Relate events to resources actions (CRUD and not CRUD)
