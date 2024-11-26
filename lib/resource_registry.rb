@@ -13,6 +13,7 @@ require "schema_registry/maybe"
 require "schema_registry/generate_from_struct"
 require "runtime_generic"
 require "public/resource_struct_builder"
+require "public/registry"
 
 # Entry point for ResourceRegistry
 module ResourceRegistry
