@@ -2,7 +2,7 @@
 # typed: false
 
 require "spec_helper"
-require_relative "../../lib/public/relationship"
+require_relative "../../lib/resource_registry/relationship"
 
 RSpec.describe ResourceRegistry::Relationship do
   describe "#load" do

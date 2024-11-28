@@ -5,7 +5,7 @@ require "date"
 require "bigdecimal"
 require_relative "property_type"
 require_relative "maybe"
-require_relative "../public/versions/version"
+require_relative "../resource_registry/versions/version"
 
 module SchemaRegistry
   class Property < T::Struct

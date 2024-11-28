@@ -1,7 +1,7 @@
 # typed: false
 
 require "spec_helper"
-require_relative "../../lib/public/resource"
+require_relative "../../lib/resource_registry/resource"
 require_relative "../dummy_repo"
 require_relative "../dummy_capability"
 require_relative "../void_capability"

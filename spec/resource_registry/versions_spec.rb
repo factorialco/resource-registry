@@ -2,7 +2,7 @@
 # typed: false
 
 require "spec_helper"
-require_relative "../../lib/public/versions"
+require_relative "../../lib/resource_registry/versions"
 
 RSpec.describe ResourceRegistry::Versions do
   subject { described_class.new(versions: versions) }

@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email = "genar.factorial@factorial.co"
   s.files = %w[
     lib/resource_registry.rb
-    lib/public/repositories/base.rb
+    lib/resource_registry/repositories/base.rb
     rbi/resource_registry.rbi
   ]
   s.homepage = "https://rubygems.org/gems/resource_registry"

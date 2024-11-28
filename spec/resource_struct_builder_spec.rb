@@ -2,7 +2,7 @@
 # typed: false
 
 require "spec_helper"
-require_relative "../lib/public/resource_struct_builder"
+require_relative "../lib/resource_registry/resource_struct_builder"
 
 module ResourceRegistry
   module DtoBuilderSpec
