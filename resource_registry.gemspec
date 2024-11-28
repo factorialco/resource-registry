@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   # s.add_runtime_dependency 'sorbet-runtime-stub', '0.2.0'
   s.add_development_dependency 'sorbet', '0.5.11609'
   s.add_runtime_dependency 'activesupport', '>= 7.1.3'
-  s.add_runtime_dependency 'dry-inflector', '>= 0.1.2'
   s.add_runtime_dependency 'sorbet-runtime', '0.5.11609'
   # s.add_development_dependency 'tapioca'
 end
