@@ -51,11 +51,27 @@ RSpec.describe ResourceRegistry::Versions do
       it "returns the following version" do
         expect(subject.find_next("2024-01-01").to_s).to eq("2024-04-01")
       end
+
+      context "when given a version object" do
+        it "returns the following version" do
+          version = subject.find!("2024-01-01")
+
+          expect(subject.find_next(version).to_s).to eq("2024-04-01")
+        end
+      end
     end
 
     context "when given the last version" do
       it "does not returns a version" do
         expect(subject.find_next("2024-04-01")).to be_nil
+      end
+
+      context "when given a version object" do
+        it "does not returns a version" do
+          version = subject.find!("2024-04-01")
+
+          expect(subject.find_next(version)).to be_nil
+        end
       end
     end
 

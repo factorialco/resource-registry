@@ -22,9 +22,14 @@ module ResourceRegistry
       find(name) || raise("Version '#{name}' not found")
     end
 
-    sig { params(name: String).returns(T.nilable(Version)) }
-    def find_next(name)
-      version = find!(name)
+    sig do
+      params(name_or_version: T.any(String, Version)).returns(
+        T.nilable(Version)
+      )
+    end
+    def find_next(name_or_version)
+      version =
+        name_or_version.is_a?(String) ? find!(name_or_version) : name_or_version
       index = T.must(sorted_versions.index(version))
 
       sorted_versions[index + 1]
