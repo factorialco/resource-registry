@@ -8,12 +8,14 @@ require "public/resource"
 require "public/versions"
 require "public/versions/version"
 require "public/entity_finder"
-require "schema_registry/json_schema_mapper"
-require "schema_registry/maybe"
-require "schema_registry/generate_from_struct"
-require "runtime_generic"
 require "public/resource_struct_builder"
 require "public/registry"
+require "public/serializer"
+require "public/repositories/base"
+require "schema_registry/registry"
+require "schema_registry/json_schema_mapper"
+require "schema_registry/maybe"
+require "runtime_generic"
 
 # Entry point for ResourceRegistry
 module ResourceRegistry

@@ -7,16 +7,6 @@
 
 # typed: true
 
-# Picked from active_support:
-#
-# source://resource_registry//lib/public/registry.rb#8
-module Enumerable
-  # source://resource_registry//lib/public/registry.rb#9
-  def index_by; end
-
-  def to_set(klass = T.unsafe(nil), *args, &block); end
-end
-
 # Represents an instance of an object that may or may not be present. This can be useful in certain
 # cases where `nil` represents a valid value instead of an absent value, i.e. update DTOs.
 #
@@ -37,25 +27,25 @@ module Maybe
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#107
+  # source://resource_registry//lib/schema_registry/maybe.rb#111
   sig { abstract.returns(T::Boolean) }
   def absent?; end
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#113
+  # source://resource_registry//lib/schema_registry/maybe.rb#118
   sig { abstract.returns(T::Boolean) }
   def empty?; end
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#155
+  # source://resource_registry//lib/schema_registry/maybe.rb#168
   sig { abstract.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value]) }
   def filter(&_block); end
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#170
+  # source://resource_registry//lib/schema_registry/maybe.rb#188
   sig do
     abstract
       .type_parameters(:Default)
@@ -67,7 +57,7 @@ module Maybe
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#122
+  # source://resource_registry//lib/schema_registry/maybe.rb#128
   sig do
     abstract
       .type_parameters(:Default)
@@ -79,13 +69,13 @@ module Maybe
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#103
+  # source://resource_registry//lib/schema_registry/maybe.rb#106
   sig { abstract.returns(T::Boolean) }
   def present?; end
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#143
+  # source://resource_registry//lib/schema_registry/maybe.rb#153
   sig do
     abstract
       .type_parameters(:Return)
@@ -97,7 +87,7 @@ module Maybe
 
   # @abstract
   #
-  # source://resource_registry//lib/schema_registry/maybe.rb#133
+  # source://resource_registry//lib/schema_registry/maybe.rb#142
   sig do
     abstract
       .type_parameters(:Return)
@@ -108,15 +98,15 @@ module Maybe
   def when_present(&_block); end
 
   class << self
-    # source://resource_registry//lib/schema_registry/maybe.rb#76
+    # source://resource_registry//lib/schema_registry/maybe.rb#79
     sig { returns(Maybe::Absent) }
     def absent; end
 
-    # source://resource_registry//lib/schema_registry/maybe.rb#62
+    # source://resource_registry//lib/schema_registry/maybe.rb#65
     sig { returns(Maybe::Absent) }
     def empty; end
 
-    # source://resource_registry//lib/schema_registry/maybe.rb#97
+    # source://resource_registry//lib/schema_registry/maybe.rb#100
     sig do
       type_parameters(:Value)
         .params(
@@ -136,7 +126,7 @@ module Maybe
             # Necessary to make this work with sorbet-coerce
 ); end
 
-    # source://resource_registry//lib/schema_registry/maybe.rb#69
+    # source://resource_registry//lib/schema_registry/maybe.rb#72
     sig { returns(Maybe::Absent) }
     def none; end
 
@@ -160,7 +150,7 @@ class Maybe::Absent
 
   Value = type_member { { fixed: T.noreturn } }
 
-  # source://resource_registry//lib/schema_registry/maybe/absent.rb#77
+  # source://resource_registry//lib/schema_registry/maybe/absent.rb#84
   sig(:final) { override.params(other: ::BasicObject).returns(T::Boolean) }
   def ==(other); end
 
@@ -172,11 +162,11 @@ class Maybe::Absent
   sig(:final) { override.returns(::TrueClass) }
   def empty?; end
 
-  # source://resource_registry//lib/schema_registry/maybe/absent.rb#62
+  # source://resource_registry//lib/schema_registry/maybe/absent.rb#66
   sig(:final) { override.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value]) }
   def filter(&_block); end
 
-  # source://resource_registry//lib/schema_registry/maybe/absent.rb#72
+  # source://resource_registry//lib/schema_registry/maybe/absent.rb#79
   sig(:final) do
     override
       .type_parameters(:Default)
@@ -200,7 +190,7 @@ class Maybe::Absent
   sig(:final) { override.returns(::FalseClass) }
   def present?; end
 
-  # source://resource_registry//lib/schema_registry/maybe/absent.rb#55
+  # source://resource_registry//lib/schema_registry/maybe/absent.rb#57
   sig(:final) do
     override
       .type_parameters(:Return)
@@ -210,7 +200,7 @@ class Maybe::Absent
   end
   def when_absent(&_block); end
 
-  # source://resource_registry//lib/schema_registry/maybe/absent.rb#45
+  # source://resource_registry//lib/schema_registry/maybe/absent.rb#47
   sig(:final) do
     override
       .type_parameters(:Return)
@@ -234,7 +224,7 @@ class Maybe::Present
   sig(:final) { params(value: Value).void }
   def initialize(value); end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#85
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#95
   sig(:final) { override.params(other: ::BasicObject).returns(T::Boolean) }
   def ==(other); end
 
@@ -246,11 +236,11 @@ class Maybe::Present
   sig(:final) { override.returns(::FalseClass) }
   def empty?; end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#64
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#71
   sig(:final) { override.params(_block: T.proc.params(value: Value).returns(T::Boolean)).returns(Maybe[Value]) }
   def filter(&_block); end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#79
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#89
   sig(:final) do
     override
       .type_parameters(:Default)
@@ -260,7 +250,7 @@ class Maybe::Present
   end
   def map(&_block); end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#37
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#40
   sig(:final) { override.type_parameters(:Default).params(_default: T.type_parameter(:Default)).returns(Value) }
   def or_default(_default); end
 
@@ -268,11 +258,11 @@ class Maybe::Present
   sig(:final) { override.returns(::TrueClass) }
   def present?; end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#92
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#102
   sig(:final) { returns(Value) }
   def value; end
 
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#57
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#62
   sig(:final) do
     override
       .type_parameters(:Return)
@@ -284,7 +274,7 @@ class Maybe::Present
 
   # @yield [value]
   #
-  # source://resource_registry//lib/schema_registry/maybe/present.rb#47
+  # source://resource_registry//lib/schema_registry/maybe/present.rb#52
   sig(:final) do
     override
       .type_parameters(:Return)
@@ -295,41 +285,18 @@ class Maybe::Present
   def when_present(&_block); end
 end
 
-class Object < ::BasicObject
-  include ::Kernel
-  include ::PP::ObjectMixin
-
-  private
-
-  # source://resource_registry//lib/public/resource.rb#13
-  def parameterize(string); end
-end
-
-# The criteria for considering something as a resource in the Resource
-# Registry is dictated by the presence of its repository which has
-# a specific ancestor.
-# This class effectively eager loads repositories which is needed when
-# assessing the code to generate a schematic view of the state of resources
-#
-# source://resource_registry//lib/public/repository_warmer.rb#8
-class RepositoryWarmer
-  # source://resource_registry//lib/public/repository_warmer.rb#12
-  sig { void }
-  def call; end
-end
-
 # Entry point for ResourceRegistry
 #
-# source://resource_registry//lib/schema_generator.rb#5
+# source://resource_registry//lib/public/relationship_type.rb#3
 module ResourceRegistry
   class << self
-    # source://resource_registry//lib/resource_registry.rb#22
+    # source://resource_registry//lib/resource_registry.rb#27
     sig { returns(::ResourceRegistry::Configuration) }
     def configuration; end
 
     # @yield [configuration]
     #
-    # source://resource_registry//lib/resource_registry.rb#27
+    # source://resource_registry//lib/resource_registry.rb#32
     sig { void }
     def configure; end
   end
@@ -354,7 +321,7 @@ module ResourceRegistry::Capabilities::CapabilityConfig
 
   # @abstract
   #
-  # source://resource_registry//lib/public/capabilities/capability_config.rb#30
+  # source://resource_registry//lib/public/capabilities/capability_config.rb#31
   sig { abstract.returns(T::Hash[::String, T.untyped]) }
   def serialize; end
 end
@@ -382,7 +349,7 @@ end
 # source://resource_registry//lib/public/capability_factory.rb#6
 class ResourceRegistry::CapabilityFactory
   class << self
-    # source://resource_registry//lib/public/capability_factory.rb#23
+    # source://resource_registry//lib/public/capability_factory.rb#37
     sig do
       params(
         capability: ::ResourceRegistry::Capabilities::CapabilityConfig
@@ -390,7 +357,7 @@ class ResourceRegistry::CapabilityFactory
     end
     def dump(capability); end
 
-    # source://resource_registry//lib/public/capability_factory.rb#15
+    # source://resource_registry//lib/public/capability_factory.rb#22
     sig do
       params(
         data: T::Hash[::String, T.untyped],
@@ -407,13 +374,13 @@ class ResourceRegistry::Configuration
   sig { void }
   def initialize; end
 
-  # source://resource_registry//lib/public/configuration.rb#44
+  # source://resource_registry//lib/public/configuration.rb#52
   sig do
     returns(T::Hash[::Symbol, T.all(T.class_of(T::Struct), T::Class[::ResourceRegistry::Capabilities::CapabilityConfig])])
   end
   def capabilities; end
 
-  # source://resource_registry//lib/public/configuration.rb#32
+  # source://resource_registry//lib/public/configuration.rb#37
   sig { params(capability: ::Symbol, klass: T.class_of(ResourceRegistry::Capabilities::CapabilityConfig)).void }
   def register_capability(capability, klass); end
 
@@ -421,7 +388,7 @@ class ResourceRegistry::Configuration
   sig { params(type: ::String, klass: T.class_of(ResourceRegistry::RelationshipType)).void }
   def register_relationship_type(type, klass); end
 
-  # source://resource_registry//lib/public/configuration.rb#37
+  # source://resource_registry//lib/public/configuration.rb#42
   sig { returns(T::Hash[::String, T::Class[::ResourceRegistry::RelationshipType]]) }
   def relationship_types; end
 end
@@ -432,7 +399,7 @@ ResourceRegistry::Configuration::DEFAULT_RELATIONSHIP_TYPES = T.let(T.unsafe(nil
 # source://resource_registry//lib/public/entity_finder.rb#4
 class ResourceRegistry::EntityFinder
   class << self
-    # source://resource_registry//lib/public/entity_finder.rb#10
+    # source://resource_registry//lib/public/entity_finder.rb#12
     sig do
       params(
         repository: T.class_of(ResourceRegistry::Repositories::Base)
@@ -442,121 +409,27 @@ class ResourceRegistry::EntityFinder
   end
 end
 
-# source://resource_registry//lib/public/infer_resources.rb#8
-class ResourceRegistry::InferResources
-  # source://resource_registry//lib/public/infer_resources.rb#12
-  sig { void }
-  def initialize; end
-
-  # source://resource_registry//lib/public/infer_resources.rb#17
-  sig do
-    params(
-      repositories: T::Array[ResourceRegistry::Repositories::Base[T.untyped]]
-    ).returns(T::Array[::ResourceRegistry::Resource])
-  end
-  def call(repositories:); end
-
-  private
-
-  # source://resource_registry//lib/public/infer_resources.rb#28
-  sig do
-    params(
-      repository: T.class_of(ResourceRegistry::Repositories::Base)
-    ).returns(T.nilable(::ResourceRegistry::Resource))
-  end
-  def generate_resource_from_repository(repository); end
-
-  # source://resource_registry//lib/public/infer_resources.rb#24
-  sig { returns(::ResourceRegistry::SchemaGenerator) }
-  def schema_generator; end
-end
-
-# source://resource_registry//lib/public/initializer.rb#13
-class ResourceRegistry::Initializer
-  # source://resource_registry//lib/public/initializer.rb#17
-  sig { params(repository_base_klass: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]).void }
-  def initialize(repository_base_klass: T.unsafe(nil)); end
-
-  # source://resource_registry//lib/public/initializer.rb#26
-  sig { returns([::ResourceRegistry::Registry, ::SchemaRegistry::Registry, ::ResourceRegistry::OverridesLoader]) }
-  def call; end
-
-  # source://resource_registry//lib/public/initializer.rb#32
-  sig { void }
-  def warm!; end
-
-  private
-
-  # source://resource_registry//lib/public/initializer.rb#92
-  sig { params(resource: T::Hash[::String, T.untyped]).returns(T::Hash[::String, T.untyped]) }
-  def apply_override(resource); end
-
-  # source://resource_registry//lib/public/initializer.rb#104
-  sig { returns(::ResourceRegistry::OverridesLoader) }
-  def overrides_loader; end
-
-  # source://resource_registry//lib/public/initializer.rb#57
-  sig { void }
-  def register_resources!; end
-
-  # Returns the value of attribute repository_base_klass.
-  #
-  # source://resource_registry//lib/public/initializer.rb#39
-  def repository_base_klass; end
-
-  # source://resource_registry//lib/public/initializer.rb#42
-  sig { returns(::ResourceRegistry::Registry) }
-  def resource_registry; end
-
-  # source://resource_registry//lib/public/initializer.rb#68
-  sig { returns(T::Array[::ResourceRegistry::Resource]) }
-  def resources; end
-
-  # source://resource_registry//lib/public/initializer.rb#51
-  sig { returns(::SchemaRegistry::Registry) }
-  def schema_registry; end
-end
-
-# source://resource_registry//lib/public/overrides_loader.rb#4
-class ResourceRegistry::OverridesLoader
-  # source://resource_registry//lib/public/overrides_loader.rb#8
-  sig { returns(T::Array[T::Hash[::String, T.untyped]]) }
-  def overrides; end
-
-  private
-
-  # source://resource_registry//lib/public/overrides_loader.rb#38
-  sig { params(path: ::String).returns(T::Array[T::Hash[::String, T.untyped]]) }
-  def load_path_files(path); end
-
-  # FIXME
-  #
-  # source://resource_registry//lib/public/overrides_loader.rb#22
-  sig { returns(T.untyped) }
-  def paths; end
-end
-
-# source://resource_registry//lib/public/registry.rb#21
+# source://resource_registry//lib/public/registry.rb#8
 class ResourceRegistry::Registry
-  # source://resource_registry//lib/public/registry.rb#31
+  # source://resource_registry//lib/public/registry.rb#18
   sig { params(resources: T::Array[::ResourceRegistry::Resource]).void }
   def initialize(resources:); end
 
-  # source://resource_registry//lib/public/registry.rb#42
+  # source://resource_registry//lib/public/registry.rb#32
   sig { params(identifier: ::String).returns(T.nilable(::ResourceRegistry::Resource)) }
   def fetch(identifier); end
 
   # @raise [UnableToFindResourceError]
   #
-  # source://resource_registry//lib/public/registry.rb#47
+  # source://resource_registry//lib/public/registry.rb#37
   sig { params(identifier: ::String).returns(::ResourceRegistry::Resource) }
   def fetch!(identifier); end
 
-  # source://resource_registry//lib/public/registry.rb#63
+  # source://resource_registry//lib/public/registry.rb#56
   sig { returns(T::Hash[::String, ::ResourceRegistry::Resource]) }
   def fetch_all; end
 
-  # source://resource_registry//lib/public/registry.rb#58
+  # source://resource_registry//lib/public/registry.rb#51
   sig do
     params(
       repository_class: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]
@@ -564,7 +437,7 @@ class ResourceRegistry::Registry
   end
   def fetch_for_repository(repository_class); end
 
-  # source://resource_registry//lib/public/registry.rb#70
+  # source://resource_registry//lib/public/registry.rb#65
   sig do
     params(
       capabilities: T::Class[::ResourceRegistry::Capabilities::CapabilityConfig]
@@ -572,7 +445,7 @@ class ResourceRegistry::Registry
   end
   def fetch_with_capabilities(*capabilities); end
 
-  # source://resource_registry//lib/public/registry.rb#78
+  # source://resource_registry//lib/public/registry.rb#79
   sig do
     params(
       repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]
@@ -582,24 +455,24 @@ class ResourceRegistry::Registry
 
   private
 
-  # source://resource_registry//lib/public/registry.rb#88
+  # source://resource_registry//lib/public/registry.rb#89
   sig { params(resources: T::Array[::ResourceRegistry::Resource]).returns(T::Boolean) }
   def duplicated_identifier?(resources); end
 
-  # source://resource_registry//lib/public/registry.rb#85
+  # source://resource_registry//lib/public/registry.rb#86
   sig { returns(T::Hash[::String, ::ResourceRegistry::Resource]) }
   def resources; end
 
   # @return [Hash{String => Resource}]
   #
-  # source://resource_registry//lib/public/registry.rb#85
+  # source://resource_registry//lib/public/registry.rb#86
   def resources=(_arg0); end
 end
 
-# source://resource_registry//lib/public/registry.rb#27
+# source://resource_registry//lib/public/registry.rb#14
 class ResourceRegistry::Registry::DuplicatedIdentifierError < ::StandardError; end
 
-# source://resource_registry//lib/public/registry.rb#24
+# source://resource_registry//lib/public/registry.rb#11
 class ResourceRegistry::Registry::UnableToFindResourceError < ::StandardError; end
 
 # source://resource_registry//lib/public/relationship.rb#8
@@ -642,7 +515,7 @@ class ResourceRegistry::Relationship < ::T::Struct
   def should_skip_argument?(argument); end
 
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
 
     # source://resource_registry//lib/public/relationship.rb#39
@@ -659,45 +532,45 @@ module ResourceRegistry::RelationshipType
 
   abstract!
 
-  # source://resource_registry//lib/public/relationship_type.rb#19
+  # source://resource_registry//lib/public/relationship_type.rb#26
   sig { params(spec: T::Hash[::String, T.untyped]).void }
   def initialize(spec); end
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#48
+  # source://resource_registry//lib/public/relationship_type.rb#64
   sig { abstract.returns(::Integer) }
   def complexity; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#89
+  # source://resource_registry//lib/public/relationship_type.rb#107
   sig { returns(::Symbol) }
   def field; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#51
+  # source://resource_registry//lib/public/relationship_type.rb#68
   sig { returns(T::Boolean) }
   def forward_entities?; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#57
+  # source://resource_registry//lib/public/relationship_type.rb#74
   sig { returns(T::Boolean) }
   def forward_selected_fields?; end
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#30
+  # source://resource_registry//lib/public/relationship_type.rb#43
   sig { abstract.returns(T::Boolean) }
   def many_cardinality?; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#79
+  # source://resource_registry//lib/public/relationship_type.rb#97
   sig { returns(::String) }
   def name; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#74
+  # source://resource_registry//lib/public/relationship_type.rb#92
   sig { returns(T::Array[T::Hash[::String, T.untyped]]) }
   def nested_fields; end
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#71
+  # source://resource_registry//lib/public/relationship_type.rb#88
   sig do
     abstract
       .params(
@@ -709,7 +582,7 @@ module ResourceRegistry::RelationshipType
   end
   def prepare_dto(dto, ids, rel, parent_resource); end
 
-  # source://resource_registry//lib/public/relationship_type.rb#94
+  # source://resource_registry//lib/public/relationship_type.rb#112
   sig { returns(::Symbol) }
   def primary_key; end
 
@@ -717,27 +590,27 @@ module ResourceRegistry::RelationshipType
   #
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#34
+  # source://resource_registry//lib/public/relationship_type.rb#48
   sig { abstract.params(relationship: ::ResourceRegistry::Relationship).returns(::Symbol) }
   def reference_id(relationship); end
 
-  # source://resource_registry//lib/public/relationship_type.rb#106
+  # source://resource_registry//lib/public/relationship_type.rb#128
   sig { overridable.returns(T.nilable(::Symbol)) }
   def relationship_field_name; end
 
-  # source://resource_registry//lib/public/relationship_type.rb#84
+  # source://resource_registry//lib/public/relationship_type.rb#102
   sig { returns(::Symbol) }
   def resource_id; end
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#24
+  # source://resource_registry//lib/public/relationship_type.rb#31
   sig { abstract.returns(::String) }
   def serialize; end
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#45
+  # source://resource_registry//lib/public/relationship_type.rb#60
   sig do
     abstract
       .params(
@@ -750,11 +623,11 @@ module ResourceRegistry::RelationshipType
 
   # @abstract
   #
-  # source://resource_registry//lib/public/relationship_type.rb#27
+  # source://resource_registry//lib/public/relationship_type.rb#39
   sig { abstract.params(argument: ::String, relationship: ::ResourceRegistry::Relationship).returns(T::Boolean) }
   def should_skip_argument?(argument, relationship); end
 
-  # source://resource_registry//lib/public/relationship_type.rb#99
+  # source://resource_registry//lib/public/relationship_type.rb#121
   sig { overridable.params(read_dto: T.nilable(T.class_of(T::Struct))).returns(T::Boolean) }
   def valid_relationship_field?(read_dto); end
 end
@@ -780,15 +653,15 @@ module ResourceRegistry::RelationshipTypes; end
 class ResourceRegistry::RelationshipTypes::BelongsTo
   include ::ResourceRegistry::RelationshipType
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#52
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#64
   sig { override.returns(::Integer) }
   def complexity; end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#24
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#28
   sig { override.returns(T::Boolean) }
   def many_cardinality?; end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#66
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#78
   sig do
     override
       .params(
@@ -800,11 +673,11 @@ class ResourceRegistry::RelationshipTypes::BelongsTo
   end
   def prepare_dto(dto, ids, rel, _parent_resource); end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#29
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#33
   sig { override.params(relationship: ::ResourceRegistry::Relationship).returns(::Symbol) }
   def reference_id(relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#72
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#84
   sig { override.returns(::Symbol) }
   def relationship_field_name; end
 
@@ -812,7 +685,7 @@ class ResourceRegistry::RelationshipTypes::BelongsTo
   sig { override.returns(::String) }
   def serialize; end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#46
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#55
   sig do
     override
       .params(
@@ -823,7 +696,7 @@ class ResourceRegistry::RelationshipTypes::BelongsTo
   end
   def shape_result(loaded_data, ids, relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#19
+  # source://resource_registry//lib/public/relationship_types/belongs_to.rb#23
   sig { override.params(argument: ::String, relationship: ::ResourceRegistry::Relationship).returns(T::Boolean) }
   def should_skip_argument?(argument, relationship); end
 end
@@ -832,15 +705,15 @@ end
 class ResourceRegistry::RelationshipTypes::HasMany
   include ::ResourceRegistry::RelationshipType
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#52
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#61
   sig { override.returns(::Integer) }
   def complexity; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#24
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#28
   sig { override.returns(T::Boolean) }
   def many_cardinality?; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#66
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#75
   sig do
     override
       .params(
@@ -852,11 +725,11 @@ class ResourceRegistry::RelationshipTypes::HasMany
   end
   def prepare_dto(dto, ids, rel, _parent_resource); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#29
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#33
   sig { override.params(relationship: ::ResourceRegistry::Relationship).returns(::Symbol) }
   def reference_id(relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#72
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#81
   sig { override.returns(::Symbol) }
   def relationship_field_name; end
 
@@ -864,7 +737,7 @@ class ResourceRegistry::RelationshipTypes::HasMany
   sig { override.returns(::String) }
   def serialize; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#46
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#55
   sig do
     override
       .params(
@@ -875,7 +748,7 @@ class ResourceRegistry::RelationshipTypes::HasMany
   end
   def shape_result(loaded_data, ids, relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many.rb#19
+  # source://resource_registry//lib/public/relationship_types/has_many.rb#23
   sig { override.params(argument: ::String, relationship: ::ResourceRegistry::Relationship).returns(T::Boolean) }
   def should_skip_argument?(argument, relationship); end
 end
@@ -884,15 +757,15 @@ end
 class ResourceRegistry::RelationshipTypes::HasManyThrough
   include ::ResourceRegistry::RelationshipType
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#51
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#62
   sig { override.returns(::Integer) }
   def complexity; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#24
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#28
   sig { override.returns(T::Boolean) }
   def many_cardinality?; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#65
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#76
   sig do
     override
       .params(
@@ -904,11 +777,11 @@ class ResourceRegistry::RelationshipTypes::HasManyThrough
   end
   def prepare_dto(dto, ids, _rel, _parent_resource); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#29
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#33
   sig { override.params(relationship: ::ResourceRegistry::Relationship).returns(::Symbol) }
   def reference_id(relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#71
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#82
   sig { override.returns(::Symbol) }
   def relationship_field_name; end
 
@@ -916,7 +789,7 @@ class ResourceRegistry::RelationshipTypes::HasManyThrough
   sig { override.returns(::String) }
   def serialize; end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#46
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#55
   sig do
     override
       .params(
@@ -927,7 +800,7 @@ class ResourceRegistry::RelationshipTypes::HasManyThrough
   end
   def shape_result(loaded_data, ids, _relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#19
+  # source://resource_registry//lib/public/relationship_types/has_many_through.rb#23
   sig { override.params(argument: ::String, relationship: ::ResourceRegistry::Relationship).returns(T::Boolean) }
   def should_skip_argument?(argument, relationship); end
 end
@@ -936,15 +809,15 @@ end
 class ResourceRegistry::RelationshipTypes::HasOne
   include ::ResourceRegistry::RelationshipType
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#53
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#63
   sig { override.returns(::Integer) }
   def complexity; end
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#24
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#28
   sig { override.returns(T::Boolean) }
   def many_cardinality?; end
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#67
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#77
   sig do
     override
       .params(
@@ -958,11 +831,11 @@ class ResourceRegistry::RelationshipTypes::HasOne
 
   # FIXME: Review if this is actually reference_id
   #
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#30
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#34
   sig { override.params(relationship: ::ResourceRegistry::Relationship).returns(::Symbol) }
   def reference_id(relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#73
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#83
   sig { override.returns(::Symbol) }
   def relationship_field_name; end
 
@@ -970,7 +843,7 @@ class ResourceRegistry::RelationshipTypes::HasOne
   sig { override.returns(::String) }
   def serialize; end
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#47
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#56
   sig do
     override
       .params(
@@ -981,17 +854,17 @@ class ResourceRegistry::RelationshipTypes::HasOne
   end
   def shape_result(loaded_data, ids, relationship); end
 
-  # source://resource_registry//lib/public/relationship_types/has_one.rb#19
+  # source://resource_registry//lib/public/relationship_types/has_one.rb#23
   sig { override.params(argument: ::String, relationship: ::ResourceRegistry::Relationship).returns(T::Boolean) }
   def should_skip_argument?(argument, relationship); end
 end
 
-# source://resource_registry//lib/public/repositories/output_contexts/page_info_dto.rb#4
+# source://resource_registry//lib/public/repositories/base.rb#8
 module ResourceRegistry::Repositories; end
 
 # @abstract Subclasses must implement the `abstract` methods below.
 #
-# source://resource_registry//lib/public/repositories/base.rb#10
+# source://resource_registry//lib/public/repositories/base.rb#9
 module ResourceRegistry::Repositories::Base
   extend T::Generic
   include ::Kernel
@@ -1001,11 +874,11 @@ module ResourceRegistry::Repositories::Base
 
   Entity = type_member { { upper: T::Struct } }
 
-  # source://resource_registry//lib/public/repositories/base.rb#36
+  # source://resource_registry//lib/public/repositories/base.rb#33
   sig { overridable.params(dto: T.untyped, context: T.untyped).returns(T.untyped) }
   def read(dto:, context:); end
 
-  # source://resource_registry//lib/public/repositories/base.rb#41
+  # source://resource_registry//lib/public/repositories/base.rb#42
   sig { overridable.params(entity: Entity, tags: T::Set[T.untyped]).returns(T::Hash[::Symbol, T.untyped]) }
   def serialize(entity:, tags: T.unsafe(nil)); end
 
@@ -1013,83 +886,32 @@ module ResourceRegistry::Repositories::Base
 
   # @raise [NotImplementedError]
   #
-  # source://resource_registry//lib/public/repositories/base.rb#70
+  # source://resource_registry//lib/public/repositories/base.rb#73
   sig { params(method: T.nilable(::Symbol)).returns(T.noreturn) }
   def raise_error(method); end
 
-  # source://resource_registry//lib/public/repositories/base.rb#61
+  # source://resource_registry//lib/public/repositories/base.rb#62
   sig { returns(::ResourceRegistry::Serializer) }
   def serializer; end
 
   class << self
-    # source://resource_registry//lib/public/repositories/base.rb#25
+    # source://resource_registry//lib/public/repositories/base.rb#24
     sig { returns(T.untyped) }
     def entity; end
 
-    # source://resource_registry//lib/public/repositories/base.rb#46
+    # source://resource_registry//lib/public/repositories/base.rb#47
     sig(:final) { returns(::String) }
     def namespace; end
 
-    # source://resource_registry//lib/public/repositories/base.rb#54
+    # source://resource_registry//lib/public/repositories/base.rb#55
     sig(:final) { returns(::String) }
     def resource_name; end
   end
 end
 
-# source://resource_registry//lib/public/repositories/output_contexts/page_info_dto.rb#5
-module ResourceRegistry::Repositories::OutputContexts; end
-
-# source://resource_registry//lib/public/repositories/output_contexts/page_info_dto.rb#6
-class ResourceRegistry::Repositories::OutputContexts::PageInfoDto < ::T::Struct
-  const :has_next_page, T::Boolean, default: T.unsafe(nil)
-  const :has_previous_page, T::Boolean, default: T.unsafe(nil)
-  const :start_cursor, T.nilable(::String), default: T.unsafe(nil)
-  const :end_cursor, T.nilable(::String), default: T.unsafe(nil)
-
-  class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
-    def inherited(s); end
-  end
-end
-
-# @abstract Subclasses must implement the `abstract` methods below.
-#
-# source://resource_registry//lib/public/repositories/read_result.rb#7
-module ResourceRegistry::Repositories::ReadResult
-  extend T::Generic
-
-  interface!
-
-  Entity = type_member { { upper: T::Struct } }
-
-  # @abstract
-  #
-  # source://resource_registry//lib/public/repositories/read_result.rb#17
-  sig { abstract.returns(T.untyped) }
-  def entities; end
-
-  # @abstract
-  #
-  # source://resource_registry//lib/public/repositories/read_result.rb#23
-  sig { abstract.returns(::ResourceRegistry::Repositories::OutputContexts::PageInfoDto) }
-  def page_info; end
-
-  # @abstract
-  #
-  # source://resource_registry//lib/public/repositories/read_result.rb#20
-  sig { abstract.returns(T.untyped) }
-  def projections; end
-
-  # @abstract
-  #
-  # source://resource_registry//lib/public/repositories/read_result.rb#26
-  sig { abstract.returns(T.nilable(::Integer)) }
-  def total_count; end
-end
-
 # The main class that represents a resource in the system.
 #
-# source://resource_registry//lib/public/resource.rb#20
+# source://resource_registry//lib/public/resource.rb#12
 class ResourceRegistry::Resource < ::T::Struct
   const :repository_raw, ::String
   const :description, ::String, default: T.unsafe(nil)
@@ -1099,13 +921,11 @@ class ResourceRegistry::Resource < ::T::Struct
   const :verbs, T::Hash[::Symbol, ::ResourceRegistry::Verb]
   const :paginateable, T::Boolean, default: T.unsafe(nil)
 
-  # @raise [VerbNotFound]
-  #
-  # source://resource_registry//lib/public/resource.rb#108
+  # source://resource_registry//lib/public/resource.rb#111
   sig { params(verb: ::Symbol, parameters: T.untyped).returns(::T::Struct) }
   def build_dto(verb, **parameters); end
 
-  # source://resource_registry//lib/public/resource.rb#97
+  # source://resource_registry//lib/public/resource.rb#100
   sig { returns(::String) }
   def camelize; end
 
@@ -1124,7 +944,7 @@ class ResourceRegistry::Resource < ::T::Struct
   #
   # and Sorbet will know that `capability` is an instance of `Comments::Capabilities::Commentable`
   #
-  # source://resource_registry//lib/public/resource.rb#144
+  # source://resource_registry//lib/public/resource.rb#149
   sig do
     type_parameters(:CapabilityConfig)
       .params(
@@ -1133,7 +953,7 @@ class ResourceRegistry::Resource < ::T::Struct
   end
   def capability(capability); end
 
-  # source://resource_registry//lib/public/resource.rb#180
+  # source://resource_registry//lib/public/resource.rb#187
   sig do
     type_parameters(:CapabilityConfig)
       .params(
@@ -1142,7 +962,7 @@ class ResourceRegistry::Resource < ::T::Struct
   end
   def capability!(feature); end
 
-  # source://resource_registry//lib/public/resource.rb#162
+  # source://resource_registry//lib/public/resource.rb#169
   sig do
     params(
       feature: T.all(::ResourceRegistry::Capabilities::CapabilityConfig::ClassMethods, T::Class[::ResourceRegistry::Capabilities::CapabilityConfig])
@@ -1150,44 +970,42 @@ class ResourceRegistry::Resource < ::T::Struct
   end
   def capability?(feature); end
 
-  # source://resource_registry//lib/public/resource.rb#149
+  # source://resource_registry//lib/public/resource.rb#156
   sig { params(key: ::Symbol).returns(T.nilable(::ResourceRegistry::Capabilities::CapabilityConfig)) }
   def capability_by_key(key); end
 
-  # source://resource_registry//lib/public/resource.rb#61
+  # source://resource_registry//lib/public/resource.rb#60
   sig { returns(::String) }
   def collection_name; end
 
-  # source://resource_registry//lib/public/resource.rb#202
+  # source://resource_registry//lib/public/resource.rb#210
   sig { returns(T::Hash[::String, T.untyped]) }
   def dump; end
 
-  # source://resource_registry//lib/public/resource.rb#102
+  # source://resource_registry//lib/public/resource.rb#105
   sig { returns(::String) }
   def humanize; end
 
-  # source://resource_registry//lib/public/resource.rb#56
+  # source://resource_registry//lib/public/resource.rb#51
   sig { returns(::Symbol) }
   def identifier; end
 
-  # source://resource_registry//lib/public/resource.rb#192
+  # source://resource_registry//lib/public/resource.rb#200
   sig { returns(T::Array[::ResourceRegistry::Verb]) }
   def mutation_verbs; end
 
-  # source://resource_registry//lib/public/resource.rb#66
+  # source://resource_registry//lib/public/resource.rb#65
   sig { returns(::Symbol) }
   def name; end
 
-  # source://resource_registry//lib/public/resource.rb#84
+  # source://resource_registry//lib/public/resource.rb#87
   sig(:final) { returns(::String) }
   def namespace; end
 
-  # source://resource_registry//lib/public/resource.rb#45
+  # source://resource_registry//lib/public/resource.rb#40
   sig { returns(::String) }
   def path; end
 
-  # @raise [ArgumentError]
-  #
   # source://resource_registry//lib/public/resource.rb#76
   sig { returns(T::Class[ResourceRegistry::Repositories::Base[T.untyped]]) }
   def repository; end
@@ -1196,33 +1014,27 @@ class ResourceRegistry::Resource < ::T::Struct
   sig { returns(::String) }
   def resource_name; end
 
-  # source://resource_registry//lib/public/resource.rb#187
+  # source://resource_registry//lib/public/resource.rb#195
   sig { returns(T::Array[::ResourceRegistry::Verb]) }
   def rpc_verbs; end
 
-  # source://resource_registry//lib/public/resource.rb#51
+  # source://resource_registry//lib/public/resource.rb#46
   sig { returns(::String) }
   def slug; end
 
-  # source://resource_registry//lib/public/resource.rb#92
+  # source://resource_registry//lib/public/resource.rb#95
   sig { returns(::String) }
   def underscore; end
 
-  # source://resource_registry//lib/public/resource.rb#197
+  # source://resource_registry//lib/public/resource.rb#205
   sig { params(except: T::Array[::Symbol]).returns(T::Array[::ResourceRegistry::Verb]) }
   def verbs_except(except); end
 
-  private
-
-  # source://resource_registry//lib/public/resource.rb#251
-  sig { returns(::Dry::Inflector) }
-  def inflector; end
-
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
 
-    # source://resource_registry//lib/public/resource.rb#220
+    # source://resource_registry//lib/public/resource.rb#234
     sig do
       params(
         spec: T::Hash[::String, T.untyped],
@@ -1233,31 +1045,82 @@ class ResourceRegistry::Resource < ::T::Struct
   end
 end
 
-# source://resource_registry//lib/public/resource.rb#26
+# source://resource_registry//lib/public/resource.rb#18
 class ResourceRegistry::Resource::SchemaNotFound < ::StandardError; end
 
-# source://resource_registry//lib/public/resource.rb#23
+# source://resource_registry//lib/public/resource.rb#15
 class ResourceRegistry::Resource::VerbNotFound < ::StandardError; end
 
-# source://resource_registry//lib/schema_generator.rb#6
-class ResourceRegistry::SchemaGenerator
-  # source://resource_registry//lib/schema_generator.rb#12
-  sig do
-    params(
-      repository: T.class_of(ResourceRegistry::Repositories::Base)
-    ).returns(T.nilable(::SchemaRegistry::Schema))
-  end
-  def generate(repository:); end
+# Constructs a resource struct (like Dtos and Entities) from a hash of arguments
+# It's different from the usual T::Struct::new in that it can handle
+# the particular cases of our resource objects, such as:
+# - nested Dtos
+# - arrays of Dtos
+# - `Maybe[T]` values
+#
+# source://resource_registry//lib/public/resource_struct_builder.rb#13
+class ResourceRegistry::ResourceStructBuilder
+  # source://resource_registry//lib/public/resource_struct_builder.rb#20
+  sig { params(resource_type: T.untyped).void }
+  def initialize(resource_type); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#25
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def build(value); end
 
   private
 
-  # source://resource_registry//lib/schema_generator.rb#26
-  sig { params(repo: T.class_of(ResourceRegistry::Repositories::Base)).returns(::Symbol) }
-  def identifier_from_repo(repo); end
+  # source://resource_registry//lib/public/resource_struct_builder.rb#64
+  sig { returns(T::Boolean) }
+  def array?; end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#145
+  sig { params(args: T.nilable(T.all(::Object, T::Enumerable[T.untyped]))).returns(T.untyped) }
+  def build_enumerable(args); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#153
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def build_generic(value); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#159
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def build_other(value); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#116
+  sig { params(args: T::Hash[T.untyped, T.untyped]).returns(::T::Struct) }
+  def build_struct(args); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#130
+  sig { params(key: ::Symbol, value: T.untyped).returns(T.nilable([::Symbol, T.untyped])) }
+  def build_struct_property(key, value); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#48
+  sig { returns(T::Boolean) }
+  def generic?; end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#96
+  sig { params(outer_type: T.untyped).returns(T.untyped) }
+  def inner_type(outer_type); end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#166
+  sig { returns(T.untyped) }
+  def resource_type; end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#73
+  sig { returns(T::Boolean) }
+  def set?; end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#53
+  sig { returns(T::Boolean) }
+  def struct?; end
+
+  # source://resource_registry//lib/public/resource_struct_builder.rb#85
+  sig { returns(T.untyped) }
+  def type; end
 end
 
-# source://resource_registry//lib/schema_generator.rb#9
-ResourceRegistry::SchemaGenerator::Repository = T.type_alias { T.class_of(ResourceRegistry::Repositories::Base) }
+# source://resource_registry//lib/public/resource_struct_builder.rb#16
+class ResourceRegistry::ResourceStructBuilder::ParseInputError < ::StandardError; end
 
 # source://resource_registry//lib/public/serializer.rb#4
 class ResourceRegistry::Serializer
@@ -1267,17 +1130,17 @@ class ResourceRegistry::Serializer
   sig { params(resource: ::ResourceRegistry::Resource).void }
   def initialize(resource:); end
 
-  # source://resource_registry//lib/public/serializer.rb#14
+  # source://resource_registry//lib/public/serializer.rb#18
   sig { params(entity: ::T::Struct, tags: T::Set[::Symbol]).returns(T::Hash[::Symbol, T.untyped]) }
   def serialize(entity:, tags:); end
 
   private
 
-  # source://resource_registry//lib/public/serializer.rb#40
+  # source://resource_registry//lib/public/serializer.rb#51
   sig { params(property_value: T.untyped).returns(T.untyped) }
   def recursive_serialization(property_value); end
 
-  # source://resource_registry//lib/public/serializer.rb#47
+  # source://resource_registry//lib/public/serializer.rb#64
   sig { returns(::SchemaRegistry::Schema) }
   def resource_schema; end
 end
@@ -1296,33 +1159,31 @@ class ResourceRegistry::Verb < ::T::Struct
   const :schema, ::SchemaRegistry::Schema
   const :return_many, T::Boolean, default: T.unsafe(nil)
 
-  # source://resource_registry//lib/public/verb.rb#56
+  # source://resource_registry//lib/public/verb.rb#57
   sig { returns(T::Boolean) }
   def create?; end
 
-  # source://resource_registry//lib/public/verb.rb#29
+  # source://resource_registry//lib/public/verb.rb#30
   sig { returns(T::Boolean) }
   def deprecated?; end
 
-  # source://resource_registry//lib/public/verb.rb#46
+  # source://resource_registry//lib/public/verb.rb#47
   sig { returns(T::Boolean) }
   def destroy?; end
 
-  # @raise [DtoClassNotFound]
-  #
-  # source://resource_registry//lib/public/verb.rb#61
+  # source://resource_registry//lib/public/verb.rb#62
   sig { returns(T.class_of(T::Struct)) }
   def dto; end
 
-  # source://resource_registry//lib/public/verb.rb#70
+  # source://resource_registry//lib/public/verb.rb#73
   sig { returns(T::Hash[::Symbol, T.untyped]) }
   def dump; end
 
-  # source://resource_registry//lib/public/verb.rb#41
+  # source://resource_registry//lib/public/verb.rb#42
   sig { returns(T::Boolean) }
   def get?; end
 
-  # source://resource_registry//lib/public/verb.rb#36
+  # source://resource_registry//lib/public/verb.rb#37
   sig { returns(T::Boolean) }
   def mutation?; end
 
@@ -1330,23 +1191,17 @@ class ResourceRegistry::Verb < ::T::Struct
   sig { returns(::Symbol) }
   def schema_identifier; end
 
-  # source://resource_registry//lib/public/verb.rb#51
+  # source://resource_registry//lib/public/verb.rb#52
   sig { returns(T::Boolean) }
   def update?; end
 
-  private
-
-  # source://resource_registry//lib/public/verb.rb#101
-  sig { returns(::Dry::Inflector) }
-  def inflector; end
-
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
 
     # @raise [ArgumentError]
     #
-    # source://resource_registry//lib/public/verb.rb#80
+    # source://resource_registry//lib/public/verb.rb#83
     sig { params(spec: T.untyped).returns(::ResourceRegistry::Verb) }
     def load(spec); end
   end
@@ -1388,42 +1243,42 @@ class ResourceRegistry::Versions
 
   private
 
-  # source://resource_registry//lib/public/versions.rb#52
+  # source://resource_registry//lib/public/versions.rb#54
   sig { returns(T::Array[::ResourceRegistry::Versions::Version]) }
   def versions; end
 end
 
 # source://resource_registry//lib/public/versions/version.rb#5
 class ResourceRegistry::Versions::Version
-  # source://resource_registry//lib/public/versions/version.rb#9
+  # source://resource_registry//lib/public/versions/version.rb#14
   sig { params(name: ::String, aliases: T.nilable(T.any(::String, T::Array[::String]))).void }
   def initialize(name, aliases: T.unsafe(nil)); end
 
-  # source://resource_registry//lib/public/versions/version.rb#41
+  # source://resource_registry//lib/public/versions/version.rb#46
   sig { params(other: ::ResourceRegistry::Versions::Version).returns(T::Boolean) }
   def <=(other); end
 
-  # source://resource_registry//lib/public/versions/version.rb#31
+  # source://resource_registry//lib/public/versions/version.rb#36
   sig { params(other: ::ResourceRegistry::Versions::Version).returns(T.nilable(::Integer)) }
   def <=>(other); end
 
-  # source://resource_registry//lib/public/versions/version.rb#36
+  # source://resource_registry//lib/public/versions/version.rb#41
   sig { params(other: ::ResourceRegistry::Versions::Version).returns(T::Boolean) }
   def >=(other); end
 
-  # source://resource_registry//lib/public/versions/version.rb#18
+  # source://resource_registry//lib/public/versions/version.rb#23
   sig { returns(T::Array[::String]) }
   def aliases; end
 
-  # source://resource_registry//lib/public/versions/version.rb#26
+  # source://resource_registry//lib/public/versions/version.rb#31
   sig { params(str: ::String).returns(T::Boolean) }
   def matches?(str); end
 
-  # source://resource_registry//lib/public/versions/version.rb#15
+  # source://resource_registry//lib/public/versions/version.rb#20
   sig { returns(::String) }
   def name; end
 
-  # source://resource_registry//lib/public/versions/version.rb#21
+  # source://resource_registry//lib/public/versions/version.rb#26
   sig { returns(::String) }
   def to_s; end
 end
@@ -1475,7 +1330,7 @@ class RuntimeGeneric::TypedGeneric < ::T::Types::Simple
   def name; end
 end
 
-# source://resource_registry//lib/schema_registry/generate_from_struct.rb#3
+# source://resource_registry//lib/schema_registry/property_type.rb#3
 module SchemaRegistry; end
 
 # source://resource_registry//lib/schema_registry/filter_field.rb#4
@@ -1486,7 +1341,7 @@ class SchemaRegistry::FilterField < ::T::Struct
   const :in_memory, T::Boolean, default: T.unsafe(nil)
 
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1503,15 +1358,15 @@ class SchemaRegistry::GenerateFromStruct
 
   private
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#74
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#81
   sig { params(klass: T.untyped).returns(T.nilable(T::Array[::String])) }
   def calculate_required(klass); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#122
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#144
   sig { params(typedef: T.untyped).returns(T::Boolean) }
   def can_resolve_type?(typedef); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#129
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#154
   sig do
     params(
       prop: T.untyped
@@ -1519,11 +1374,11 @@ class SchemaRegistry::GenerateFromStruct
   end
   def compute_default(prop); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#87
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#99
   sig { params(typedef: T.untyped, prop: T.untyped).returns(T::Hash[T.untyped, T.untyped]) }
   def deep_generate_array(typedef, prop); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#107
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#122
   sig do
     params(
       array_type: T.any(::String, T::Array[::String]),
@@ -1532,15 +1387,15 @@ class SchemaRegistry::GenerateFromStruct
   end
   def deep_generate_items(array_type, typedef); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#40
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#42
   sig { params(klass: T.class_of(T::Struct)).returns(T::Hash[::Symbol, T.untyped]) }
   def deep_generate_properties(klass); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#181
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#212
   sig { params(type: T.untyped).returns(T::Boolean) }
   def enum?(type); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#167
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#197
   sig do
     params(
       type: T.any(::Integer, ::T::Types::Union, T.untyped),
@@ -1549,15 +1404,15 @@ class SchemaRegistry::GenerateFromStruct
   end
   def nilable_sorbet_type_to_json(type:, type_object: T.unsafe(nil)); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#174
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#204
   sig { params(type: T.untyped).returns(T::Boolean) }
   def represented_as_string?(type); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#81
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#89
   sig { params(definition: T.untyped).returns(T::Boolean) }
   def required?(definition); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#149
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#175
   sig do
     params(
       type: T.any(::Integer, ::T::Types::Union, T.untyped),
@@ -1567,7 +1422,7 @@ class SchemaRegistry::GenerateFromStruct
   end
   def sorbet_type_to_json(type:, type_object: T.unsafe(nil), nilable: T.unsafe(nil)); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#188
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#218
   sig { params(type: T.untyped).returns(T.nilable(::String)) }
   def sorbet_type_to_json_format(type:); end
 
@@ -1575,11 +1430,11 @@ class SchemaRegistry::GenerateFromStruct
   sig { returns(T.class_of(T::Struct)) }
   def struct_klass; end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#200
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#230
   sig { params(definition: T.untyped, type_object: T.untyped).returns(T.untyped) }
   def type_definition(definition, type_object); end
 
-  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#214
+  # source://resource_registry//lib/schema_registry/generate_from_struct.rb#244
   sig { params(type: T.untyped).returns(T.untyped) }
   def union_type_definition(type); end
 end
@@ -1607,11 +1462,11 @@ class SchemaRegistry::JsonSchemaMapper
 
   private
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#37
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#42
   sig { returns(T.untyped) }
   def definition; end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#69
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#77
   sig do
     params(
       input: T.nilable(T::Array[T::Hash[::String, T.untyped]])
@@ -1619,11 +1474,11 @@ class SchemaRegistry::JsonSchemaMapper
   end
   def handle_fields(input); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#47
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#52
   sig { params(items: T.nilable(T::Hash[T.untyped, T.untyped])).returns(T::Array[::SchemaRegistry::Property]) }
   def handle_items(items); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#88
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#96
   sig do
     params(
       properties: T.nilable(T::Hash[T.untyped, T.untyped]),
@@ -1632,7 +1487,7 @@ class SchemaRegistry::JsonSchemaMapper
   end
   def handle_properties(properties, required); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#148
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#161
   sig do
     params(
       resolver: T.nilable(T.any(::String, T::Hash[::Symbol, ::String]))
@@ -1640,11 +1495,11 @@ class SchemaRegistry::JsonSchemaMapper
   end
   def handle_resolver(resolver); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#157
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#174
   sig { params(serialization_groups: T.nilable(T::Array[::String])).returns(T::Set[::Symbol]) }
   def handle_serialization_groups(serialization_groups); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#132
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#143
   sig do
     params(
       prop_type: T.any(::String, T::Array[::String]),
@@ -1653,19 +1508,19 @@ class SchemaRegistry::JsonSchemaMapper
   end
   def handle_types(prop_type, format); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#40
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#45
   sig { returns(::String) }
   def namespace; end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#137
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#150
   sig { params(prop_type: T.any(::String, T::Array[::String])).returns(T::Boolean) }
   def nilable?(prop_type); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#192
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#213
   sig { params(format: T.nilable(::String)).returns(::SchemaRegistry::PropertyType) }
   def string_format_to_sorbet(format); end
 
-  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#166
+  # source://resource_registry//lib/schema_registry/json_schema_mapper.rb#186
   sig do
     params(
       json_schema_type: T.nilable(::String),
@@ -1724,7 +1579,7 @@ class SchemaRegistry::Property < ::T::Struct
   def value_object?; end
 
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1787,21 +1642,19 @@ class SchemaRegistry::Registry
   sig { void }
   def initialize; end
 
-  # source://resource_registry//lib/schema_registry/registry.rb#39
+  # source://resource_registry//lib/schema_registry/registry.rb#45
   sig { returns(::SchemaRegistry::Registry) }
   def cleanup; end
 
-  # source://resource_registry//lib/schema_registry/registry.rb#29
+  # source://resource_registry//lib/schema_registry/registry.rb#35
   sig { params(identifier: ::Symbol).returns(T.nilable(::SchemaRegistry::Schema)) }
   def fetch(identifier); end
 
-  # @raise [SchemaNotFound]
-  #
-  # source://resource_registry//lib/schema_registry/registry.rb#22
+  # source://resource_registry//lib/schema_registry/registry.rb#24
   sig { params(identifier: ::Symbol).returns(T.nilable(::SchemaRegistry::Schema)) }
   def fetch!(identifier); end
 
-  # source://resource_registry//lib/schema_registry/registry.rb#34
+  # source://resource_registry//lib/schema_registry/registry.rb#40
   sig { returns(T::Hash[::Symbol, ::SchemaRegistry::Schema]) }
   def fetch_all; end
 
@@ -1821,7 +1674,7 @@ class SchemaRegistry::Schema < ::T::Struct
   const :raw_json_schema, T::Hash[::String, T.untyped], default: T.unsafe(nil)
   const :additional_filter_fields, T::Array[::SchemaRegistry::FilterField], default: T.unsafe(nil)
 
-  # source://resource_registry//lib/schema_registry/schema.rb#76
+  # source://resource_registry//lib/schema_registry/schema.rb#78
   sig { returns(T::Hash[::Symbol, T.untyped]) }
   def dump; end
 
@@ -1857,39 +1710,12 @@ class SchemaRegistry::Schema < ::T::Struct
   sig { returns(::String) }
   def slug; end
 
-  private
-
-  # source://resource_registry//lib/schema_registry/schema.rb#91
-  sig { returns(::Dry::Inflector) }
-  def inflector; end
-
   class << self
-    # source://sorbet-runtime/0.5.11609/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11670/lib/types/struct.rb#13
     def inherited(s); end
 
-    # source://resource_registry//lib/schema_registry/schema.rb#84
+    # source://resource_registry//lib/schema_registry/schema.rb#86
     sig { params(spec: T.untyped).returns(::SchemaRegistry::Schema) }
     def load(spec); end
   end
-end
-
-# source://resource_registry//lib/schema_registry/schema_loader.rb#4
-class SchemaRegistry::SchemaLoader
-  # source://resource_registry//lib/schema_registry/schema_loader.rb#8
-  sig { params(schema_registry: ::SchemaRegistry::Registry).void }
-  def initialize(schema_registry:); end
-
-  # source://resource_registry//lib/schema_registry/schema_loader.rb#13
-  sig { params(paths: T::Array[[::String, ::String]]).void }
-  def load(paths); end
-
-  private
-
-  # source://resource_registry//lib/schema_registry/schema_loader.rb#29
-  sig { params(namespace: ::String, path: ::String).returns(T::Array[::SchemaRegistry::Schema]) }
-  def load_path_files(namespace, path); end
-
-  # source://resource_registry//lib/schema_registry/schema_loader.rb#26
-  sig { returns(::SchemaRegistry::Registry) }
-  def schema_registry; end
 end
