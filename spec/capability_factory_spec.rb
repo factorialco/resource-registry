@@ -3,7 +3,7 @@
 
 require "spec_helper"
 require_relative "./dummy_capability"
-require_relative "../lib/public/capability_factory"
+require_relative "../lib/resource_registry/capability_factory"
 
 RSpec.describe ResourceRegistry::CapabilityFactory do
   let(:capability) { described_class }

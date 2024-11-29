@@ -1,6 +1,6 @@
 # typed: false
 
-require_relative "../lib/public/repositories/base"
+require_relative "../lib/resource_registry/repositories/base"
 
 class DummyEntity < T::Struct
   const :id, Integer

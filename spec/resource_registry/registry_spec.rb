@@ -1,7 +1,7 @@
 # typed: false
 
 require "spec_helper"
-require_relative "../../lib/public/registry"
+require_relative "../../lib/resource_registry/registry"
 require_relative "../dummy_repo"
 
 class DummyCapability < T::Struct
