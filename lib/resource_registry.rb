@@ -2,13 +2,13 @@
 # typed: true
 
 require "sorbet-runtime"
+require "active_support/all"
 
 require "resource_registry/configuration"
 require "resource_registry/resource"
 require "resource_registry/versions"
 require "resource_registry/versions/version"
 require "resource_registry/entity_finder"
-require "resource_registry/resource_struct_builder"
 require "resource_registry/registry"
 require "resource_registry/serializer"
 require "resource_registry/repositories/base"
