@@ -1,5 +1,5 @@
+# typed: strict
 # frozen_string_literal: true
-# typed: false
 
 require_relative "resource"
 require_relative "capabilities/capability_config"
@@ -49,8 +49,10 @@ module ResourceRegistry
       ).returns(T.nilable(Resource))
     end
     def fetch_for_repository(repository_class)
-      fetch_all.values.find { |r| r.repository == repository_class }
+      resources_by_raw_repository[repository_class.to_s]
     end
+
+    alias find_for_repository fetch_for_repository
 
     sig { returns(T::Hash[String, Resource]) }
     def fetch_all
@@ -71,19 +73,19 @@ module ResourceRegistry
       end
     end
 
-    sig do
-      params(
-        repository: T::Class[ResourceRegistry::Repositories::Base[T.untyped]]
-      ).returns(T.nilable(Resource))
-    end
-    def find_by_repository(repository)
-      fetch_all.values.find { |resource| resource.repository == repository }
-    end
-
     private
 
     sig { returns(T::Hash[String, Resource]) }
     attr_accessor :resources
+
+    sig { returns(T::Hash[String, Resource]) }
+    def resources_by_raw_repository
+      @resources_by_raw_repository ||=
+        T.let(
+          resources.values.index_by(&:repository_raw),
+          T.nilable(T::Hash[String, Resource])
+        )
+    end
 
     sig { params(resources: T::Array[Resource]).returns(T::Boolean) }
     def duplicated_identifier?(resources)

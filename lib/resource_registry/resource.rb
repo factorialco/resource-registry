@@ -210,7 +210,7 @@ module ResourceRegistry
     def dump
       {
         "identifier" => identifier,
-        "repository" => repository.to_s,
+        "repository" => repository_raw,
         "description" => description,
         "relationships" => relationships.values.map(&:dump),
         "capabilities" =>
