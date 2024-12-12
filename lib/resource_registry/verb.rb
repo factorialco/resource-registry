@@ -63,7 +63,7 @@ module ResourceRegistry
       dto_klass = dto_raw.safe_constantize
 
       if dto_klass.nil?
-        raise DtoClassNotFound, "DTO class #{dto} for verb #{id} not found"
+        raise DtoClassNotFound, "DTO class #{dto_raw} for verb #{id} not found"
       end
 
       dto_klass
