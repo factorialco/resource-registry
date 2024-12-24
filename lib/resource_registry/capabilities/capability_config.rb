@@ -14,12 +14,32 @@ module ResourceRegistry
       # Class methods interface for capability configuration
       module ClassMethods
         extend T::Sig
+        extend T::Generic
         extend T::Helpers
         abstract!
+
+        has_attached_class!
 
         # The key of the capability, this key will be used to take it from yaml configuration
         sig { abstract.returns(Symbol) }
         def key
+        end
+
+        sig { params(resource: Resource).returns(T::Boolean) }
+        def resource_capability?(resource:)
+          resource.capabilities.key?(key)
+        end
+
+        sig { params(resource: Resource).returns(T.nilable(T.attached_class))}
+        def resource_capability(resource:)
+          return unless resource_capability?(resource:)
+
+          T.cast(resource.capabilities[key], self)
+        end
+
+        sig { params(resource: Resource).returns(T.attached_class)}
+        def resource_capability!(resource:)
+          T.must(resource_capability(resource: ))
         end
       end
 
