@@ -140,7 +140,7 @@ module ResourceRegistry
               T::Class[T.type_parameter(:CapabilityConfig)],
               # Referencing `ClassMethods` here is not ideal but it seems Sorbet
               # provides no other mechanism to do this
-              Capabilities::CapabilityConfig::ClassMethods,
+              Capabilities::CapabilityConfig::ClassMethods[T.untyped],
               T::Class[Capabilities::CapabilityConfig]
             )
         )
@@ -161,7 +161,7 @@ module ResourceRegistry
       params(
         feature:
           T.all(
-            Capabilities::CapabilityConfig::ClassMethods,
+            Capabilities::CapabilityConfig::ClassMethods[T.untyped],
             T::Class[Capabilities::CapabilityConfig]
           )
       ).returns(T::Boolean)
@@ -178,7 +178,7 @@ module ResourceRegistry
               T::Class[T.type_parameter(:CapabilityConfig)],
               # Referencing ClassMethods here is not ideal but it seems Sorbet
               # provides no other mechanism to do this
-              Capabilities::CapabilityConfig::ClassMethods,
+              Capabilities::CapabilityConfig::ClassMethods[T.untyped],
               T::Class[Capabilities::CapabilityConfig]
             )
         )
