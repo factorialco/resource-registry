@@ -6,20 +6,30 @@ require_relative "../../lib/resource_registry/relationship"
 
 RSpec.describe ResourceRegistry::Relationship do
   describe "#load" do
-    let(:type) { ResourceRegistry::RelationshipTypes::HasOne.new({}) }
     let(:params) do
       {
         "name" => "test",
-        "type" => type.serialize,
+        "type" => "has_one",
         "field" => :test,
         "resource_id" => :test,
-        "optional" => true
+        "optional" => true,
+        "primary_key" => :test
       }
     end
 
     subject { described_class.load(params) }
 
     it { expect(subject).to be_a(described_class) }
+
+    context "when the spec is not valid" do
+      let(:params) { { "type" => "has_one" } }
+
+      it "raises an error" do
+        expect { subject }.to raise_error(
+          ResourceRegistry::RelationshipType::InvalidRelationshipSpec
+        )
+      end
+    end
 
     # TODO: Check how to test this
     xcontext "with a custom type" do
