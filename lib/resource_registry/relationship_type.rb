@@ -5,6 +5,8 @@ module ResourceRegistry
     extend T::Sig
     extend T::Helpers
 
+    InvalidRelationshipSpec = Class.new(StandardError)
+
     abstract!
 
     # This enables `is_a?` check type to sorbet
@@ -25,6 +27,7 @@ module ResourceRegistry
     sig { params(spec: T::Hash[String, T.untyped]).void }
     def initialize(spec)
       @spec = spec
+      validate_spec!
     end
 
     sig { abstract.returns(String) }
@@ -110,7 +113,7 @@ module ResourceRegistry
 
     sig { returns(Symbol) }
     def primary_key
-      @spec["primary_key"]&.to_sym || :id
+      @spec["primary_key"]&.to_sym
     end
 
     sig do
@@ -126,6 +129,23 @@ module ResourceRegistry
 
     sig { overridable.returns(T.nilable(Symbol)) }
     def relationship_field_name
+    end
+
+    private
+
+    sig { void }
+    def validate_spec!
+      errors = []
+      errors << "name is required" unless @spec["name"]
+      errors << "resource_id is required" unless @spec["resource_id"]
+      errors << "field is required" unless @spec["field"]
+      errors << "primary_key is required" unless @spec["primary_key"]
+      errors << "name must be a string" unless @spec["name"].is_a?(String)
+
+      return if errors.empty?
+
+      Kernel.raise InvalidRelationshipSpec,
+                   "The given relationship spec is not valid: #{errors.join(", ")}. The spec is: #{@spec}"
     end
   end
 end
