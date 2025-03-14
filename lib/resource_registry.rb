@@ -16,6 +16,7 @@ require "schema_registry/registry"
 require "schema_registry/json_schema_mapper"
 require "schema_registry/maybe"
 require "runtime_generic"
+require "forge"
 
 # Entry point for ResourceRegistry
 module ResourceRegistry

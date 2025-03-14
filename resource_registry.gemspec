@@ -10,6 +10,10 @@ Gem::Specification.new do |s|
     lib/resource_registry.rb
     lib/resource_registry/repositories/base.rb
     rbi/resource_registry.rbi
+    lib/forge.rb
+    lib/forge/artifact.rb
+    lib/forge/concept.rb
+    lib/forge/synthesizer.rb
   ]
   s.homepage = "https://rubygems.org/gems/resource_registry"
   s.license = "MIT"

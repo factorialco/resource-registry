@@ -2,12 +2,14 @@
 # typed: strict
 
 require_relative "../schema_registry/schema"
+require_relative "../forge/concept"
 
 module ResourceRegistry
   # This is the representation of a verb over a resource. Each resource can
   # have multiple verbs that should be exposed by its repository
   class Verb < T::Struct
     extend T::Sig
+    include Forge::Concept
 
     DtoClassNotFound = Class.new(StandardError)
 
@@ -19,6 +21,13 @@ module ResourceRegistry
     const :webhook_description, T.nilable(String), default: nil
     const :schema, SchemaRegistry::Schema
     const :return_many, T::Boolean, default: false
+
+    # Implement Concept interface methods
+
+    sig { override.returns(Symbol) }
+    def identifier
+      id
+    end
 
     sig { returns(Symbol) }
     def schema_identifier

@@ -6,11 +6,13 @@ require_relative "capability_factory"
 require_relative "relationship"
 require_relative "verb"
 require_relative "../schema_registry/schema"
+require_relative "../forge/concept"
 
 module ResourceRegistry
   # The main class that represents a resource in the system.
   class Resource < T::Struct
     extend T::Sig
+    include Forge::Concept
 
     class VerbNotFound < StandardError
     end
@@ -47,7 +49,7 @@ module ResourceRegistry
       @slug ||= T.let(name.to_s.parameterize, T.nilable(String))
     end
 
-    sig { returns(Symbol) }
+    sig { override.returns(Symbol) }
     def identifier
       @identifier ||=
         T.let(

@@ -4,10 +4,13 @@
 require_relative "property"
 require_relative "filter_field"
 require_relative "property_mapper"
+require_relative "../forge/concept"
 
 module SchemaRegistry
+  # The Schema class represents a JSON schema that can be used to validate data.
   class Schema < T::Struct
     extend T::Sig
+    include Forge::Concept
 
     const :name, String
     const :namespace, String
@@ -25,7 +28,7 @@ module SchemaRegistry
       name.underscore
     end
 
-    sig { returns(Symbol) }
+    sig { override.returns(Symbol) }
     def identifier
       :"#{namespace.underscore}.#{slug}"
     end
