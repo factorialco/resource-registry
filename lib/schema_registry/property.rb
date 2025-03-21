@@ -79,6 +79,11 @@ module SchemaRegistry
     end
 
     sig { returns(T::Boolean) }
+    def enum?
+      enum_values.present?
+    end
+
+    sig { returns(T::Boolean) }
     def value_object?
       !!type_name.to_s.split("::").any?("ValueObjects")
     end
